@@ -1,0 +1,428 @@
+{
+  "event": "TechStorm 2026",
+  "currency": "INR",
+  "last_updated": "2026-12-14T16:30:00+05:30",
+  "updated_by": "sponsor-tracker",
+
+  "total_budget": 850000,
+  "total_spent": 587500,
+  "budget_utilization_pct": 69.1,
+
+  "sponsors": [
+    {
+      "id": "SPONSOR-01",
+      "name": "HyperX",
+      "tier": "title",
+      "commitment_inr": 300000,
+      "payment_status": "paid",
+      "payment_date": "2026-11-20",
+      "contact_person": "Arvind Mehta",
+      "contact_email": "arvind.m@hyperx.com",
+      "deliverables": {
+        "booth": {
+          "location": "B1 — Main Entrance Hall",
+          "size": "6x4m",
+          "status": "ready",
+          "setup_completed": "2026-12-13T18:00:00+05:30"
+        },
+        "banners": {
+          "locations": ["Main Stage — Center", "Arena Alpha — Left Wall"],
+          "status": "installed",
+          "installed_date": "2026-12-13"
+        },
+        "swag_bags": {
+          "items": "HyperX Cloud III headset vouchers (200 units)",
+          "quantity": 200,
+          "status": "delivered",
+          "delivered_date": "2026-12-12"
+        },
+        "social_media": {
+          "required_posts": 3,
+          "completed_posts": 3,
+          "posts": [
+            {"platform": "Instagram", "url": "https://instagram.com/p/hyperx_techstorm1", "date": "2026-12-10"},
+            {"platform": "Twitter/X", "url": "https://x.com/hyperx/status/123456", "date": "2026-12-12"},
+            {"platform": "LinkedIn", "url": "https://linkedin.com/post/hyperx-techstorm", "date": "2026-12-14"}
+          ],
+          "status": "completed"
+        },
+        "stage_shoutouts": {
+          "scheduled": ["Day 1 Opening Ceremony", "Valorant Grand Final"],
+          "completed": ["Day 1 Opening Ceremony"],
+          "status": "in_progress"
+        }
+      }
+    },
+    {
+      "id": "SPONSOR-02",
+      "name": "Monster Energy",
+      "tier": "gold",
+      "commitment_inr": 200000,
+      "payment_status": "paid",
+      "payment_date": "2026-11-25",
+      "contact_person": "Sneha Kapoor",
+      "contact_email": "sneha.k@monsterenergy.in",
+      "deliverables": {
+        "booth": {
+          "location": "B3 — Food Court Area",
+          "size": "4x3m",
+          "status": "ready",
+          "setup_completed": "2026-12-14T08:00:00+05:30"
+        },
+        "banners": {
+          "locations": ["Arena Beta — Entrance"],
+          "status": "in_progress",
+          "notes": "Banner delivered but not yet hung — waiting for AV crew"
+        },
+        "swag_bags": {
+          "items": "Monster Energy drink cans (500 units) + branded caps (200 units)",
+          "quantity": 700,
+          "status": "delivered",
+          "delivered_date": "2026-12-13"
+        },
+        "social_media": {
+          "required_posts": 2,
+          "completed_posts": 0,
+          "posts": [],
+          "status": "not_started",
+          "deadline": "2026-12-14T23:59:00+05:30",
+          "alert": "⚠️ OVERDUE — 0/2 posts, deadline tonight"
+        },
+        "stage_shoutouts": {
+          "scheduled": ["BGMI Finals"],
+          "completed": ["BGMI Finals"],
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "SPONSOR-03",
+      "name": "Logitech",
+      "tier": "gold",
+      "commitment_inr": 175000,
+      "payment_status": "paid",
+      "payment_date": "2026-11-28",
+      "contact_person": "Rohan Desai",
+      "contact_email": "rohan.d@logitech.com",
+      "deliverables": {
+        "booth": {
+          "location": "B2 — Gaming Peripherals Zone",
+          "size": "5x3m",
+          "status": "ready",
+          "setup_completed": "2026-12-13T16:00:00+05:30",
+          "notes": "Demo stations with G Pro X Superlight mice"
+        },
+        "banners": {
+          "locations": ["Main Stage — Right", "Workshop Hall — Entrance"],
+          "status": "installed",
+          "installed_date": "2026-12-13"
+        },
+        "swag_bags": {
+          "items": "Logitech branded mousepads (300 units)",
+          "quantity": 300,
+          "status": "in_transit",
+          "eta": "2026-12-14T15:00:00+05:30",
+          "tracking": "DTDC-98765432",
+          "alert": "⏳ In transit — ETA 3 PM today"
+        },
+        "social_media": {
+          "required_posts": 2,
+          "completed_posts": 2,
+          "posts": [
+            {"platform": "Instagram", "url": "https://instagram.com/p/logi_techstorm", "date": "2026-12-13"},
+            {"platform": "Twitter/X", "url": "https://x.com/logitech/status/789012", "date": "2026-12-14"}
+          ],
+          "status": "completed"
+        },
+        "stage_shoutouts": {
+          "scheduled": ["Rocket League Finals"],
+          "completed": ["Rocket League Finals"],
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "SPONSOR-04",
+      "name": "AMD",
+      "tier": "silver",
+      "commitment_inr": 100000,
+      "payment_status": "paid",
+      "payment_date": "2026-12-01",
+      "contact_person": "Karthik Nair",
+      "contact_email": "karthik.n@amd.com",
+      "deliverables": {
+        "booth": {
+          "location": "B4 — Tech Demo Zone",
+          "size": "3x3m",
+          "status": "ready",
+          "setup_completed": "2026-12-14T09:00:00+05:30",
+          "notes": "Ryzen 9 + Radeon RX demo rigs for participants to test"
+        },
+        "banners": {
+          "locations": ["Arena Alpha — Right Wall"],
+          "status": "installed",
+          "installed_date": "2026-12-14"
+        },
+        "swag_bags": null,
+        "social_media": {
+          "required_posts": 2,
+          "completed_posts": 1,
+          "posts": [
+            {"platform": "Twitter/X", "url": "https://x.com/amd/status/345678", "date": "2026-12-14"}
+          ],
+          "status": "in_progress"
+        },
+        "stage_shoutouts": null
+      }
+    },
+    {
+      "id": "SPONSOR-05",
+      "name": "Jio",
+      "tier": "connectivity_partner",
+      "commitment_inr": 75000,
+      "payment_status": "paid",
+      "payment_date": "2026-12-05",
+      "contact_person": "Priya Sharma",
+      "contact_email": "priya.s@jio.com",
+      "deliverables": {
+        "booth": null,
+        "banners": {
+          "locations": ["Registration Desk"],
+          "status": "installed",
+          "installed_date": "2026-12-13"
+        },
+        "swag_bags": {
+          "items": "Jio prepaid SIM cards with 2GB data (500 units)",
+          "quantity": 500,
+          "status": "delivered",
+          "delivered_date": "2026-12-13"
+        },
+        "social_media": {
+          "required_posts": 1,
+          "completed_posts": 1,
+          "posts": [
+            {"platform": "Instagram", "url": "https://instagram.com/p/jio_techstorm", "date": "2026-12-14"}
+          ],
+          "status": "completed"
+        },
+        "stage_shoutouts": null,
+        "special": {
+          "service": "Dedicated 5G hotspot for tournament PCs",
+          "status": "active",
+          "bandwidth": "500 Mbps dedicated",
+          "support_onsite": true
+        }
+      }
+    }
+  ],
+
+  "prize_pool": {
+    "total_allocated": 270000,
+    "total_disbursed": 0,
+    "tournaments": {
+      "valorant": {
+        "sponsored_by": "HyperX",
+        "prizes": {
+          "first": {"amount": 50000, "status": "pending"},
+          "second": {"amount": 25000, "status": "pending"},
+          "third": {"amount": 10000, "status": "pending"},
+          "mvp": {"amount": 5000, "status": "pending"}
+        },
+        "total": 90000
+      },
+      "bgmi": {
+        "sponsored_by": "Monster Energy",
+        "prizes": {
+          "first": {"amount": 40000, "status": "pending"},
+          "second": {"amount": 20000, "status": "pending"},
+          "third": {"amount": 10000, "status": "pending"}
+        },
+        "total": 70000
+      },
+      "fifa25": {
+        "sponsored_by": "Logitech",
+        "prizes": {
+          "first": {"amount": 25000, "status": "pending"},
+          "second": {"amount": 15000, "status": "pending"},
+          "third": {"amount": 5000, "status": "pending"}
+        },
+        "total": 45000
+      },
+      "rocket_league": {
+        "sponsored_by": "AMD",
+        "prizes": {
+          "first": {"amount": 20000, "status": "pending"},
+          "second": {"amount": 10000, "status": "pending"},
+          "third": {"amount": 5000, "status": "pending"}
+        },
+        "total": 35000
+      },
+      "hackathon": {
+        "sponsored_by": "HyperX + Jio",
+        "prizes": {
+          "first": {"amount": 15000, "status": "pending"},
+          "second": {"amount": 10000, "status": "pending"},
+          "third": {"amount": 5000, "status": "pending"}
+        },
+        "total": 30000
+      }
+    }
+  },
+
+  "expenses": {
+    "categories": {
+      "venue_rental": {
+        "allocated": 200000,
+        "spent": 200000,
+        "utilization_pct": 100,
+        "items": [
+          {"description": "Nexus Convention Center — 2-day rental", "amount": 180000, "status": "paid", "vendor": "Nexus Venues Pvt Ltd", "invoice": "NV-2026-1847"},
+          {"description": "Additional parking lot rental", "amount": 20000, "status": "paid", "vendor": "Nexus Venues Pvt Ltd", "invoice": "NV-2026-1848"}
+        ]
+      },
+      "stage_and_av": {
+        "allocated": 150000,
+        "spent": 142000,
+        "utilization_pct": 94.7,
+        "items": [
+          {"description": "Main Stage setup + LED wall (12x6ft)", "amount": 80000, "status": "paid", "vendor": "SoundCraft Productions", "invoice": "SC-4521"},
+          {"description": "Arena Alpha + Beta PA systems", "amount": 45000, "status": "paid", "vendor": "SoundCraft Productions", "invoice": "SC-4522"},
+          {"description": "Tournament PC rentals (20 gaming rigs)", "amount": 17000, "status": "paid", "vendor": "RentAPC Gaming", "invoice": "RAP-881"}
+        ]
+      },
+      "catering": {
+        "allocated": 100000,
+        "spent": 65500,
+        "utilization_pct": 65.5,
+        "items": [
+          {"description": "Day 1 lunch + snacks (800 pax)", "amount": 40000, "status": "paid", "vendor": "Campus Bites Catering", "invoice": "CBC-2210"},
+          {"description": "Day 1 dinner (hackathon participants, 200 pax)", "amount": 15000, "status": "paid", "vendor": "Campus Bites Catering", "invoice": "CBC-2211"},
+          {"description": "Day 2 lunch + snacks (800 pax)", "amount": 10500, "status": "pending_approval", "vendor": "Campus Bites Catering", "invoice": "CBC-2212"}
+        ]
+      },
+      "merch_production": {
+        "allocated": 80000,
+        "spent": 72000,
+        "utilization_pct": 90.0,
+        "items": [
+          {"description": "TechStorm 2026 t-shirts (500 units)", "amount": 50000, "status": "paid", "vendor": "PrintHub India", "invoice": "PHI-3302"},
+          {"description": "Lanyards + ID badges (1000 units)", "amount": 12000, "status": "paid", "vendor": "PrintHub India", "invoice": "PHI-3303"},
+          {"description": "Sticker packs (1000 units)", "amount": 10000, "status": "paid", "vendor": "StickerMule India", "invoice": "SMI-7741"}
+        ]
+      },
+      "marketing": {
+        "allocated": 50000,
+        "spent": 48000,
+        "utilization_pct": 96.0,
+        "alert": "⚠️ 96% utilized — approach with caution",
+        "items": [
+          {"description": "Instagram + YouTube ads campaign", "amount": 30000, "status": "paid", "vendor": "DigiBoost Media", "invoice": "DBM-1129"},
+          {"description": "Campus posters + banners printing", "amount": 12000, "status": "paid", "vendor": "PrintHub India", "invoice": "PHI-3301"},
+          {"description": "Influencer collaboration (2 gaming creators)", "amount": 6000, "status": "paid", "vendor": "Direct Payment", "invoice": "DP-001"}
+        ]
+      },
+      "miscellaneous": {
+        "allocated": 50000,
+        "spent": 30000,
+        "utilization_pct": 60.0,
+        "items": [
+          {"description": "First aid kit + medical volunteer stipend", "amount": 8000, "status": "paid", "vendor": "MedReady Services", "invoice": "MRS-442"},
+          {"description": "Security personnel (6 guards, 2 days)", "amount": 12000, "status": "paid", "vendor": "SecureGuard Solutions", "invoice": "SGS-1187"},
+          {"description": "Emergency supplies + water bottles", "amount": 10000, "status": "paid", "vendor": "Campus Store", "invoice": "CS-2026-88"}
+        ]
+      },
+      "unallocated_reserve": {
+        "allocated": 30000,
+        "spent": 0,
+        "utilization_pct": 0,
+        "notes": "Emergency fund — requires Fest Lead approval for any withdrawal"
+      }
+    },
+    "summary": {
+      "total_allocated": 660000,
+      "total_spent": 557500,
+      "remaining": 102500,
+      "overall_utilization_pct": 84.5
+    }
+  },
+
+  "vendor_payments": [
+    {
+      "id": "VENDOR-01",
+      "vendor": "Nexus Venues Pvt Ltd",
+      "description": "Venue rental — 2 days + parking",
+      "amount": 200000,
+      "invoice": "NV-2026-1847/1848",
+      "status": "paid",
+      "approved_by": "FestLead",
+      "approved_at": "2026-11-15T10:00:00+05:30",
+      "paid_at": "2026-11-16T14:30:00+05:30"
+    },
+    {
+      "id": "VENDOR-02",
+      "vendor": "SoundCraft Productions",
+      "description": "Stage setup + AV systems",
+      "amount": 125000,
+      "invoice": "SC-4521/4522",
+      "status": "paid",
+      "approved_by": "FestLead",
+      "approved_at": "2026-12-01T11:00:00+05:30",
+      "paid_at": "2026-12-02T09:00:00+05:30"
+    },
+    {
+      "id": "VENDOR-03",
+      "vendor": "Campus Bites Catering",
+      "description": "Day 2 lunch + snacks (800 pax)",
+      "amount": 10500,
+      "invoice": "CBC-2212",
+      "status": "pending_approval",
+      "submitted_at": "2026-12-14T14:00:00+05:30",
+      "approval_hash": "#e7a3",
+      "notes": "Day 2 catering — awaiting Fest Lead approval"
+    },
+    {
+      "id": "VENDOR-04",
+      "vendor": "RentAPC Gaming",
+      "description": "Tournament PC rentals (20 gaming rigs)",
+      "amount": 17000,
+      "invoice": "RAP-881",
+      "status": "paid",
+      "approved_by": "FestLead",
+      "approved_at": "2026-12-10T16:00:00+05:30",
+      "paid_at": "2026-12-11T10:00:00+05:30"
+    }
+  ],
+
+  "payout_log": [],
+
+  "alerts": [
+    {
+      "type": "warning",
+      "category": "sponsor_deliverable",
+      "message": "Monster Energy: 0/2 social media posts — deadline tonight 11:59 PM",
+      "created_at": "2026-12-14T16:00:00+05:30",
+      "resolved": false
+    },
+    {
+      "type": "info",
+      "category": "sponsor_deliverable",
+      "message": "Logitech: Swag mousepads in transit — ETA 3 PM today",
+      "created_at": "2026-12-14T10:00:00+05:30",
+      "resolved": false
+    },
+    {
+      "type": "warning",
+      "category": "budget",
+      "message": "Marketing budget at 96% utilization",
+      "created_at": "2026-12-14T09:00:00+05:30",
+      "resolved": false
+    },
+    {
+      "type": "action_required",
+      "category": "vendor_payment",
+      "message": "VENDOR-03 (Campus Bites Day 2) awaiting approval — ₹10,500",
+      "created_at": "2026-12-14T14:00:00+05:30",
+      "resolved": false
+    }
+  ]
+}

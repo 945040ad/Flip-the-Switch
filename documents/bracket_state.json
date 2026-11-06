@@ -1,0 +1,994 @@
+{
+  "event": "TechStorm 2026",
+  "last_updated": "2026-12-14T17:45:00+05:30",
+  "updated_by": "bracket-marshal",
+  "tournaments": {
+    "valorant": {
+      "name": "TechStorm Valorant Championship",
+      "format": "single_elimination",
+      "total_teams": 16,
+      "best_of": {
+        "quarterfinals": 3,
+        "semifinals": 3,
+        "grand_final": 5
+      },
+      "matches": [
+        {
+          "match_id": "MATCH-01",
+          "round": "quarterfinal",
+          "round_number": 1,
+          "scheduled_time": "2026-12-14T10:00:00+05:30",
+          "stage": "Arena Alpha",
+          "team_a": "Team Mayhem",
+          "team_b": "Phoenix Esports",
+          "seed_a": 1,
+          "seed_b": 5,
+          "status": "completed",
+          "winner": "Team Mayhem",
+          "score": {
+            "team_a_maps": 2,
+            "team_b_maps": 0,
+            "maps": [
+              {
+                "map": "Ascent",
+                "score_a": 13,
+                "score_b": 7,
+                "winner": "Team Mayhem"
+              },
+              {
+                "map": "Haven",
+                "score_a": 13,
+                "score_b": 11,
+                "winner": "Team Mayhem"
+              }
+            ]
+          },
+          "proof_screenshot": "https://imgur.com/ts2026/val-qf1-result.png",
+          "approved_by": "FestLead",
+          "approved_at": "2026-12-14T10:52:00+05:30",
+          "approval_hash": "#a1b2"
+        },
+        {
+          "match_id": "MATCH-02",
+          "round": "quarterfinal",
+          "round_number": 2,
+          "scheduled_time": "2026-12-14T10:45:00+05:30",
+          "stage": "Arena Alpha",
+          "team_a": "Hydra Officials",
+          "team_b": "Velocity Gaming",
+          "seed_a": 2,
+          "seed_b": 6,
+          "status": "completed",
+          "winner": "Velocity Gaming",
+          "score": {
+            "team_a_maps": 1,
+            "team_b_maps": 2,
+            "maps": [
+              {
+                "map": "Bind",
+                "score_a": 13,
+                "score_b": 9,
+                "winner": "Hydra Officials"
+              },
+              {
+                "map": "Split",
+                "score_a": 8,
+                "score_b": 13,
+                "winner": "Velocity Gaming"
+              },
+              {
+                "map": "Lotus",
+                "score_a": 10,
+                "score_b": 13,
+                "winner": "Velocity Gaming"
+              }
+            ]
+          },
+          "proof_screenshot": "https://imgur.com/ts2026/val-qf2-result.png",
+          "approved_by": "FestLead",
+          "approved_at": "2026-12-14T12:05:00+05:30",
+          "approval_hash": "#c3d4"
+        },
+        {
+          "match_id": "MATCH-03",
+          "round": "quarterfinal",
+          "round_number": 3,
+          "scheduled_time": "2026-12-14T11:30:00+05:30",
+          "stage": "Arena Alpha",
+          "team_a": "True Rippers",
+          "team_b": "Enigma Gaming",
+          "seed_a": 3,
+          "seed_b": 7,
+          "status": "completed",
+          "winner": "Enigma Gaming",
+          "score": {
+            "team_a_maps": 0,
+            "team_b_maps": 2,
+            "maps": [
+              {
+                "map": "Sunset",
+                "score_a": 9,
+                "score_b": 13,
+                "winner": "Enigma Gaming"
+              },
+              {
+                "map": "Ascent",
+                "score_a": 11,
+                "score_b": 13,
+                "winner": "Enigma Gaming"
+              }
+            ]
+          },
+          "proof_screenshot": "https://imgur.com/ts2026/val-qf3-result.png",
+          "approved_by": "FestLead",
+          "approved_at": "2026-12-14T12:48:00+05:30",
+          "approval_hash": "#e5f6"
+        },
+        {
+          "match_id": "MATCH-04",
+          "round": "quarterfinal",
+          "round_number": 4,
+          "scheduled_time": "2026-12-14T12:15:00+05:30",
+          "stage": "Arena Alpha",
+          "team_a": "Revenant Esports",
+          "team_b": "GodLike Esports",
+          "seed_a": 4,
+          "seed_b": 8,
+          "status": "completed",
+          "winner": "GodLike Esports",
+          "score": {
+            "team_a_maps": 1,
+            "team_b_maps": 2,
+            "maps": [
+              {
+                "map": "Haven",
+                "score_a": 13,
+                "score_b": 11,
+                "winner": "Revenant Esports"
+              },
+              {
+                "map": "Abyss",
+                "score_a": 6,
+                "score_b": 13,
+                "winner": "GodLike Esports"
+              },
+              {
+                "map": "Bind",
+                "score_a": 12,
+                "score_b": 14,
+                "winner": "GodLike Esports"
+              }
+            ]
+          },
+          "proof_screenshot": "https://imgur.com/ts2026/val-qf4-result.png",
+          "approved_by": "FestLead",
+          "approved_at": "2026-12-14T13:55:00+05:30",
+          "approval_hash": "#g7h8"
+        },
+        {
+          "match_id": "MATCH-05",
+          "round": "semifinal",
+          "round_number": 1,
+          "scheduled_time": "2026-12-14T14:00:00+05:30",
+          "stage": "Arena Alpha",
+          "team_a": "Team Mayhem",
+          "team_b": "Velocity Gaming",
+          "seed_a": 1,
+          "seed_b": 6,
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "proof_screenshot": null,
+          "notes": "Winner of MATCH-01 vs Winner of MATCH-02"
+        },
+        {
+          "match_id": "MATCH-06",
+          "round": "semifinal",
+          "round_number": 2,
+          "scheduled_time": "2026-12-14T14:45:00+05:30",
+          "stage": "Arena Alpha",
+          "team_a": "Enigma Gaming",
+          "team_b": "GodLike Esports",
+          "seed_a": 7,
+          "seed_b": 8,
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "proof_screenshot": null,
+          "notes": "Winner of MATCH-03 vs Winner of MATCH-04"
+        },
+        {
+          "match_id": "MATCH-07",
+          "round": "grand_final",
+          "round_number": 1,
+          "scheduled_time": "2026-12-15T18:00:00+05:30",
+          "stage": "Main Stage",
+          "team_a": null,
+          "team_b": null,
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "proof_screenshot": null,
+          "notes": "Winner of MATCH-05 vs Winner of MATCH-06. BO5."
+        }
+      ]
+    },
+    "bgmi": {
+      "name": "TechStorm Battle Royale Cup",
+      "format": "battle_royale_cumulative",
+      "total_squads": 20,
+      "total_rounds": 3,
+      "points_system": {
+        "placement": {
+          "1": 15,
+          "2": 12,
+          "3": 10,
+          "4-5": 8,
+          "6-10": 5,
+          "11-15": 3,
+          "16-20": 1
+        },
+        "per_kill": 1
+      },
+      "squads": [
+        { "name": "Hydra Officials", "tag": "HYDRA" },
+        { "name": "GodLike Esports", "tag": "GL" },
+        { "name": "Team SouL", "tag": "SOUL" },
+        { "name": "Orangutan Gaming", "tag": "OR" },
+        { "name": "Blind Esports", "tag": "BLIND" },
+        { "name": "Team XSpark", "tag": "XS" },
+        { "name": "Enigma Gaming", "tag": "EG" },
+        { "name": "Skylightz Gaming", "tag": "SLG" },
+        { "name": "Global Esports", "tag": "GE" },
+        { "name": "7Sea Esports", "tag": "7SEA" },
+        { "name": "Chemin Esports", "tag": "CE" },
+        { "name": "Marcos Gaming", "tag": "MG" },
+        { "name": "Reckoning Esports", "tag": "RE" },
+        { "name": "Tactical Tigers", "tag": "TT" },
+        { "name": "Campus Clutch Squad", "tag": "CCS" },
+        { "name": "Nexus Warriors", "tag": "NW" },
+        { "name": "Pixel Pushers", "tag": "PP" },
+        { "name": "Blaze Mobile", "tag": "BM" },
+        { "name": "Desi Dominators", "tag": "DD" },
+        { "name": "Chai & Clutch", "tag": "CC" }
+      ],
+      "rounds": [
+        {
+          "round_id": 1,
+          "match_ids": ["MATCH-17", "MATCH-18"],
+          "map": "Erangel",
+          "status": "completed",
+          "lobbies": [
+            {
+              "match_id": "MATCH-17",
+              "lobby": "A",
+              "scheduled_time": "2026-12-14T10:00:00+05:30",
+              "status": "completed",
+              "squads": ["Hydra Officials", "GodLike Esports", "Team SouL", "Orangutan Gaming", "Blind Esports", "Team XSpark", "Enigma Gaming", "Skylightz Gaming", "Global Esports", "7Sea Esports"],
+              "results": [
+                { "placement": 1, "squad": "GodLike Esports", "kills": 14, "placement_points": 15, "kill_points": 14, "total": 29 },
+                { "placement": 2, "squad": "Hydra Officials", "kills": 11, "placement_points": 12, "kill_points": 11, "total": 23 },
+                { "placement": 3, "squad": "Team SouL", "kills": 9, "placement_points": 10, "kill_points": 9, "total": 19 },
+                { "placement": 4, "squad": "Enigma Gaming", "kills": 7, "placement_points": 8, "kill_points": 7, "total": 15 },
+                { "placement": 5, "squad": "7Sea Esports", "kills": 5, "placement_points": 8, "kill_points": 5, "total": 13 },
+                { "placement": 6, "squad": "Orangutan Gaming", "kills": 6, "placement_points": 5, "kill_points": 6, "total": 11 },
+                { "placement": 7, "squad": "Blind Esports", "kills": 4, "placement_points": 5, "kill_points": 4, "total": 9 },
+                { "placement": 8, "squad": "Skylightz Gaming", "kills": 3, "placement_points": 5, "kill_points": 3, "total": 8 },
+                { "placement": 9, "squad": "Team XSpark", "kills": 2, "placement_points": 5, "kill_points": 2, "total": 7 },
+                { "placement": 10, "squad": "Global Esports", "kills": 1, "placement_points": 5, "kill_points": 1, "total": 6 }
+              ]
+            },
+            {
+              "match_id": "MATCH-18",
+              "lobby": "B",
+              "scheduled_time": "2026-12-14T11:00:00+05:30",
+              "status": "completed",
+              "squads": ["Chemin Esports", "Marcos Gaming", "Reckoning Esports", "Tactical Tigers", "Campus Clutch Squad", "Nexus Warriors", "Pixel Pushers", "Blaze Mobile", "Desi Dominators", "Chai & Clutch"],
+              "results": [
+                { "placement": 1, "squad": "Marcos Gaming", "kills": 16, "placement_points": 15, "kill_points": 16, "total": 31 },
+                { "placement": 2, "squad": "Chemin Esports", "kills": 10, "placement_points": 12, "kill_points": 10, "total": 22 },
+                { "placement": 3, "squad": "Desi Dominators", "kills": 8, "placement_points": 10, "kill_points": 8, "total": 18 },
+                { "placement": 4, "squad": "Reckoning Esports", "kills": 6, "placement_points": 8, "kill_points": 6, "total": 14 },
+                { "placement": 5, "squad": "Tactical Tigers", "kills": 5, "placement_points": 8, "kill_points": 5, "total": 13 },
+                { "placement": 6, "squad": "Campus Clutch Squad", "kills": 4, "placement_points": 5, "kill_points": 4, "total": 9 },
+                { "placement": 7, "squad": "Blaze Mobile", "kills": 3, "placement_points": 5, "kill_points": 3, "total": 8 },
+                { "placement": 8, "squad": "Nexus Warriors", "kills": 3, "placement_points": 5, "kill_points": 3, "total": 8 },
+                { "placement": 9, "squad": "Pixel Pushers", "kills": 2, "placement_points": 5, "kill_points": 2, "total": 7 },
+                { "placement": 10, "squad": "Chai & Clutch", "kills": 1, "placement_points": 5, "kill_points": 1, "total": 6 }
+              ]
+            }
+          ],
+          "cumulative_standings_after_round_1": [
+            { "rank": 1, "squad": "Marcos Gaming", "total_points": 31 },
+            { "rank": 2, "squad": "GodLike Esports", "total_points": 29 },
+            { "rank": 3, "squad": "Hydra Officials", "total_points": 23 },
+            { "rank": 4, "squad": "Chemin Esports", "total_points": 22 },
+            { "rank": 5, "squad": "Team SouL", "total_points": 19 },
+            { "rank": 6, "squad": "Desi Dominators", "total_points": 18 },
+            { "rank": 7, "squad": "Enigma Gaming", "total_points": 15 },
+            { "rank": 8, "squad": "Reckoning Esports", "total_points": 14 },
+            { "rank": 9, "squad": "7Sea Esports", "total_points": 13 },
+            { "rank": 10, "squad": "Tactical Tigers", "total_points": 13 },
+            { "rank": 11, "squad": "Orangutan Gaming", "total_points": 11 },
+            { "rank": 12, "squad": "Blind Esports", "total_points": 9 },
+            { "rank": 13, "squad": "Campus Clutch Squad", "total_points": 9 },
+            { "rank": 14, "squad": "Skylightz Gaming", "total_points": 8 },
+            { "rank": 15, "squad": "Blaze Mobile", "total_points": 8 },
+            { "rank": 16, "squad": "Nexus Warriors", "total_points": 8 },
+            { "rank": 17, "squad": "Team XSpark", "total_points": 7 },
+            { "rank": 18, "squad": "Pixel Pushers", "total_points": 7 },
+            { "rank": 19, "squad": "Global Esports", "total_points": 6 },
+            { "rank": 20, "squad": "Chai & Clutch", "total_points": 6 }
+          ]
+        },
+        {
+          "round_id": 2,
+          "match_ids": ["MATCH-19"],
+          "map": "Miramar",
+          "status": "pending",
+          "lobbies": [
+            {
+              "match_id": "MATCH-19",
+              "lobby": "Combined",
+              "scheduled_time": "2026-12-14T17:00:00+05:30",
+              "status": "pending",
+              "squads": "all_20",
+              "results": null
+            }
+          ]
+        },
+        {
+          "round_id": 3,
+          "match_ids": ["MATCH-20"],
+          "map": "Erangel",
+          "status": "pending",
+          "lobbies": [
+            {
+              "match_id": "MATCH-20",
+              "lobby": "Grand Final",
+              "scheduled_time": "2026-12-15T13:30:00+05:30",
+              "status": "pending",
+              "squads": "all_20",
+              "results": null
+            }
+          ]
+        }
+      ]
+    },
+    "fifa25": {
+      "name": "TechStorm FIFA Cup",
+      "format": "single_elimination",
+      "total_players": 32,
+      "best_of": {
+        "all_rounds": 1,
+        "final": 3
+      },
+      "players": [
+        "Rohan_FIFA", "ProStriker99", "DribbleKing", "GoalMachine",
+        "TikiTaka_Pro", "ChipShotKing", "Volley_Master", "FinesseGod",
+        "CrossSpammer", "PaceAbuser", "SkillMove_X", "FreeKickAce",
+        "GKlegend", "Penalty_Pro", "WingWizard", "HeaderKing",
+        "Sweaty_SZN", "ParkTheBus", "GegenPress", "TotalFootball",
+        "CatenaccioX", "JogaBonito", "R9_Fan", "Messi_Mode",
+        "CR7_Siu", "Neymar_Jr", "Mbappe_Rush", "Haaland_9",
+        "Vini_Dancin", "Salah_Speed", "Bellingham_5", "Modric_10"
+      ],
+      "matches": [
+        {
+          "match_id": "MATCH-25",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T12:15:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "Rohan_FIFA",
+          "player_b": "Modric_10",
+          "status": "completed",
+          "winner": "Rohan_FIFA",
+          "score": "3-1",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1a1"
+        },
+        {
+          "match_id": "MATCH-26",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T12:15:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "ProStriker99",
+          "player_b": "Bellingham_5",
+          "status": "completed",
+          "winner": "ProStriker99",
+          "score": "2-0",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1a2"
+        },
+        {
+          "match_id": "MATCH-27",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T12:15:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "DribbleKing",
+          "player_b": "Salah_Speed",
+          "status": "completed",
+          "winner": "DribbleKing",
+          "score": "4-2",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1a3"
+        },
+        {
+          "match_id": "MATCH-28",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T12:15:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "GoalMachine",
+          "player_b": "Vini_Dancin",
+          "status": "completed",
+          "winner": "GoalMachine",
+          "score": "2-1",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1a4"
+        },
+        {
+          "match_id": "MATCH-29",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T12:15:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "TikiTaka_Pro",
+          "player_b": "Haaland_9",
+          "status": "completed",
+          "winner": "TikiTaka_Pro",
+          "score": "3-2",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1a5"
+        },
+        {
+          "match_id": "MATCH-30",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T12:15:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "ChipShotKing",
+          "player_b": "Mbappe_Rush",
+          "status": "completed",
+          "winner": "Mbappe_Rush",
+          "score": "1-3",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1a6"
+        },
+        {
+          "match_id": "MATCH-31",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T12:15:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "Volley_Master",
+          "player_b": "Neymar_Jr",
+          "status": "completed",
+          "winner": "Volley_Master",
+          "score": "2-1",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1a7"
+        },
+        {
+          "match_id": "MATCH-32",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T12:15:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "FinesseGod",
+          "player_b": "CR7_Siu",
+          "status": "completed",
+          "winner": "CR7_Siu",
+          "score": "0-2",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1a8"
+        },
+        {
+          "match_id": "MATCH-33",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T14:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "CrossSpammer",
+          "player_b": "Messi_Mode",
+          "status": "completed",
+          "winner": "Messi_Mode",
+          "score": "1-4",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1b1"
+        },
+        {
+          "match_id": "MATCH-34",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T14:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "PaceAbuser",
+          "player_b": "R9_Fan",
+          "status": "completed",
+          "winner": "PaceAbuser",
+          "score": "3-2",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1b2"
+        },
+        {
+          "match_id": "MATCH-35",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T14:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "SkillMove_X",
+          "player_b": "JogaBonito",
+          "status": "completed",
+          "winner": "SkillMove_X",
+          "score": "2-0",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1b3"
+        },
+        {
+          "match_id": "MATCH-36",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T14:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "FreeKickAce",
+          "player_b": "CatenaccioX",
+          "status": "completed",
+          "winner": "FreeKickAce",
+          "score": "1-0",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1b4"
+        },
+        {
+          "match_id": "MATCH-37",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T14:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "GKlegend",
+          "player_b": "TotalFootball",
+          "status": "completed",
+          "winner": "TotalFootball",
+          "score": "0-1",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1b5"
+        },
+        {
+          "match_id": "MATCH-38",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T14:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "Penalty_Pro",
+          "player_b": "GegenPress",
+          "status": "completed",
+          "winner": "Penalty_Pro",
+          "score": "2-1",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1b6"
+        },
+        {
+          "match_id": "MATCH-39",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T14:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "WingWizard",
+          "player_b": "ParkTheBus",
+          "status": "completed",
+          "winner": "WingWizard",
+          "score": "3-0",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1b7"
+        },
+        {
+          "match_id": "MATCH-40",
+          "round": "round_of_32",
+          "scheduled_time": "2026-12-14T14:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "HeaderKing",
+          "player_b": "Sweaty_SZN",
+          "status": "completed",
+          "winner": "Sweaty_SZN",
+          "score": "1-2",
+          "approved_by": "FestLead",
+          "approval_hash": "#r1b8"
+        },
+        {
+          "match_id": "MATCH-45",
+          "round": "round_of_16",
+          "scheduled_time": "2026-12-14T17:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "Rohan_FIFA",
+          "player_b": "ProStriker99",
+          "status": "completed",
+          "winner": "Rohan_FIFA",
+          "score": "2-1",
+          "approved_by": "FestLead",
+          "approval_hash": "#r2a1"
+        },
+        {
+          "match_id": "MATCH-46",
+          "round": "round_of_16",
+          "scheduled_time": "2026-12-14T17:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "DribbleKing",
+          "player_b": "GoalMachine",
+          "status": "completed",
+          "winner": "GoalMachine",
+          "score": "1-3",
+          "approved_by": "FestLead",
+          "approval_hash": "#r2a2"
+        },
+        {
+          "match_id": "MATCH-47",
+          "round": "round_of_16",
+          "scheduled_time": "2026-12-14T17:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "TikiTaka_Pro",
+          "player_b": "Mbappe_Rush",
+          "status": "disputed",
+          "winner": null,
+          "score": null,
+          "dispute": {
+            "reported_by": "TikiTaka_Pro",
+            "issue": "Opponent disconnected at 1-1 in 85th minute, claims server lag. TikiTaka_Pro had possession in attacking third.",
+            "evidence": "https://imgur.com/ts2026/fifa-r16-dispute.png",
+            "timestamp": "2026-12-14T17:35:00+05:30",
+            "status": "under_review"
+          }
+        },
+        {
+          "match_id": "MATCH-48",
+          "round": "round_of_16",
+          "scheduled_time": "2026-12-14T17:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "Volley_Master",
+          "player_b": "CR7_Siu",
+          "status": "completed",
+          "winner": "CR7_Siu",
+          "score": "0-2",
+          "approved_by": "FestLead",
+          "approval_hash": "#r2a4"
+        },
+        {
+          "match_id": "MATCH-49",
+          "round": "round_of_16",
+          "scheduled_time": "2026-12-14T19:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "Messi_Mode",
+          "player_b": "PaceAbuser",
+          "status": "completed",
+          "winner": "Messi_Mode",
+          "score": "4-1",
+          "approved_by": "FestLead",
+          "approval_hash": "#r2b1"
+        },
+        {
+          "match_id": "MATCH-50",
+          "round": "round_of_16",
+          "scheduled_time": "2026-12-14T19:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "SkillMove_X",
+          "player_b": "FreeKickAce",
+          "status": "pending",
+          "winner": null,
+          "score": null
+        },
+        {
+          "match_id": "MATCH-51",
+          "round": "round_of_16",
+          "scheduled_time": "2026-12-14T19:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "TotalFootball",
+          "player_b": "Penalty_Pro",
+          "status": "pending",
+          "winner": null,
+          "score": null
+        },
+        {
+          "match_id": "MATCH-52",
+          "round": "round_of_16",
+          "scheduled_time": "2026-12-14T19:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "WingWizard",
+          "player_b": "Sweaty_SZN",
+          "status": "pending",
+          "winner": null,
+          "score": null
+        },
+        {
+          "match_id": "MATCH-57",
+          "round": "quarterfinal",
+          "scheduled_time": "2026-12-15T10:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "Rohan_FIFA",
+          "player_b": "GoalMachine",
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Winner of MATCH-45 vs Winner of MATCH-46"
+        },
+        {
+          "match_id": "MATCH-58",
+          "round": "quarterfinal",
+          "scheduled_time": "2026-12-15T10:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": null,
+          "player_b": "CR7_Siu",
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Winner of MATCH-47 vs Winner of MATCH-48"
+        },
+        {
+          "match_id": "MATCH-59",
+          "round": "quarterfinal",
+          "scheduled_time": "2026-12-15T10:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": "Messi_Mode",
+          "player_b": null,
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Winner of MATCH-49 vs Winner of MATCH-50"
+        },
+        {
+          "match_id": "MATCH-60",
+          "round": "quarterfinal",
+          "scheduled_time": "2026-12-15T10:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": null,
+          "player_b": null,
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Winner of MATCH-51 vs Winner of MATCH-52"
+        },
+        {
+          "match_id": "MATCH-63",
+          "round": "semifinal",
+          "scheduled_time": "2026-12-15T11:30:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": null,
+          "player_b": null,
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Winner of MATCH-57 vs Winner of MATCH-58"
+        },
+        {
+          "match_id": "MATCH-64",
+          "round": "semifinal",
+          "scheduled_time": "2026-12-15T11:30:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": null,
+          "player_b": null,
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Winner of MATCH-59 vs Winner of MATCH-60"
+        },
+        {
+          "match_id": "MATCH-66",
+          "round": "grand_final",
+          "scheduled_time": "2026-12-15T14:00:00+05:30",
+          "stage": "Arena Beta",
+          "player_a": null,
+          "player_b": null,
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Winner of MATCH-63 vs Winner of MATCH-64. BO3."
+        }
+      ]
+    },
+    "rocket_league": {
+      "name": "TechStorm Rocket Championship",
+      "format": "double_elimination",
+      "total_teams": 8,
+      "best_of": {
+        "all_rounds": 5,
+        "grand_final": 7
+      },
+      "teams": [
+        { "name": "Aerial Aces", "seed": 1 },
+        { "name": "Boost Bandits", "seed": 2 },
+        { "name": "Ceiling Shotters", "seed": 3 },
+        { "name": "Demo Derby", "seed": 4 },
+        { "name": "Flip Reset FC", "seed": 5 },
+        { "name": "Ground Zero", "seed": 6 },
+        { "name": "Half-Flip Heroes", "seed": 7 },
+        { "name": "Musty Flickers", "seed": 8 }
+      ],
+      "winners_bracket": [
+        {
+          "match_id": "MATCH-41",
+          "round": "wb_round_1",
+          "scheduled_time": "2026-12-14T15:00:00+05:30",
+          "stage": "Arena Beta",
+          "team_a": "Aerial Aces",
+          "team_b": "Musty Flickers",
+          "status": "completed",
+          "winner": "Aerial Aces",
+          "score": {
+            "team_a_games": 3,
+            "team_b_games": 1,
+            "games": [
+              { "game": 1, "score_a": 4, "score_b": 2, "winner": "Aerial Aces" },
+              { "game": 2, "score_a": 1, "score_b": 3, "winner": "Musty Flickers" },
+              { "game": 3, "score_a": 5, "score_b": 0, "winner": "Aerial Aces" },
+              { "game": 4, "score_a": 3, "score_b": 2, "winner": "Aerial Aces" }
+            ]
+          },
+          "approved_by": "FestLead",
+          "approval_hash": "#rl01"
+        },
+        {
+          "match_id": "MATCH-42",
+          "round": "wb_round_1",
+          "scheduled_time": "2026-12-14T15:30:00+05:30",
+          "stage": "Arena Beta",
+          "team_a": "Boost Bandits",
+          "team_b": "Half-Flip Heroes",
+          "status": "completed",
+          "winner": "Boost Bandits",
+          "score": {
+            "team_a_games": 3,
+            "team_b_games": 2,
+            "games": [
+              { "game": 1, "score_a": 2, "score_b": 3, "winner": "Half-Flip Heroes" },
+              { "game": 2, "score_a": 4, "score_b": 1, "winner": "Boost Bandits" },
+              { "game": 3, "score_a": 1, "score_b": 2, "winner": "Half-Flip Heroes" },
+              { "game": 4, "score_a": 6, "score_b": 0, "winner": "Boost Bandits" },
+              { "game": 5, "score_a": 3, "score_b": 2, "winner": "Boost Bandits" }
+            ]
+          },
+          "approved_by": "FestLead",
+          "approval_hash": "#rl02"
+        },
+        {
+          "match_id": "MATCH-43",
+          "round": "wb_round_1",
+          "scheduled_time": "2026-12-14T16:00:00+05:30",
+          "stage": "Arena Beta",
+          "team_a": "Ceiling Shotters",
+          "team_b": "Ground Zero",
+          "status": "completed",
+          "winner": "Ceiling Shotters",
+          "score": {
+            "team_a_games": 3,
+            "team_b_games": 0,
+            "games": [
+              { "game": 1, "score_a": 5, "score_b": 1, "winner": "Ceiling Shotters" },
+              { "game": 2, "score_a": 3, "score_b": 2, "winner": "Ceiling Shotters" },
+              { "game": 3, "score_a": 4, "score_b": 3, "winner": "Ceiling Shotters" }
+            ]
+          },
+          "approved_by": "FestLead",
+          "approval_hash": "#rl03"
+        },
+        {
+          "match_id": "MATCH-44",
+          "round": "wb_round_1",
+          "scheduled_time": "2026-12-14T16:30:00+05:30",
+          "stage": "Arena Beta",
+          "team_a": "Demo Derby",
+          "team_b": "Flip Reset FC",
+          "status": "completed",
+          "winner": "Flip Reset FC",
+          "score": {
+            "team_a_games": 1,
+            "team_b_games": 3,
+            "games": [
+              { "game": 1, "score_a": 3, "score_b": 4, "winner": "Flip Reset FC" },
+              { "game": 2, "score_a": 5, "score_b": 2, "winner": "Demo Derby" },
+              { "game": 3, "score_a": 0, "score_b": 3, "winner": "Flip Reset FC" },
+              { "game": 4, "score_a": 1, "score_b": 4, "winner": "Flip Reset FC" }
+            ]
+          },
+          "approved_by": "FestLead",
+          "approval_hash": "#rl04"
+        },
+        {
+          "match_id": "MATCH-53",
+          "round": "wb_semifinal",
+          "scheduled_time": "2026-12-14T19:00:00+05:30",
+          "stage": "Arena Beta",
+          "team_a": "Aerial Aces",
+          "team_b": "Boost Bandits",
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Winner of MATCH-41 vs Winner of MATCH-42"
+        },
+        {
+          "match_id": "MATCH-54",
+          "round": "wb_semifinal",
+          "scheduled_time": "2026-12-14T19:00:00+05:30",
+          "stage": "Arena Beta",
+          "team_a": "Ceiling Shotters",
+          "team_b": "Flip Reset FC",
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Winner of MATCH-43 vs Winner of MATCH-44"
+        },
+        {
+          "match_id": "MATCH-68",
+          "round": "wb_final",
+          "scheduled_time": "2026-12-15T12:00:00+05:30",
+          "stage": "Arena Beta",
+          "team_a": null,
+          "team_b": null,
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Winner of MATCH-53 vs Winner of MATCH-54"
+        }
+      ],
+      "losers_bracket": [
+        {
+          "match_id": "MATCH-55",
+          "round": "lb_round_1",
+          "scheduled_time": "2026-12-15T09:30:00+05:30",
+          "stage": "Arena Beta",
+          "team_a": "Musty Flickers",
+          "team_b": "Ground Zero",
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Loser of MATCH-41 vs Loser of MATCH-43"
+        },
+        {
+          "match_id": "MATCH-56",
+          "round": "lb_round_1",
+          "scheduled_time": "2026-12-15T09:30:00+05:30",
+          "stage": "Arena Beta",
+          "team_a": "Half-Flip Heroes",
+          "team_b": "Demo Derby",
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Loser of MATCH-42 vs Loser of MATCH-44"
+        },
+        {
+          "match_id": "MATCH-61",
+          "round": "lb_round_2",
+          "scheduled_time": "2026-12-15T11:00:00+05:30",
+          "stage": "Arena Beta",
+          "team_a": null,
+          "team_b": null,
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Winner of MATCH-55 vs Loser of WB SF (MATCH-54)"
+        },
+        {
+          "match_id": "MATCH-62",
+          "round": "lb_round_2",
+          "scheduled_time": "2026-12-15T11:00:00+05:30",
+          "stage": "Arena Beta",
+          "team_a": null,
+          "team_b": null,
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Winner of MATCH-56 vs Loser of WB SF (MATCH-53)"
+        },
+        {
+          "match_id": "MATCH-65",
+          "round": "lb_final",
+          "scheduled_time": "2026-12-15T13:00:00+05:30",
+          "stage": "Arena Beta",
+          "team_a": null,
+          "team_b": null,
+          "status": "pending",
+          "winner": null,
+          "score": null,
+          "notes": "Winner of MATCH-61 vs Winner of MATCH-62"
+        }
+      ],
+      "grand_final": {
+        "match_id": "MATCH-67",
+        "round": "grand_final",
+        "scheduled_time": "2026-12-15T14:30:00+05:30",
+        "stage": "Arena Beta",
+        "team_a": null,
+        "team_b": null,
+        "status": "pending",
+        "winner": null,
+        "score": null,
+        "notes": "Winner of WB Final (MATCH-68) vs Winner of LB Final (MATCH-65). BO7. WB winner has 1-game advantage."
+      }
+    }
+  }
+}
