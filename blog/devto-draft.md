@@ -201,7 +201,7 @@ python scripts/rehearse.py            # all six scenarios, no Switch needed
 
 FestCommand started from real pain. I've been that fest lead drowning in WhatsApp groups, manually copying bracket results between chats, chasing sponsors for deliverable updates, and losing dispute resolutions in a sea of unread messages.
 
-Switch gave me the primitives to build something better: **rooms** for bounded contexts, **room documents** for shared state, **per-agent addressing** for security, **templates** to stand the whole thing up in one pass, and an agent in two rooms as the bridge between them. The human gate on top makes it trustworthy.
+Switch gave me the primitives to build something better: **rooms** for bounded contexts, **room documents** that only their creating agent can write, **per-agent addressing** for security, **templates** to stand the whole thing up in one pass, and an agent in two rooms as the bridge between them. The human gate on top makes it trustworthy.
 
 Three rooms. Three agents. One command center. That's FestCommand.
 
