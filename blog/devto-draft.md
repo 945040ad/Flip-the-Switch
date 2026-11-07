@@ -37,7 +37,7 @@ Think of it as mission control for your fest — except the mission controllers 
   │ 📄 schedule_and_rules│ approved │ @sponsor-tracker         │        │ 📄 sponsor_ledger.json│
   │ ✏️ announcements.md   │ results  │ 📄 bracket_state.json    │        │ ✏️ ledger_live.json    │
   │                      │          │ 📄 schedule_and_rules.md │        │                       │
-  │                      │          │ ✏️ bracket_live.json      │        │                       │
+  │                      │          │ ✏️ bracket_live_*.json    │        │                       │
   └──────────────────────┘          └──────────────────────────┘        └───────────────────────┘
    📄 template baseline, read-only · ✏️ created at kickoff by the only agent that can edit it
 ```
@@ -100,8 +100,8 @@ resources:
           …contents of documents/bracket_state.json…
     kickoff: |
       @{bracket_marshal.name} you're live. If this room has no
-      bracket_live.json yet, create it with the exact content of
-      bracket_state.json… Then post a one-screen status…
+      approvals_live.json yet, split the exact content of bracket_state.json
+      into your live documents… Then post a one-screen status…
 ```
 
 The agent instructions and the room documents live in their own files (`agents/*/SKILL.md`, `documents/*`). A small build script inlines them into the template, so the instructions an agent runs with and the document it reads can never drift from what's in the repo.
@@ -122,7 +122,7 @@ So a participant can't message the bracket marshal at all, let alone prompt-inje
 
 Each room carries its own documents (`docs:` in the template). The bracket and the rulebook live in `#tournament-ops`. The public rulebook is also in the helpdesk. The money lives in `#sponsor-finance`, a room the concierge isn't in, so sponsor commitments and vendor invoices are never in the public agent's reach.
 
-There's a second, stronger property. Switch lets only the agent that **created** a room document update it, and documents a template provisions have no creating agent. So the template's documents are a read-only baseline. At kickoff, the marshal copies the bracket into `bracket_live.json`, and the tracker copies the ledger into `ledger_live.json`. From then on, the platform itself guarantees each one has exactly one writer. The concierge owns `announcements.md`, a public log of approved changes that overrides the rulebook's times.
+There's a second, stronger property. Switch lets only the agent that **created** a room document update it, and documents a template provisions have no creating agent. So the template's documents are a read-only baseline. At kickoff, the marshal splits the bracket into one `bracket_live_<game>.json` per tournament plus `approvals_live.json`, and the tracker copies the ledger into `ledger_live.json`. (`update_room_document` replaces a whole document, so the split keeps each rewrite to a few KB, and a bad write can only damage one game.) From then on, the platform itself guarantees each one has exactly one writer. The concierge owns `announcements.md`, a public log of approved changes that overrides the rulebook's times.
 
 ### 4. Cross-room hand-offs come from membership
 

@@ -46,22 +46,22 @@ FestCommand turns your Discord, Slack, or Mattermost server into a **structured 
   │ 📄 schedule_and_rules │ outcomes │                           │        │ 📄 sponsor_ledger.json │
   │ ✏️ announcements.md    │          │ 📄 bracket_state.json      │        │ ✏️ ledger_live.json     │
   │                       │          │ 📄 schedule_and_rules.md   │        │ ✋ approve PAYOUT-01 #… │
-  │                       │          │ ✏️ bracket_live.json        │        │ ✋ approve VENDOR-03 #… │
+  │                       │          │ ✏️ bracket_live_<game>.json │        │ ✋ approve VENDOR-03 #… │
   │                       │          │ ✋ approve MATCH-06 #…     │        │                        │
   └───────────────────────┘          └───────────────────────────┘        └────────────────────────┘
-                     group "techstorm FestCommand": links helpdesk ⇄ ops → finance
+                     group "TechStorm 2026 FestCommand": links helpdesk ⇄ ops → finance
    📄 provisioned by the template, read-only to every agent · ✏️ created at kickoff by the one agent that can edit it
 ```
 
 | Agent | Rooms | Addressing (who can make it act) | Writes |
 |---|---|---|---|
 | `{fest}-concierge` | helpdesk, ops | `anyone_in: [helpdesk, ops]` | `announcements.md`: approved outcomes only |
-| `{fest}-bracket-marshal` | ops | `owner-agents`: the Fest Lead and their agents | `bracket_live.json`, after approval |
+| `{fest}-bracket-marshal` | ops | `owner-agents`: the Fest Lead and their agents | `bracket_live_<game>.json` + `approvals_live.json`, after approval |
 | `{fest}-sponsor-tracker` | ops, finance | `owner-agents` | `ledger_live.json`, after approval |
 
 **How hand-offs cross rooms.** An agent that is a member of two rooms is the bridge between them. The concierge carries a participant's report from the helpdesk into ops, and carries the approved outcome back out. The sponsor tracker hears "tournament complete" in ops and opens payouts in finance, the only room where money is discussed. Every Switch agent operation acts on the one room a session is connected to. So an agent crosses with `list_linked_rooms` (which returns the group's labelled `links:`) and `connect_to_room`, and addresses the next agent with `send_targeted_message`.
 
-**Who can write what is enforced by Switch, not just by instructions.** Switch lets only the agent that *created* a room document update it, and documents a template provisions have no creating agent. So the template's documents are a read-only baseline, and at kickoff each stateful agent copies its document into one it owns: `bracket_live.json` for the marshal and `ledger_live.json` for the tracker. The concierge does the same with `announcements.md`, a public log of approved changes. No other agent, and no participant, can alter them.
+**Who can write what is enforced by Switch, not just by instructions.** Switch lets only the agent that *created* a room document update it, and documents a template provisions have no creating agent. So the template's documents are a read-only baseline, and at kickoff each stateful agent copies its document into documents it owns. The marshal splits the bracket into one `bracket_live_<game>.json` per tournament plus `approvals_live.json`, so each approval rewrites a few KB and a bad write can only damage one game. The tracker keeps `ledger_live.json`. The concierge does the same with `announcements.md`, a public log of approved changes. No other agent, and no participant, can alter them.
 
 **Why the public can't tamper with results.** Participants can address only the concierge, and the concierge only files reports. The bracket marshal and sponsor tracker use `owner-agents` addressing, so no participant can talk to them at all. On top of that, the agents' instructions accept an `approve` line only when the Fest Lead typed it. An approval relayed by any agent doesn't count.
 
@@ -72,7 +72,7 @@ Question  ─► concierge reads announcements.md, then the rulebook ─► answ
 
 Result    ─► concierge ─► ops: marshal validates (exists? legal score? proof?)
           ─► "approve MATCH-06 #da40"  ◄── 🧑 Fest Lead
-          ─► bracket_live.json updated, winner slotted into the next match, audit_log += entry
+          ─► bracket_live_valorant.json updated, winner slotted into the next match, audit_log += entry
           ─► marshal: 📣 ANNOUNCE ─► concierge logs it in announcements.md and posts in helpdesk
 
 Dispute   ─► same path; the marshal quotes the rulebook, flags rule gaps, finds a free slot for a replay

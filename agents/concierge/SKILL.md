@@ -31,8 +31,8 @@ In the helpdesk (load with `load_internal_documents`):
 
 In tournament-ops:
 
-- **`bracket_live.json`**: who plays whom, results and statuses, kept by
-  @{bracket_marshal.name}. Read it for "who do I play next?" when
+- **`bracket_live_<game>.json`** (e.g. `bracket_live_valorant.json`): who
+  plays whom, results and statuses, kept by @{bracket_marshal.name}. Read it for "who do I play next?" when
   announcements.md doesn't answer it. You never edit it.
 
 If the documents don't answer the question, say so and offer to ask the ops

@@ -218,13 +218,13 @@ def recompute_ledger(ledger: dict):
 
 
 def s1_schedule_question(st: Stage, bracket: dict, M: dict):
-    st.scene(1, "Participant asks about their next match", "helpdesk → ops (read bracket_live.json) → helpdesk")
+    st.scene(1, "Participant asks about their next match", "helpdesk → ops (read bracket_live_valorant.json) → helpdesk")
     gf, sf = M["MATCH-07"], M["MATCH-05"]
     team = gf["team_a"]
     st.enter("helpdesk")
     st.say(f"👤 Rahul ({team})", f"@{FEST}-concierge we won our semi!! when and where is the Valorant final?", C.BLUE)
     st.note("announcements.md has nothing newer → list_linked_rooms → connect_to_room(ops)")
-    st.note("load_internal_documents(bracket_live.json) → connect_to_room(helpdesk)")
+    st.note("load_internal_documents(bracket_live_valorant.json) → connect_to_room(helpdesk)")
     maps = ", ".join(f"{m['map']} {m['score_a']}-{m['score_b']}" for m in sf["score"]["maps"])
     opp = gf["team_b"] or "winner of MATCH-06 (result pending)"
     st.say(AGENT["concierge"], f"""
@@ -242,7 +242,7 @@ Check in 15 min early with your roster (5 + 1 sub). GL HF! 🎮""", C.GREEN)
 
 def s2_match_result(st: Stage, bracket: dict, M: dict):
     st.scene(2, "Match result → validation → human approval → announcement",
-             "helpdesk → ops → approval gate → bracket_live.json → announcements.md")
+             "helpdesk → ops → approval gate → bracket_live_valorant.json → announcements.md")
     m, gf = M["MATCH-06"], M["MATCH-07"]
     a, b = m["team_a"], m["team_b"]
     submitted = [("Bind", 13, 9), ("Haven", 10, 13), ("Ascent", 14, 12)]
@@ -309,7 +309,7 @@ Fest Lead: approve MATCH-{num} {code}""", C.YELLOW, 1.4)
 • {m['match_id']}: status → completed, winner → {winner}
 • {gf['match_id']}: team_b → {winner}
 • audit_log += MATCH-{num} (Fest Lead, {st.clock:%H:%M})
-  (written to bracket_live.json, the copy only the marshal can edit)
+  (written to bracket_live_valorant.json + approvals_live.json, which only the marshal can edit)
 📣 ANNOUNCE @{FEST}-concierge""", C.YELLOW)
 
     st.enter("helpdesk")
@@ -597,7 +597,7 @@ def main() -> int:
     print(f"{C.GREEN}✓ bracket_state.json    {len(M)} matches in {len(bracket['tournaments'])} tournaments{C.RESET}")
     print(f"{C.GREEN}✓ sponsor_ledger.json   {len(ledger['sponsors'])} sponsors · budget {rupees(ledger['total_budget'])}{C.RESET}")
     print(f"{C.GREEN}✓ schedule_and_rules.md {len(schedule.splitlines())} lines{C.RESET}")
-    print(f"{C.DIM}  Kickoff: marshal seeds bracket_live.json, tracker seeds ledger_live.json,{C.RESET}")
+    print(f"{C.DIM}  Kickoff: marshal seeds bracket_live_<game>.json ×4 + approvals_live.json, tracker seeds ledger_live.json,{C.RESET}")
     print(f"{C.DIM}           concierge opens announcements.md. Agents can only edit documents they created.{C.RESET}")
     print(f"{C.DIM}  Clock starts at the documents' snapshot: {day_time(bracket['last_updated'])}{C.RESET}")
     st.pause(0.8)

@@ -31,9 +31,12 @@
 # Documents. Switch lets only the agent that created a room document update
 # it, and documents a template provisions have no creating agent. So the
 # documents below are the deploy-time baseline, read-only to everyone. At
-# kickoff the marshal copies bracket_state.json to bracket_live.json and the
+# kickoff the marshal splits bracket_state.json into one
+# bracket_live_<game>.json per tournament plus approvals_live.json, and the
 # tracker copies sponsor_ledger.json to ledger_live.json. Each agent created
-# its live copy, so Switch itself guarantees it is the only writer.
+# its live copies, so Switch itself guarantees it is the only writer.
+# update_room_document replaces a whole document, so the per-tournament split
+# keeps each rewrite small, and a bad write can only damage one game.
 version: 2
 
 params:
@@ -198,22 +201,24 @@ resources:
       - name: bracket_state.json
         description: Every bracket as of deploy, plus pending approvals and the audit log. Read-only baseline.
         instructions: >-
-          Baseline only; no agent can edit it. The bracket marshal copies it to
-          bracket_live.json at kickoff and keeps that copy. Read bracket_live.json
-          for current state.
+          Baseline only; no agent can edit it. At kickoff the bracket marshal
+          splits it into bracket_live_<game>.json (one per tournament) and
+          approvals_live.json, and keeps those. Read them for current state.
         content: "@include documents/bracket_state.json"
       - name: schedule_and_rules.md
         description: Published schedule, rulebook, prize structure, venue and contacts (as of deploy).
         instructions: >-
           Cite it in rulings. Approved schedule changes live in
-          bracket_live.json (scheduled_time), which overrides the times here.
+          bracket_live_<game>.json (scheduled_time), which overrides the times here.
         content: "@include documents/schedule_and_rules.md"
     kickoff: |
       @{bracket_marshal.name} you're live. If this room has no
-      bracket_live.json yet, create it (create_room_document) with the exact
-      content of bracket_state.json; from now on you only ever update that
-      copy. Then post a one-screen status: matches awaiting a result, open
-      disputes, and the next three scheduled matches.
+      approvals_live.json yet, split the exact content of bracket_state.json
+      into your live documents (create_room_document): one
+      bracket_live_<game>.json per key of `tournaments`, and
+      approvals_live.json with its pending_approvals and audit_log. From now
+      on you only ever update those. Then post a one-screen status: matches
+      awaiting a result, open disputes, and the next three scheduled matches.
 
   finance:
     type: room

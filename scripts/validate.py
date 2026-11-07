@@ -141,6 +141,12 @@ def check_bracket(bracket):
     snap = datetime.fromisoformat(bracket["last_updated"])
     matches = all_matches(bracket)
     winners = {mid: m.get("winner") for mid, m in matches.items()}
+    # The marshal splits the bracket into bracket_live_<game>.json by these keys.
+    skill = (ROOT / "agents" / "bracket-marshal" / "SKILL.md").read_text(encoding="utf-8")
+    games = re.search(r"one per key of `tournaments`\s*\(([^)]*)\)", skill)
+    listed = set(re.findall(r"`([a-z0-9_]+)`", games.group(1))) if games else set()
+    check(listed == set(bracket["tournaments"]),
+          f"bracket-marshal SKILL.md lists games {sorted(listed)}, bracket_state.json has {sorted(bracket['tournaments'])}")
 
     for mid, m in matches.items():
         when = m.get("scheduled_time")
