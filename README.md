@@ -147,7 +147,7 @@ Run `python scripts/rehearse.py`. The clock starts at the documents' snapshot, *
 |---|---|---|---|
 | 1 | 📅 *"When is our final?"* (Team Mayhem) | helpdesk | Answer built from bracket + schedule: MATCH-07, Day 2 18:00, Main Stage, BO5 |
 | 2 | ✅ Referee reports Valorant SF2 (MATCH-06) | helpdesk → ops → helpdesk | Validation (match exists, legal map scores incl. 14-12 OT, BO3 decided). A participant's `approve …` in public is **refused**. Fest Lead approves; Enigma Gaming slotted into the final; announced |
-| 3 | ⚖️ FIFA disconnect at 1-1 in the 85th minute (MATCH-47) | helpdesk → ops → helpdesk | Marshal quotes both disconnect rules, **flags the rule gap**, recommends a rematch, finds a free Arena Alpha slot with no player clash. A wrong approval code is rejected |
+| 3 | ⚖️ FIFA disconnect at 1-1 in the 85th minute (MATCH-47) | helpdesk → ops → helpdesk | Marshal quotes both disconnect rules, **flags the rule gap**, recommends a rematch, finds a free Arena Alpha slot with no player clash. The Fest Lead types `pending` and gets the exact line to copy; a wrong approval code is rejected |
 | 4 | 💳 Day 2 catering invoice (VENDOR-03, ₹10,500) | finance | Category impact 55% → 65.5% of budget, alert resolved after approval |
 | 5 | 📊 Sponsor dashboard | finance | 5 sponsors × 5 deliverables, plus *Action required*: Monster Energy 0/2 posts due tonight, Logitech swag **overdue** vs its 15:00 ETA |
 | 6 | 💰 BGMI finishes → payouts | ops → finance | ⏩ Day 2. Podium from cumulative points (rounds 2-3 simulated from a fixed seed), 3 PAYOUT approvals, ledger and budget recomputed |

@@ -144,6 +144,15 @@ class Gate:
             "proposed_change": change, "requested_at": self.stage.clock.isoformat()})
         return code
 
+    def pending_board(self) -> str:
+        """What the agent answers to `pending`: oldest first, with the line to copy."""
+        rows = []
+        for p in sorted(self.doc["pending_approvals"], key=lambda p: p["requested_at"]):
+            age = int((self.stage.clock - datetime.fromisoformat(p["requested_at"])).total_seconds() // 60)
+            flag = "  ⚠️ over 15 min" if age > 15 else ""
+            rows.append(f"• {p['summary']} ({age} min){flag}\n  approve {p['type']}-{p['id']} {p['code']}")
+        return "\n".join(rows) or "Nothing waiting for you."
+
     def submit(self, line: str, typed_by_fest_lead: bool) -> dict | None:
         m = re.fullmatch(r"approve ([A-Z]+)-([\w-]+) (#[0-9a-f]{4})", line.strip())
         pending = None
@@ -376,6 +385,8 @@ Follow-up: add a "level score after 20'" clause to the rulebook.
 
 Fest Lead: approve DISPUTE-{num} {code}""", C.YELLOW, 1.4)
 
+    st.say(f"👑 {FEST_LEAD}", "pending", C.RED, 0.4)
+    st.say(AGENT["marshal"], f"⏳ Waiting for you:\n{st.gate_b.pending_board()}", C.YELLOW, 0.6)
     st.say(f"👑 {FEST_LEAD}", f"approve DISPUTE-{num} #0b47", C.RED, 0.5)
     assert st.gate_b.submit(f"approve DISPUTE-{num} #0b47", typed_by_fest_lead=True) is None
     st.say(AGENT["marshal"], f"✗ Code mismatch, nothing changed. Pending: approve DISPUTE-{num} {code}", C.YELLOW, 0.5)

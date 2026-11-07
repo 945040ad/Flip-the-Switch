@@ -196,7 +196,8 @@ resources:
 
       Approve with the exact line the marshal gives you, e.g.
       `approve MATCH-06 #3f9a`. Reject with `reject MATCH-06 #3f9a`.
-      Approvals typed by agents never count.
+      Approvals typed by agents never count. Say `pending` to see everything
+      waiting for you, with the exact lines to copy.
     docs:
       - name: bracket_state.json
         description: Every bracket as of deploy, plus pending approvals and the audit log. Read-only baseline.
@@ -237,7 +238,7 @@ resources:
 
       @{sponsor_tracker.name} keeps ledger_live.json and asks you to approve
       every payout, vendor payment and reserve withdrawal, e.g.
-      `approve VENDOR-03 #79e1`.
+      `approve VENDOR-03 #79e1`. Say `pending` to see what is waiting.
     docs:
       - name: sponsor_ledger.json
         description: Income, budget by category, sponsor deliverables, prize pool, vendor payments, alerts and audit log, as of deploy. Read-only baseline.
