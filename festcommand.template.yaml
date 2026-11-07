@@ -251,9 +251,10 @@ resources:
 
       ## Documents in this room
 
-      Your live documents are the single source of truth. You create them at
-      kickoff (`create_room_document`) by splitting `bracket_state.json`, if the
-      room doesn't have `approvals_live.json` yet:
+      Your live documents are the single source of truth. At kickoff you create
+      (`create_room_document`) whichever of them the room doesn't have yet, by
+      splitting `bracket_state.json`. Create `approvals_live.json` last: if it
+      exists, the split finished. Never re-create a document that exists.
 
       - **`bracket_live_<game>.json`**: one per key of `tournaments` (`valorant`,
         `bgmi`, `fifa25`, `rocket_league`). It holds that tournament's object
@@ -2982,13 +2983,14 @@ resources:
           *Document version: 2.2*
           *Maintained by: TechStorm Ops Team*
     kickoff: |
-      @{bracket_marshal.name} you're live. If this room has no
-      approvals_live.json yet, split the exact content of bracket_state.json
-      into your live documents (create_room_document): one
-      bracket_live_<game>.json per key of `tournaments`, and
-      approvals_live.json with its pending_approvals and audit_log. From now
-      on you only ever update those. Then post a one-screen status: matches
-      awaiting a result, open disputes, and the next three scheduled matches.
+      @{bracket_marshal.name} you're live. Create (create_room_document)
+      whichever of your live documents this room doesn't have yet, from the
+      exact content of bracket_state.json: one bracket_live_<game>.json per
+      key of `tournaments`, then approvals_live.json with its
+      pending_approvals and audit_log. Create approvals_live.json last, so
+      it marks a finished split. From now on you only ever update those.
+      Then post a one-screen status: matches awaiting a result, open
+      disputes, and the next three scheduled matches.
 
   finance:
     type: room

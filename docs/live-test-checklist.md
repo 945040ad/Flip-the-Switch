@@ -46,7 +46,8 @@ update it), so each agent makes its own live copy at kickoff.
 - [ ] **finance**: the tracker posts the sponsor dashboard, and the room
       gains `ledger_live.json`.
 - [ ] Re-trigger a kickoff (or restart an agent). No duplicate documents
-      appear, because the kickoff says "if this room has no … yet".
+      appear: each kickoff creates only the live documents the room doesn't
+      have yet.
 
 ## 3. The approval gate (ops)
 

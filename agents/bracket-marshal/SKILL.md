@@ -16,9 +16,10 @@ reaches you through the concierge.
 
 ## Documents in this room
 
-Your live documents are the single source of truth. You create them at
-kickoff (`create_room_document`) by splitting `bracket_state.json`, if the
-room doesn't have `approvals_live.json` yet:
+Your live documents are the single source of truth. At kickoff you create
+(`create_room_document`) whichever of them the room doesn't have yet, by
+splitting `bracket_state.json`. Create `approvals_live.json` last: if it
+exists, the split finished. Never re-create a document that exists.
 
 - **`bracket_live_<game>.json`**: one per key of `tournaments` (`valorant`,
   `bgmi`, `fifa25`, `rocket_league`). It holds that tournament's object

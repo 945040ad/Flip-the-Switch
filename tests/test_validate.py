@@ -195,7 +195,7 @@ class ValidatorCatches(unittest.TestCase):
     @unittest.skipUnless(HAVE_YAML, "PyYAML not installed")
     def test_kickoff_creates_a_provisioned_name(self):
         self.p.edit("template/festcommand.template.src.yaml",
-                    "If this room has no ledger_live.json", "If this room has no sponsor_ledger.json")
+                    "      - name: sponsor_ledger.json\n", "      - name: ledger_live.json\n")
         self.p.rebuild()
         self.assertFlags(self.p.validate(), "already provisions")
 

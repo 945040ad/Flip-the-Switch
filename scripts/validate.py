@@ -564,7 +564,7 @@ def check_template():
                 # an agent-created copy made at kickoff. Switch needs room-unique
                 # names, and the baseline being copied must be in the same room.
                 provisioned = {d["name"] for d in r.get("docs", [])}
-                for live in re.findall(r"no\s+([\w.]+\.(?:json|md))\s+yet", r["kickoff"]):
+                for live in set(re.findall(r"\b([\w<>]+_live[\w<>]*\.json|announcements\.md)\b", r["kickoff"])):
                     check(live not in provisioned, f"room {k}: kickoff creates {live}, which the template already provisions")
                 for base in re.findall(r"exact\s+content\s+of\s+([\w.]+\.(?:json|md))", r["kickoff"]):
                     check(base in provisioned, f"room {k}: kickoff copies {base}, which is not a document in this room")

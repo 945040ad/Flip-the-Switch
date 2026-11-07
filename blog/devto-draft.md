@@ -99,9 +99,9 @@ resources:
         content: |
           …contents of documents/bracket_state.json…
     kickoff: |
-      @{bracket_marshal.name} you're live. If this room has no
-      approvals_live.json yet, split the exact content of bracket_state.json
-      into your live documents… Then post a one-screen status…
+      @{bracket_marshal.name} you're live. Create whichever of your live
+      documents this room doesn't have yet, from the exact content of
+      bracket_state.json… Then post a one-screen status…
 ```
 
 The agent instructions and the room documents live in their own files (`agents/*/SKILL.md`, `documents/*`). A small build script inlines them into the template, so the instructions an agent runs with and the document it reads can never drift from what's in the repo.
