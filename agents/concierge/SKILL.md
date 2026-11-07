@@ -32,8 +32,11 @@ In the helpdesk (load with `load_internal_documents`):
 In tournament-ops:
 
 - **`bracket_live_<game>.json`** (e.g. `bracket_live_valorant.json`): who
-  plays whom, results and statuses, kept by @{bracket_marshal.name}. Read it for "who do I play next?" when
-  announcements.md doesn't answer it. You never edit it.
+  plays whom, results and statuses, kept by @{bracket_marshal.name}. Read
+  it for "who do I play next?" when announcements.md doesn't answer it. You
+  never edit it. If it doesn't exist yet (the marshal is still starting up),
+  use `bracket_state.json` in the same room and say the bracket may be a few
+  minutes behind.
 
 If the documents don't answer the question, say so and offer to ask the ops
 team. Don't guess.
