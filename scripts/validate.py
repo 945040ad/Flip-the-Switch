@@ -338,6 +338,30 @@ ROOM_KEYS = {"type", "if", "kickoff", "group", "name", "description", "instructi
              "references", "packages", "docs", "aliases"}
 GROUP_KEYS = {"type", "if", "name", "description", "color", "links"}
 AGENT_NAME = re.compile(r"\A[a-z0-9][a-z0-9._-]*\Z")
+# Agent operations (MCP tools) the server defines, from
+# core/switch_core/bridges/agent/operations/definitions.py. Instructions that
+# name a tool not on this list would send an agent after something that
+# doesn't exist.
+SWITCH_OPERATIONS = {
+    "list_rooms", "connect_to_room", "list_references", "list_linked_rooms",
+    "load_internal_documents", "create_room_document", "update_room_document",
+    "delete_room_document", "read_context", "list_participants", "post_message",
+    "send_targeted_message", "create_room", "list_roles", "get_role_detail",
+    "define_role", "edit_role", "delete_role", "assume_role", "release_role",
+    "list_reference_types", "create_reference", "attach_reference_to_room",
+    "list_all_references", "link_rooms", "unlink_rooms", "list_bridges",
+    "invite_agent_to_room", "remove_agent_from_room", "add_users_to_room",
+    "list_all_rooms", "list_room_groups", "create_room_group",
+    "get_room_group_detail", "create_room_from_yaml", "get_template_guide",
+    "list_templates", "get_template", "run_template", "save_template",
+    "update_template", "delete_template", "list_agents", "get_agent_detail",
+    "request_agent_deletion", "update_agent_detail", "get_room_detail",
+    "update_room", "archive_room", "unarchive_room",
+}
+OPERATION_LIKE = re.compile(
+    r"\b((?:list|connect|load|create|update|delete|send|post|get|run|save|invite|"
+    r"remove|add|link|unlink|assume|release|define|edit|archive|unarchive|attach|request)"
+    r"_[a-z_]+)\b")
 CONDITION = re.compile(r"^\{([A-Za-z_][A-Za-z0-9_]*)\}(?:\s*(==|!=)\s*(.+))?$")
 
 
@@ -485,6 +509,9 @@ def check_template():
             for other in re.findall(r"@\{(\w+)\.name\}", r["instructions"]):
                 check(bool(rooms_of[k] & rooms_of.get(other, set())),
                       f"agent {k} mentions @{other} but they share no room")
+    told = [r.get("instructions", "") for r in res.values()] + [r.get("kickoff", "") for r in res.values()]
+    named = {op for t in told for op in OPERATION_LIKE.findall(t or "")}
+    check(named <= SWITCH_OPERATIONS, f"instructions name Switch operations that don't exist: {sorted(named - SWITCH_OPERATIONS)}")
     text = (ROOT / "festcommand.template.yaml").read_text(encoding="utf-8")
     refs = set(re.findall(r"\{(\w+)\.name\}", text))
     check(refs <= set(res), f"unknown resource references: {sorted(refs - set(res))}")

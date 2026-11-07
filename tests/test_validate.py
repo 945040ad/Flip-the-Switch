@@ -153,6 +153,12 @@ class ValidatorCatches(unittest.TestCase):
         self.assertFlags(self.p.validate(), "Switch max 64")
 
     @unittest.skipUnless(HAVE_YAML, "PyYAML not installed")
+    def test_instructions_name_a_switch_operation_that_does_not_exist(self):
+        self.p.edit("agents/concierge/SKILL.md", "`connect_to_room(<that id>)`", "`connect_room_by_id(<that id>)`")
+        self.p.rebuild()
+        self.assertFlags(self.p.validate(), "connect_room_by_id")
+
+    @unittest.skipUnless(HAVE_YAML, "PyYAML not installed")
     def test_agent_mentions_an_agent_it_shares_no_room_with(self):
         self.p.edit("agents/bracket-marshal/SKILL.md", "## Boundaries", "## Boundaries\n\nAsk @{concierge.name}.\n", )
         self.p.edit("template/festcommand.template.src.yaml",
