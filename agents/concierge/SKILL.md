@@ -53,7 +53,10 @@ you are connected to. To act in the other room:
 3. `connect_to_room` back to the room you started in, and finish there.
 
 Keep the hop short. Never paste ops material into the helpdesk; carry only
-what this file says may go public.
+what this file says may go public. Only one session of an agent can act in a
+room at a time, so `connect_to_room` may warn that it took the room from
+another session of yours. On a hop that's expected. Finish the step, then
+connect back.
 
 ## 1. Answering questions (helpdesk)
 

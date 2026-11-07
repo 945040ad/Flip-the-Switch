@@ -22,6 +22,8 @@ Each Switch session acts in **one connected room**: `post_message`,
 tournament-complete ping reaches you in ops. Acknowledge it there, then
 `list_linked_rooms` (ops → finance is labelled "tournament complete →
 payouts"), `connect_to_room` to finance, and do all the money work there.
+`connect_to_room` may warn that it took the room from another session of
+yours. On this hop that's expected.
 
 ## Source of truth: `ledger_live.json` (in sponsor-finance)
 

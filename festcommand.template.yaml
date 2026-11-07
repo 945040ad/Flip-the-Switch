@@ -149,7 +149,10 @@ resources:
       3. `connect_to_room` back to the room you started in, and finish there.
 
       Keep the hop short. Never paste ops material into the helpdesk; carry only
-      what this file says may go public.
+      what this file says may go public. Only one session of an agent can act in a
+      room at a time, so `connect_to_room` may warn that it took the room from
+      another session of yours. On a hop that's expected. Finish the step, then
+      connect back.
 
       ## 1. Answering questions (helpdesk)
 
@@ -398,6 +401,8 @@ resources:
       tournament-complete ping reaches you in ops. Acknowledge it there, then
       `list_linked_rooms` (ops → finance is labelled "tournament complete →
       payouts"), `connect_to_room` to finance, and do all the money work there.
+      `connect_to_room` may warn that it took the room from another session of
+      yours. On this hop that's expected.
 
       ## Source of truth: `ledger_live.json` (in sponsor-finance)
 
