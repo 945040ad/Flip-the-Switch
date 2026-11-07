@@ -37,12 +37,20 @@
 version: 2
 
 params:
+  title:
+    type: string
+    label: Fest display name
+    description: How your fest is named in messages and on the agents, e.g. "TechStorm 2026".
+    default: TechStorm 2026
+    pattern: ".{1,40}"
   fest:
     type: string
-    label: Fest name
-    description: Short, lowercase name of your fest. Every room and agent name starts with it.
+    label: Fest short name
+    description: >-
+      Lowercase letters, digits and dashes (up to 24). Every room and agent
+      name starts with it, e.g. techstorm-concierge.
     default: techstorm
-    pattern: "[a-z][a-z0-9-]*"
+    pattern: "[a-z][a-z0-9-]{0,23}"
   bridge:
     type: bridge
     label: Messaging app
@@ -75,7 +83,7 @@ resources:
   concierge:
     type: agent
     name: "{fest}-concierge"
-    display_name: "{fest} Concierge"
+    display_name: "{title} Concierge"
     description: >-
       Public helpdesk: answers participant questions from the schedule, files
       match results and disputes with tournament ops, announces approved
@@ -89,7 +97,7 @@ resources:
   bracket_marshal:
     type: agent
     name: "{fest}-bracket-marshal"
-    display_name: "{fest} Bracket Marshal"
+    display_name: "{title} Bracket Marshal"
     description: >-
       Tournament ops: validates results, rules on disputes, proposes schedule
       shifts. Changes bracket_state.json only after the Fest Lead approves.
@@ -102,7 +110,7 @@ resources:
   sponsor_tracker:
     type: agent
     name: "{fest}-sponsor-tracker"
-    display_name: "{fest} Sponsor Tracker"
+    display_name: "{title} Sponsor Tracker"
     description: >-
       Sponsors & finance: deliverable dashboards, budget alerts, vendor
       payments and prize payouts, each gated on Fest Lead approval.
@@ -115,7 +123,7 @@ resources:
   # ─────────────────────────────── group ────────────────────────────────
   war_room:
     type: group
-    name: "{fest} FestCommand"
+    name: "{title} FestCommand"
     description: The three FestCommand rooms and the hand-offs between them.
     color: purple
     links:
@@ -137,7 +145,7 @@ resources:
         value: ["{$creator}"]
       - value: []
     instructions: |
-      Welcome to the **{fest} Public Helpdesk** 🎮
+      Welcome to the **{title} Public Helpdesk** 🎮
 
       Ask @{concierge.name} about:
       - 📅 Match times, stages and check-in
@@ -177,7 +185,7 @@ resources:
         value: ["{$creator}"]
       - value: []
     instructions: |
-      🔒 **{fest} Tournament Ops.** Fest Lead and agents only.
+      🔒 **{title} Tournament Ops.** Fest Lead and agents only.
 
       - @{concierge.name} brings in results and disputes from the helpdesk.
       - @{bracket_marshal.name} validates them and asks for approval.
@@ -220,7 +228,7 @@ resources:
         value: ["{$creator}"]
       - value: []
     instructions: |
-      💰 **{fest} Sponsor & Finance.** Fest Lead only.
+      💰 **{title} Sponsor & Finance.** Fest Lead only.
 
       @{sponsor_tracker.name} keeps ledger_live.json and asks you to approve
       every payout, vendor payment and reserve withdrawal, e.g.

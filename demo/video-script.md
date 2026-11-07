@@ -34,7 +34,7 @@
 > "FestCommand is a multi-room AI war room built on Switch. Three rooms. Three AI agents. One command center. Instead of chaos, you get structure."
 
 ### 📺 On Screen:
-- **0:15–0:20**: Switch Console → **Templates** → import `festcommand.template.yaml`. The form asks for *Fest name* and *Messaging app* only.
+- **0:15–0:20**: Switch Console → **Templates** → import `festcommand.template.yaml`. The form asks for *Fest display name*, *Fest short name* and *Messaging app* only.
 - **0:20–0:25**: The YAML file briefly scrolls on screen. Highlight the three room resources with colored boxes:
   - 🟢 `#public-helpdesk` (green)
   - 🟡 `#tournament-ops` (yellow)

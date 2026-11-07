@@ -121,7 +121,7 @@ The rehearsal plays six scenarios across the three rooms **against the real docu
 ### 2. Deploy on Switch
 
 1. Open **Switch Console → Templates** and import `festcommand.template.yaml`.
-2. Set **Fest name** (default `techstorm`) and the **Messaging app**. Provider, machine and directory are under *Advanced*. No messaging app on your server? Leave it empty: the three rooms are created as Switch-only rooms, so you can try FestCommand on a fresh local server.
+2. Set **Fest display name** (default "TechStorm 2026"), **Fest short name** (default `techstorm`, used in every room and agent name) and the **Messaging app**. Provider, machine and directory are under *Advanced*. No messaging app on your server? Leave it empty: the three rooms are created as Switch-only rooms, so you can try FestCommand on a fresh local server.
 3. Create. Switch makes the three agents, the three rooms with their documents, and the group. Each room's kickoff wakes its agent: the concierge posts a welcome, the marshal posts a bracket status, and the tracker posts the sponsor dashboard.
 
 You don't need to upload any documents. They're embedded in the template.

@@ -54,13 +54,14 @@ FestCommand is not one bot with access to everything. It's three agents with **d
 
 ### 1. One template creates the whole topology
 
-The entire war room is one file, `festcommand.template.yaml`, in Switch's v2 template language. It defines three agents, three rooms and a group that links them. You import it in Switch Console and fill in a fest name and a messaging app. Switch then creates everything in one pass and posts a kickoff into each room, so all three agents start working immediately.
+The entire war room is one file, `festcommand.template.yaml`, in Switch's v2 template language. It defines three agents, three rooms and a group that links them. You import it in Switch Console and fill in the fest's name and a messaging app (or none, for Switch-only rooms). Switch then creates everything in one pass and posts a kickoff into each room, so all three agents start working immediately.
 
 ```yaml
 version: 2
 params:
-  fest: { type: string, default: techstorm, pattern: "[a-z][a-z0-9-]*" }
-  bridge: { type: bridge, default: [$first] }
+  title: { type: string, default: TechStorm 2026 }                   # shown to people
+  fest: { type: string, default: techstorm, pattern: "[a-z][a-z0-9-]{0,23}" }  # in every name
+  bridge: { type: bridge, default: [$first], required: false }
   # provider, machine, agents_dir …
 
 resources:

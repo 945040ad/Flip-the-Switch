@@ -324,6 +324,7 @@ ROOM_KEYS = {"type", "if", "kickoff", "group", "name", "description", "instructi
              "channel_type", "read_visibility", "write_visibility", "agents", "users", "roles",
              "references", "packages", "docs", "aliases"}
 GROUP_KEYS = {"type", "if", "name", "description", "color", "links"}
+AGENT_NAME = re.compile(r"\A[a-z0-9][a-z0-9._-]*\Z")
 CONDITION = re.compile(r"^\{([A-Za-z_][A-Za-z0-9_]*)\}(?:\s*(==|!=)\s*(.+))?$")
 
 
@@ -365,6 +366,25 @@ def check_switch_schema(t: dict) -> None:
                 re.compile(spec["pattern"])
             except re.error:
                 check(False, f"param {name}: pattern is not a valid regex")
+    # Agent names must match the server's VALID_AGENT_NAME_RE and display
+    # names fit MAX_DISPLAY_NAME_LENGTH, with defaults and with the longest
+    # value each string param's pattern admits.
+    longest = {}
+    for name, spec in params.items():
+        if spec.get("type", "string") == "string" and spec.get("pattern"):
+            longest[name] = next((("a" * n) for n in range(80, 0, -1)
+                                  if re.fullmatch(spec["pattern"], "a" * n)), "a")
+    defaults = {n: str(s["default"]) for n, s in params.items() if isinstance(s.get("default"), str)}
+    for label, values in (("defaults", defaults), ("longest inputs", {**defaults, **longest})):
+        def render(text):
+            return re.sub(r"\{(\w+)\}", lambda m: values.get(m.group(1), m.group(0)), text)
+        for k, r in t["resources"].items():
+            if r.get("type") != "agent":
+                continue
+            agent_name = render(r.get("name", ""))
+            check(bool(AGENT_NAME.fullmatch(agent_name)), f"agent {k}: name {agent_name!r} ({label}) is not a valid Switch agent name")
+            shown = render(r.get("display_name", ""))
+            check(len(shown) <= 64, f"agent {k}: display_name is {len(shown)} chars with {label} (Switch max 64)")
     res = t["resources"]
     check(sum(1 for r in res.values() if r.get("type") == "group") <= 1, "a template creates at most one group")
     allowed = {"agent": AGENT_KEYS, "room": ROOM_KEYS, "group": GROUP_KEYS}

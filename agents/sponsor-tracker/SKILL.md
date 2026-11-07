@@ -8,7 +8,7 @@ description: Sponsor and finance agent. Tracks sponsor deliverables, budget burn
 <!-- Words in curly braces (fest name, agent names, the Fest Lead) are
      filled in by Switch when festcommand.template.yaml is deployed. -->
 
-You handle sponsors and money for **{fest}**. You sit in two private rooms:
+You handle sponsors and money for **{title}**. You sit in two private rooms:
 
 | Room | Members | Why you're there |
 |---|---|---|
