@@ -73,6 +73,7 @@ class Stage:
     def __init__(self, fast: bool, start: datetime):
         self.fast = fast
         self.clock = start  # the documents' snapshot time
+        self.touched: dict[str, str] = {}  # game -> when its live document last changed
         self.room: str | None = None
         self.stats = {"messages": 0, "approvals": 0, "refused": 0, "handoffs": 0}
         self.gate_b: Gate
@@ -183,12 +184,19 @@ class Gate:
 # ───────────────────────────── document helpers ─────────────────────────
 
 
-def live_documents(bracket: dict, ledger: dict) -> dict[str, dict]:
+def touch(st: "Stage", bracket: dict, game: str) -> None:
+    """Record that a game's live document changed now."""
+    bracket["last_updated"] = st.clock.isoformat()
+    st.touched[game] = bracket["last_updated"]
+
+
+def live_documents(bracket: dict, ledger: dict, baseline: dict, touched: dict[str, str]) -> dict[str, dict]:
     """The documents the agents keep in Switch, split the way the marshal's
-    kickoff splits bracket_state.json: one per tournament, plus approvals."""
+    kickoff splits bracket_state.json: one per tournament, plus approvals.
+    Each tournament carries the time it last changed (the baseline's if never)."""
     docs = {
         f"bracket_live_{game}.json": {"event": bracket["event"], "tournament": game,
-                                      "last_updated": bracket["last_updated"], **t}
+                                      "last_updated": touched.get(game, baseline["last_updated"]), **t}
         for game, t in bracket["tournaments"].items()
     }
     docs["approvals_live.json"] = {"event": bracket["event"],
@@ -331,7 +339,7 @@ Fest Lead: approve MATCH-{num} {code}""", C.YELLOW, 1.4)
              score={"team_a_maps": wins_a, "team_b_maps": 3 - wins_a,
                     "maps": [{"map": mp, "score_a": x, "score_b": y, "winner": a if x > y else b} for mp, x, y in submitted]})
     gf["team_b"] = winner
-    bracket["last_updated"] = st.clock.isoformat()
+    touch(st, bracket, "valorant")
     st.say(AGENT["marshal"], f"""
 ✅ APPROVED: MATCH-{num} {code}
 • {m['match_id']}: status → completed, winner → {winner}
@@ -349,7 +357,7 @@ Next: 🏆 GRAND FINAL, {gf['team_a']} vs {gf['team_b']}
       {day_time(gf['scheduled_time'])}, {gf['stage']}""", C.GREEN)
 
 
-def s3_dispute(st: Stage, M: dict, schedule: str):
+def s3_dispute(st: Stage, bracket: dict, M: dict, schedule: str):
     m = M["MATCH-47"]
     d = m["dispute"]
     nxt = M["MATCH-58"]
@@ -412,6 +420,7 @@ Fest Lead: approve DISPUTE-{num} {code}""", C.YELLOW, 1.4)
     st.say(f"👑 {FEST_LEAD}", f"approve DISPUTE-{num} {code}", C.RED, 0.6)
     assert st.gate_b.submit(f"approve DISPUTE-{num} {code}", typed_by_fest_lead=True)
     m.update(status="rematch_scheduled", scheduled_time=when, stage="Arena Alpha")
+    touch(st, bracket, "fifa25")
     d.update(status="resolved", resolution="Full BO1 rematch (rule gap: level score after 20')", approval_hash=code)
     st.say(AGENT["marshal"], f"""
 ✅ APPROVED: DISPUTE-{num} {code}
@@ -556,6 +565,7 @@ def s6_payout(st: Stage, bracket: dict, ledger: dict):
         rnd["lobbies"][0].update(status="completed", results=results, simulated=True)
     podium = sorted(totals.items(), key=lambda kv: -kv[1])[:3]
     bg["final_standings"] = [{"place": i + 1, "squad": s, "points": p} for i, (s, p) in enumerate(podium)]
+    touch(st, bracket, "bgmi")
 
     st.enter("ops")
     medals = "\n".join(f"{'🥇🥈🥉'[i]} {s}: {p} pts" for i, (s, p) in enumerate(podium))
@@ -635,7 +645,7 @@ def main() -> int:
 
     s1_schedule_question(st, bracket, M)
     s2_match_result(st, bracket, M)
-    s3_dispute(st, M, schedule)
+    s3_dispute(st, bracket, M, schedule)
     s4_vendor(st, ledger)
     s5_dashboard(st, ledger)
     s6_payout(st, bracket, ledger)
@@ -657,7 +667,7 @@ def main() -> int:
             print("Refusing to overwrite documents/. Pick another directory.")
             return 2
         out.mkdir(parents=True, exist_ok=True)
-        for name, doc in live_documents(bracket, ledger).items():
+        for name, doc in live_documents(bracket, ledger, before[0], st.touched).items():
             (out / name).write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
         print(f"\nWrote the agents' post-rehearsal live documents to {out}")
     print(f"\n{C.DIM}Deploy it for real: Switch Console → Templates → import festcommand.template.yaml{C.RESET}\n")

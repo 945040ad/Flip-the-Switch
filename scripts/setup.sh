@@ -46,7 +46,14 @@ echo ""
 
 echo ""
 echo "── Mutation tests"
-"$PYTHON" -m unittest discover -s tests 2>&1 | tail -n 3
+if ! TESTS="$("$PYTHON" -m unittest discover -s tests 2>&1)"; then
+    echo "$TESTS"
+    exit 1
+fi
+echo "$TESTS" | tail -n 1
+if echo "$TESTS" | grep -q "skipped="; then
+    echo "  (template tests skipped: install PyYAML to run them)"
+fi
 
 echo ""
 echo "══════════════════════════════════════════════════════════════"
