@@ -96,6 +96,22 @@ Payout    ─► marshal: 🏁 TOURNAMENT COMPLETE in ops ─► tracker opens P
 
 ---
 
+## Verified on a live Switch server
+
+FestCommand has been deployed and run, not just written against the docs.
+
+| What | How it was checked | Result |
+|---|---|---|
+| Template accepted | Switch's own upload lint, run planner and room parser, on the newest Switch code and on the 0.31.0 server that ships with Switch Console | clean: no errors, no warnings |
+| Deployed on Discord with real Claude agents | Switch Console's local server, Discord bridge, deployed from `festcommand.template.yaml` | 3 agents, 3 channels, 4 documents, 0 errors |
+| Kickoffs ran unprompted | `python scripts/live_check.py inspect --console` after the deploy | each agent created its own live documents: the bracket split into 4 per-game files, the ledger copied, VENDOR-03 queued; every copy identical to the template's baseline (13/13) |
+| Switch enforces the boundaries, not just the prompts | `python scripts/live_check.py protocol` drives three agents over the real agent protocol | 33/33, including **HTTP 403** when an agent writes a document it didn't create, and refusal when the marshal or concierge tries to enter the finance room |
+
+The 403 is the design working: it is why each agent keeps its own live copy
+of the documents (see [Architecture](#architecture)).
+
+---
+
 ## Quick start
 
 ### 1. Rehearse locally (no Switch needed)
@@ -121,13 +137,27 @@ The rehearsal plays six scenarios across the three rooms **against the real docu
 
 ### 2. Deploy on Switch
 
-1. Open **Switch Console → Templates** and import `festcommand.template.yaml`.
-2. Set **Fest display name** (default "TechStorm 2026"), **Fest short name** (default `techstorm`, used in every room and agent name) and the **Messaging app**. Provider, machine and directory are under *Advanced*. No messaging app on your server? Leave it empty: the three rooms are created as Switch-only rooms, so you can try FestCommand on a fresh local server.
-3. Create. Switch makes the three agents, the three rooms with their documents, and the group. Each room's kickoff wakes its agent: the concierge posts a welcome, the marshal posts a bracket status, and the tracker posts the sponsor dashboard.
+**On Discord, step by step: [docs/discord-setup.md](docs/discord-setup.md)** (about 15 minutes, bot creation to working agents, with troubleshooting).
+
+In short:
+
+1. Install [Switch Console](https://github.com/sandbox-quantum/switch#get-started-in-two-steps), choose **Run a server on this computer**, and sign in a coding agent (Claude Code, Codex or OpenCode) under **Agent providers**.
+2. Connect your messaging app (Discord, Slack, Teams, Telegram or Mattermost) under **Home → Messaging apps**, and link your own account (**This is me**).
+3. **Templates → Import** `festcommand.template.yaml`. Set **Fest display name** (default "TechStorm 2026"), **Fest short name** (default `techstorm`, used in every room and agent name) and **Messaging app**. Choose the app explicitly: the field otherwise defaults to the server's first one, often the Console's built-in Mattermost.
+4. Create. Switch makes the three agents, the three rooms with their documents, and the group. Each room's kickoff wakes its agent, and within a couple of minutes every stateful agent owns its live documents.
 
 You don't need to upload any documents. They're embedded in the template.
 
-### 3. Make it yours
+### 3. Check the deployment
+
+```bash
+python scripts/live_check.py inspect --console    # did every kickoff create its live documents?
+python scripts/live_check.py protocol --console   # does Switch enforce FestCommand's boundaries?
+```
+
+`inspect` reads your deployment. `protocol` deploys a throwaway Switch-only copy with three stand-in agents, exercises the agent protocol (who can write which document, who can enter which room, links, hand-offs), then deletes everything it made. Neither needs anything beyond the standard library. For a server not run by Switch Console, pass `--url` and `--email` and set `SWITCH_ADMIN_PASSWORD`.
+
+### 4. Make it yours
 
 Edit `documents/` (your schedule, teams, sponsors, budget) and `agents/*/SKILL.md` (agent behaviour), then:
 
@@ -176,10 +206,13 @@ Flip-the-Switch/
 │   ├── build_template.py              # source + skills + documents → template
 │   ├── validate.py                    # ~700 cross-document + Switch schema checks
 │   ├── rehearse.py                    # six-scenario simulation, data-driven
+│   ├── live_check.py                  # checks a running Switch server (inspect / protocol)
 │   └── setup.sh                       # environment + validation in one command
 ├── tests/test_validate.py             # mutation tests: the validator catches what it claims
 ├── .github/workflows/validate.yml     # CI: build check, validate, rehearse, tests
-├── docs/live-test-checklist.md        # 20-minute live test on a local Switch
+├── docs/
+│   ├── discord-setup.md               # bot to working agents on Discord, ~15 minutes
+│   └── live-test-checklist.md         # manual end-to-end test on a local Switch
 ├── demo/video-script.md               # 2-minute demo video script
 ├── blog/devto-draft.md                # DEV.to post draft
 └── LICENSE
@@ -227,7 +260,7 @@ The code is there to stop you approving the wrong item and to make the audit log
 - **Single approver.** A real deployment would split approval roles, e.g. a finance head for payouts and a tournament director for rulings.
 - **No payment rails.** Payouts are recorded in the ledger. UPI or bank transfers happen outside FestCommand.
 - **No game APIs.** Results are reported by referees, not pulled from Riot or Krafton.
-- **Checked against Switch's source, not yet run on a live server.** Every field was traced through the server's own template code (`template_lint`, `template_v2.compile_v2`, the run planner and `rooms_yaml`), and `validate.py` mirrors those rules. The agents' room mechanics (one connected room per session, `connect_to_room`, `list_linked_rooms`, creator-only document updates, `send_targeted_message`) were read from the server's agent operations. A live import is still the final proof: [docs/live-test-checklist.md](docs/live-test-checklist.md) walks through it in about 20 minutes on a local Switch with no messaging app.
+- **Agent judgment is only as good as the model.** Switch enforces the boundaries (see [Verified on a live Switch server](#verified-on-a-live-switch-server)), but how well an agent writes a ruling or reads a schedule depends on the coding agent running it. Every state change still waits for the Fest Lead's `approve`.
 
 ---
 
@@ -249,7 +282,7 @@ Built for the **[Flip the Switch Hackathon](https://wemakedevs.org)** by WeMakeD
 | Criteria | Weight | How FestCommand addresses it |
 |---|---|---|
 | Switch Features | 30% | v2 template creating 3 agents, 3 rooms and a linked group; template docs as baseline + agent-created live docs (creator-only writes); per-agent addressing incl. `anyone_in`; per-room kickoffs; multi-room agents crossing via `list_linked_rooms`/`connect_to_room`; `send_targeted_message` hand-offs; conditional `users` so it deploys with or without a messaging app |
-| Technical Execution | 25% | Template built from single-source skills + documents, 700-check validator (cross-document + Switch schema) with mutation tests, data-driven rehearsal with a working approval gate, CI |
+| Technical Execution | 25% | Runs on a live Switch server with Discord and real Claude agents; `live_check.py` reproduces the verification on any server (33 protocol + 13 deployment checks). Template built from single-source skills + documents, 700-check validator (cross-document + Switch schema) with mutation tests, data-driven rehearsal with a working approval gate, CI |
 | Creativity & Impact | 25% | Solves real campus fest chaos — a pain point felt by thousands of student organizers |
 | Presentation & Docs | 20% | Architecture diagram, demo video script, DEV.to blog draft, comprehensive README |
 

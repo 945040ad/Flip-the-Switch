@@ -173,6 +173,8 @@ I almost set everything to `anyone` for simplicity. Then I realized any particip
 
 My first design had the marshal editing the template's `bracket_state.json` directly. It read fine against the docs. Then I traced it through Switch's server code. `update_room_document` refuses any agent that didn't create the document, and template documents have no creator. The design would have imported cleanly and then failed on the first approval. The fix (agent-owned live copies seeded at kickoff) turned out *better*, because single-writer is now a platform guarantee instead of a promise in a prompt.
 
+Then I ran it for real: Switch Console's local server, a Discord bot, three Claude agents. The kickoffs ran with nobody prompting them. The marshal split the bracket into four files, the tracker copied the ledger, the concierge opened its announcements log. A stand-in agent that tried to write the template's bracket got exactly what the source predicted: `HTTP 403: Agent … did not create document …`. If you build on Switch, `scripts/live_check.py` in the repo is a small, dependency-free example of driving the agent protocol yourself: event stream, heartbeat, operations.
+
 ### 5. Your documents are your prompt
 
 The agents are only as right as the data they read. My first sample data had the booths swapped between two files and a pending invoice counted as spent. It also had two different prize tables. A validator caught all of it. Write one.

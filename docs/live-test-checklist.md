@@ -1,9 +1,11 @@
 # Live test on Switch: checklist
 
-FestCommand's template and agent mechanics were checked against Switch's
-server source (template linter, v2 compiler, run planner, room-document and
-agent operations), and `scripts/validate.py` mirrors those rules. This
-checklist covers what only a live run can prove. It takes about 20 minutes.
+A manual end-to-end pass, about 20 minutes. Most of it is automated by
+`scripts/live_check.py` (`inspect` for the kickoffs, `protocol` for the
+platform rules), which is how FestCommand was verified on Discord. Use this
+list when you change the agents' instructions and want to watch real agents
+work through each step. To run on Discord instead of Switch-only rooms, see
+[discord-setup.md](discord-setup.md).
 
 ## 0. Set up a local Switch (no messaging app needed)
 
@@ -24,8 +26,10 @@ checklist covers what only a live run can prove. It takes about 20 minutes.
 - [ ] The form asks for *Fest display name*, *Fest short name* and
       *Messaging app*; *Provider*, *Machine* and *Agents dir* sit under
       **Advanced**.
-- [ ] Leave **Messaging app** empty and create. The preview shows 3 agents,
-      3 rooms and 1 group.
+- [ ] Set **Messaging app** (or clear it, on a server with none: the rooms
+      are then Switch-only) and create. It defaults to the server's first
+      messaging app, often the Console's built-in Mattermost. The preview shows
+      3 agents, 3 rooms and 1 group.
 - [ ] Created: `techstorm-concierge`, `techstorm-bracket-marshal`,
       `techstorm-sponsor-tracker`; rooms `techstorm-public-helpdesk`,
       `techstorm-tournament-ops`, `techstorm-sponsor-finance`; group
