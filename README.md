@@ -132,13 +132,13 @@ You don't need to upload any documents. They're embedded in the template.
 Edit `documents/` (your schedule, teams, sponsors, budget) and `agents/*/SKILL.md` (agent behaviour), then:
 
 ```bash
-python scripts/validate.py         # ~690 consistency checks; fix anything it flags
+python scripts/validate.py         # ~700 consistency checks; fix anything it flags
 python scripts/build_template.py   # re-embed into festcommand.template.yaml
 ```
 
 Day dates come from the rulebook's `## Day N Schedule — <Month> <day>` headings, and the year from the bracket's `last_updated`. Game-specific score rules (Valorant maps, BGMI points) apply only to the games you run. If your prize table uses different row labels, edit the `GAME_ROWS` mapping marked *EDIT FOR YOUR FEST* in `scripts/validate.py`.
 
-Edit `template/festcommand.template.src.yaml`, not the generated file. CI (`.github/workflows/validate.yml`) fails if the generated template is stale or the documents contradict each other. `python -m unittest discover -s tests` breaks a throwaway copy of the project in a dozen specific ways and checks that the validator catches each one.
+Edit `template/festcommand.template.src.yaml`, not the generated file. CI (`.github/workflows/validate.yml`) fails if the generated template is stale or the documents contradict each other. `python -m unittest discover -s tests` breaks a throwaway copy of the project in about twenty specific ways and checks that the validator catches each one.
 
 ---
 
@@ -174,7 +174,7 @@ Flip-the-Switch/
 │   └── sponsor_ledger.json            # income, budget, sponsors, prizes, vendors, alerts
 ├── scripts/
 │   ├── build_template.py              # source + skills + documents → template
-│   ├── validate.py                    # ~690 cross-document + Switch schema checks
+│   ├── validate.py                    # ~700 cross-document + Switch schema checks
 │   ├── rehearse.py                    # six-scenario simulation, data-driven
 │   └── setup.sh                       # environment + validation in one command
 ├── tests/test_validate.py             # mutation tests: the validator catches what it claims
@@ -249,7 +249,7 @@ Built for the **[Flip the Switch Hackathon](https://wemakedevs.org)** by WeMakeD
 | Criteria | Weight | How FestCommand addresses it |
 |---|---|---|
 | Switch Features | 30% | v2 template creating 3 agents, 3 rooms and a linked group; template docs as baseline + agent-created live docs (creator-only writes); per-agent addressing incl. `anyone_in`; per-room kickoffs; multi-room agents crossing via `list_linked_rooms`/`connect_to_room`; `send_targeted_message` hand-offs; conditional `users` so it deploys with or without a messaging app |
-| Technical Execution | 25% | Template built from single-source skills + documents, 690-check validator (cross-document + Switch schema) with mutation tests, data-driven rehearsal with a working approval gate, CI |
+| Technical Execution | 25% | Template built from single-source skills + documents, 700-check validator (cross-document + Switch schema) with mutation tests, data-driven rehearsal with a working approval gate, CI |
 | Creativity & Impact | 25% | Solves real campus fest chaos — a pain point felt by thousands of student organizers |
 | Presentation & Docs | 20% | Architecture diagram, demo video script, DEV.to blog draft, comprehensive README |
 
