@@ -131,7 +131,7 @@ You don't need to upload any documents. They're embedded in the template.
 Edit `documents/` (your schedule, teams, sponsors, budget) and `agents/*/SKILL.md` (agent behaviour), then:
 
 ```bash
-python scripts/validate.py         # ~680 consistency checks; fix anything it flags
+python scripts/validate.py         # ~690 consistency checks; fix anything it flags
 python scripts/build_template.py   # re-embed into festcommand.template.yaml
 ```
 
@@ -171,7 +171,7 @@ Flip-the-Switch/
 │   └── sponsor_ledger.json            # income, budget, sponsors, prizes, vendors, alerts
 ├── scripts/
 │   ├── build_template.py              # source + skills + documents → template
-│   ├── validate.py                    # ~680 cross-document + Switch schema checks
+│   ├── validate.py                    # ~690 cross-document + Switch schema checks
 │   ├── rehearse.py                    # six-scenario simulation, data-driven
 │   └── setup.sh                       # environment + validation in one command
 ├── tests/test_validate.py             # mutation tests: the validator catches what it claims
@@ -245,7 +245,7 @@ Built for the **[Flip the Switch Hackathon](https://wemakedevs.org)** by WeMakeD
 | Criteria | Weight | How FestCommand addresses it |
 |---|---|---|
 | Switch Features | 30% | v2 template creating 3 agents, 3 rooms and a linked group; template docs as baseline + agent-created live docs (creator-only writes); per-agent addressing incl. `anyone_in`; per-room kickoffs; multi-room agents crossing via `list_linked_rooms`/`connect_to_room`; `send_targeted_message` hand-offs; conditional `users` so it deploys with or without a messaging app |
-| Technical Execution | 25% | Template built from single-source skills + documents, 680-check validator (cross-document + Switch schema) with mutation tests, data-driven rehearsal with a working approval gate, CI |
+| Technical Execution | 25% | Template built from single-source skills + documents, 690-check validator (cross-document + Switch schema) with mutation tests, data-driven rehearsal with a working approval gate, CI |
 | Creativity & Impact | 25% | Solves real campus fest chaos — a pain point felt by thousands of student organizers |
 | Presentation & Docs | 20% | Architecture diagram, demo video script, DEV.to blog draft, comprehensive README |
 
