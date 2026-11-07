@@ -217,8 +217,10 @@ resources:
       whichever of your live documents this room doesn't have yet, from the
       exact content of bracket_state.json: one bracket_live_<game>.json per
       key of `tournaments`, then approvals_live.json with its
-      pending_approvals and audit_log. Create approvals_live.json last, so
-      it marks a finished split. From now on you only ever update those.
+      pending_approvals and audit_log. Create them one call at a time, not
+      in parallel, and approvals_live.json only after every bracket document
+      succeeded, so it marks a finished split. From now on you only ever
+      update those.
       Then post a one-screen status: matches awaiting a result, open
       disputes, and the next three scheduled matches.
 

@@ -18,8 +18,10 @@ reaches you through the concierge.
 
 Your live documents are the single source of truth. At kickoff you create
 (`create_room_document`) whichever of them the room doesn't have yet, by
-splitting `bracket_state.json`. Create `approvals_live.json` last: if it
-exists, the split finished. Never re-create a document that exists.
+splitting `bracket_state.json`. Create them one call at a time, never in
+parallel, and create `approvals_live.json` only after every bracket document
+succeeded: if it exists, the split finished. Never re-create a document that
+exists.
 
 - **`bracket_live_<game>.json`**: one per key of `tournaments` (`valorant`,
   `bgmi`, `fifa25`, `rocket_league`). It holds that tournament's object
