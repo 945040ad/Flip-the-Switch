@@ -131,11 +131,11 @@ You don't need to upload any documents. They're embedded in the template.
 Edit `documents/` (your schedule, teams, sponsors, budget) and `agents/*/SKILL.md` (agent behaviour), then:
 
 ```bash
-python scripts/validate.py         # ~650 consistency checks; fix anything it flags
+python scripts/validate.py         # ~680 consistency checks; fix anything it flags
 python scripts/build_template.py   # re-embed into festcommand.template.yaml
 ```
 
-Edit `template/festcommand.template.src.yaml`, not the generated file. CI (`.github/workflows/validate.yml`) fails if the generated template is stale or the documents contradict each other.
+Edit `template/festcommand.template.src.yaml`, not the generated file. CI (`.github/workflows/validate.yml`) fails if the generated template is stale or the documents contradict each other. `python -m unittest discover -s tests` breaks a throwaway copy of the project in a dozen specific ways and checks that the validator catches each one.
 
 ---
 
@@ -171,10 +171,11 @@ Flip-the-Switch/
 │   └── sponsor_ledger.json            # income, budget, sponsors, prizes, vendors, alerts
 ├── scripts/
 │   ├── build_template.py              # source + skills + documents → template
-│   ├── validate.py                    # ~650 cross-document + Switch schema checks
+│   ├── validate.py                    # ~680 cross-document + Switch schema checks
 │   ├── rehearse.py                    # six-scenario simulation, data-driven
 │   └── setup.sh                       # environment + validation in one command
-├── .github/workflows/validate.yml     # CI: build check, validate, rehearse
+├── tests/test_validate.py             # mutation tests: the validator catches what it claims
+├── .github/workflows/validate.yml     # CI: build check, validate, rehearse, tests
 ├── demo/video-script.md               # 2-minute demo video script
 ├── blog/devto-draft.md                # DEV.to post draft
 └── LICENSE
@@ -244,7 +245,7 @@ Built for the **[Flip the Switch Hackathon](https://wemakedevs.org)** by WeMakeD
 | Criteria | Weight | How FestCommand addresses it |
 |---|---|---|
 | Switch Features | 30% | v2 template creating 3 agents, 3 rooms and a linked group; room documents; per-agent addressing as the security boundary; per-room kickoffs; multi-room agents for hand-offs |
-| Technical Execution | 25% | Template built from single-source skills + documents, 650-check validator (cross-document + Switch schema), data-driven rehearsal with a working approval gate, CI |
+| Technical Execution | 25% | Template built from single-source skills + documents, 680-check validator (cross-document + Switch schema) with mutation tests, data-driven rehearsal with a working approval gate, CI |
 | Creativity & Impact | 25% | Solves real campus fest chaos — a pain point felt by thousands of student organizers |
 | Presentation & Docs | 20% | Architecture diagram, demo video script, DEV.to blog draft, comprehensive README |
 
