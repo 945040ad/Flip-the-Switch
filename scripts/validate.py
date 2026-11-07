@@ -220,6 +220,7 @@ def check_bracket(bracket):
                 check(r["total"] == r["placement_points"] + r["kill_points"], f"BGMI {lobby['match_id']}: total wrong")
 
     check_approval_lists(bracket, "bracket_state.json")
+    check_cited_sections()
     done(f"{len(matches)} matches: progression, scores, statuses and approval codes are consistent", b0)
 
 
@@ -236,6 +237,17 @@ EXTRA = {("bgmi", "mvp"): "BGMI MVP", ("hackathon", "peoples_choice"): "Hackatho
 
 def inr(text: str) -> int:
     return int(re.sub(r"[^\d]", "", text))
+
+
+def check_cited_sections() -> None:
+    """Agents are told to look up rulebook sections by their quoted name
+    (e.g. "Tournament Conduct"); each must still be a heading."""
+    rulebook = (DOCS / "schedule_and_rules.md").read_text(encoding="utf-8")
+    headings = {re.sub(r"^#+\s*", "", h).strip() for h in re.findall(r"^#{2,4} .+$", rulebook, re.M)}
+    for skill in sorted((ROOT / "agents").glob("*/SKILL.md")):
+        text = re.sub(r"\s+", " ", skill.read_text(encoding="utf-8"))
+        for cited in re.findall(r'"([A-Z][A-Za-z]+(?: (?:[A-Z][A-Za-z]+|&))+)"', text):
+            check(cited in headings, f"{skill.parent.name} cites rulebook section \"{cited}\", which has no heading")
 
 
 def check_approval_lists(doc: dict, name: str) -> None:

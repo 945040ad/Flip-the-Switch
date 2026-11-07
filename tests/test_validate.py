@@ -114,6 +114,14 @@ class ValidatorCatches(unittest.TestCase):
         self.p.edit_json("documents/bracket_state.json", break_score)
         self.assertFlags(self.p.validate(), broken["id"])
 
+    def test_rulebook_section_cited_by_an_agent_is_renamed(self):
+        self.p.edit("documents/schedule_and_rules.md", "### Tournament Conduct", "### Match Conduct")
+        self.assertFlags(self.p.validate(), '"Tournament Conduct"')
+
+    def test_ledger_loses_its_approval_queue(self):
+        self.p.edit_json("documents/sponsor_ledger.json", lambda d: d.pop("pending_approvals"))
+        self.assertFlags(self.p.validate(), "pending_approvals")
+
     # ── template ──
     def test_stale_template(self):
         self.p.edit("agents/concierge/SKILL.md", "## Tone", "## Tone (edited)")
