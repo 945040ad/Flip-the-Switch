@@ -101,7 +101,7 @@ def schedule_slots(schedule: str) -> dict[str, tuple[str, str]]:
     """MATCH-ID -> (ISO local time 'YYYY-MM-DDTHH:MM', stage) from the day tables."""
     slots: dict[str, tuple[str, str]] = {}
     for day, body in re.findall(r"## Day (\d) Schedule.*?\n(.*?)(?=\n---|\n## )", schedule, re.S):
-        lines = [l for l in body.splitlines() if l.startswith("|")]
+        lines = [row for row in body.splitlines() if row.startswith("|")]
         header = [c.strip() for c in lines[0].strip("|").split("|")]
         for row in lines[2:]:
             cells = [c.strip() for c in row.strip("|").split("|")]
@@ -433,7 +433,7 @@ def check_switch_schema(t: dict) -> None:
                                   if re.fullmatch(spec["pattern"], "a" * n)), "a")
     defaults = {n: str(s["default"]) for n, s in params.items() if isinstance(s.get("default"), str)}
     for label, values in (("defaults", defaults), ("longest inputs", {**defaults, **longest})):
-        def render(text):
+        def render(text, values=values):
             return re.sub(r"\{(\w+)\}", lambda m: values.get(m.group(1), m.group(0)), text)
         for k, r in t["resources"].items():
             if r.get("type") != "agent":
@@ -517,8 +517,8 @@ def check_template():
                 for base in re.findall(r"exact\s+content\s+of\s+([\w.]+\.(?:json|md))", r["kickoff"]):
                     check(base in provisioned, f"room {k}: kickoff copies {base}, which is not a document in this room")
         elif r["type"] == "group":
-            for l in r.get("links", []):
-                check(kinds.get(l["from"]) == "room" and kinds.get(l["to"]) == "room", f"group {k}: bad link {l}")
+            for link in r.get("links", []):
+                check(kinds.get(link["from"]) == "room" and kinds.get(link["to"]) == "room", f"group {k}: bad link {link}")
     # Each agent must be in a room with every agent it hands off to.
     rooms_of = {k: {rk for rk, r in res.items() if r["type"] == "room" and k in r.get("agents", [])}
                 for k, r in res.items() if r["type"] == "agent"}

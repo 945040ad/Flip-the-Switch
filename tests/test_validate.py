@@ -179,7 +179,8 @@ class Rehearsal(unittest.TestCase):
     def test_runs_and_leaves_documents_untouched(self):
         p = Project()
         self.addCleanup(p.close)
-        digest = lambda: {f.name: hashlib.sha256(f.read_bytes()).hexdigest() for f in (p.root / "documents").iterdir()}
+        def digest():
+            return {f.name: hashlib.sha256(f.read_bytes()).hexdigest() for f in (p.root / "documents").iterdir()}
         before = digest()
         result = p.run("rehearse.py", "--fast", "--no-color")
         self.assertEqual(result.returncode, 0, result.stdout[-2000:] + result.stderr)
