@@ -178,6 +178,7 @@ Flip-the-Switch/
 │   └── setup.sh                       # environment + validation in one command
 ├── tests/test_validate.py             # mutation tests: the validator catches what it claims
 ├── .github/workflows/validate.yml     # CI: build check, validate, rehearse, tests
+├── docs/live-test-checklist.md        # 20-minute live test on a local Switch
 ├── demo/video-script.md               # 2-minute demo video script
 ├── blog/devto-draft.md                # DEV.to post draft
 └── LICENSE
@@ -225,7 +226,7 @@ The code is there to stop you approving the wrong item and to make the audit log
 - **Single approver.** A real deployment would split approval roles, e.g. a finance head for payouts and a tournament director for rulings.
 - **No payment rails.** Payouts are recorded in the ledger. UPI or bank transfers happen outside FestCommand.
 - **No game APIs.** Results are reported by referees, not pulled from Riot or Krafton.
-- **Checked against Switch's source, not yet run on a live server.** Every field was traced through the server's own template code (`template_lint`, `template_v2.compile_v2`, the run planner and `rooms_yaml`), and `validate.py` mirrors those rules. The agents' room mechanics (one connected room per session, `connect_to_room`, `list_linked_rooms`, creator-only document updates, `send_targeted_message`) were read from the server's agent operations. A live import is still the final proof.
+- **Checked against Switch's source, not yet run on a live server.** Every field was traced through the server's own template code (`template_lint`, `template_v2.compile_v2`, the run planner and `rooms_yaml`), and `validate.py` mirrors those rules. The agents' room mechanics (one connected room per session, `connect_to_room`, `list_linked_rooms`, creator-only document updates, `send_targeted_message`) were read from the server's agent operations. A live import is still the final proof: [docs/live-test-checklist.md](docs/live-test-checklist.md) walks through it in about 20 minutes on a local Switch with no messaging app.
 
 ---
 
