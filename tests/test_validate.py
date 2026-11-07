@@ -94,6 +94,14 @@ class ValidatorCatches(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("checks passed", result.stdout)
 
+    def test_runs_without_a_utf8_environment(self):
+        # Windows consoles and pipes default to cp1252; the scripts print emoji.
+        env = {k: v for k, v in os.environ.items() if k not in ("PYTHONIOENCODING", "PYTHONUTF8")}
+        for script in ("validate.py", "build_template.py"):
+            args = [sys.executable, str(self.p.root / "scripts" / script)] + (["--check"] if script.startswith("build") else [])
+            result = subprocess.run(args, capture_output=True, env=env)
+            self.assertEqual(result.returncode, 0, f"{script}: " + result.stderr.decode("utf-8", "replace")[-1500:])
+
     # ── documents ──
     def test_schedule_and_bracket_disagree_on_stage(self):
         self.p.edit_json("documents/bracket_state.json", lambda d: match(d, "MATCH-07").update(stage="Arena Beta"))

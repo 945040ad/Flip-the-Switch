@@ -29,11 +29,17 @@ Standard library only; template checks use PyYAML when it is installed.
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
+
+# Emoji in the output: don't let a cp1252 console or pipe on Windows crash us.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "documents"
@@ -480,7 +486,8 @@ def check_switch_schema(t: dict) -> None:
 def check_template():
     b0 = len(errors)
     built = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_template.py"), "--check"],
-                           capture_output=True, text=True)
+                           capture_output=True, text=True, encoding="utf-8",
+                           env={**os.environ, "PYTHONIOENCODING": "utf-8"})
     check(built.returncode == 0, "festcommand.template.yaml is stale. Run: python scripts/build_template.py")
     try:
         import yaml  # type: ignore

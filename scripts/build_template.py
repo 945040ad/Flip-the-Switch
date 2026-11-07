@@ -17,6 +17,11 @@ import re
 import sys
 from pathlib import Path
 
+# Emoji in the output: don't let a cp1252 console or pipe on Windows crash us.
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "template" / "festcommand.template.src.yaml"
 OUT = ROOT / "festcommand.template.yaml"
