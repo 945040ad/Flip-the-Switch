@@ -686,5 +686,6 @@
     "ticket_sales": 138000,
     "notes": "Ticket sales: pre-sold passes as of 2026-12-13 (General ₹299 / All-Access ₹499 / Spectator ₹149)."
   },
+  "pending_approvals": [],
   "audit_log": []
 }

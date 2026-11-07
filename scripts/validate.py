@@ -219,8 +219,7 @@ def check_bracket(bracket):
                 check(r["kill_points"] == r["kills"] * pts["per_kill"], f"BGMI {lobby['match_id']}: kill points wrong")
                 check(r["total"] == r["placement_points"] + r["kill_points"], f"BGMI {lobby['match_id']}: total wrong")
 
-    for p in bracket.get("pending_approvals", []):
-        check(bool(HEX.match(p.get("code", ""))), f"pending approval {p.get('id')} has a bad code")
+    check_approval_lists(bracket, "bracket_state.json")
     done(f"{len(matches)} matches: progression, scores, statuses and approval codes are consistent", b0)
 
 
@@ -239,8 +238,17 @@ def inr(text: str) -> int:
     return int(re.sub(r"[^\d]", "", text))
 
 
+def check_approval_lists(doc: dict, name: str) -> None:
+    """Both approval protocols keep pending_approvals and audit_log lists."""
+    for key in ("pending_approvals", "audit_log"):
+        check(isinstance(doc.get(key), list), f"{name} needs a '{key}' list for the approval protocol")
+    for p in doc.get("pending_approvals") or []:
+        check(bool(HEX.match(p.get("code", ""))), f"{name}: pending approval {p.get('id')} has a bad code")
+
+
 def check_ledger(ledger, schedule):
     b0 = len(errors)
+    check_approval_lists(ledger, "sponsor_ledger.json")
     sponsorship = sum(s["commitment_inr"] for s in ledger["sponsors"])
     inc = ledger.get("income", {})
     check(inc.get("sponsorship") == sponsorship, "income.sponsorship != sum of sponsor commitments")
