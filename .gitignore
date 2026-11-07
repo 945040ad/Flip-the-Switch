@@ -66,3 +66,6 @@ htmlcov/
 *.tmp
 *.temp
 .cache/
+
+# Local Claude Code conversation export (private; may contain personal context)
+.claude/conversation/

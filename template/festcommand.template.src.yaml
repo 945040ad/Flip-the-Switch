@@ -1,0 +1,194 @@
+# FestCommand: a multi-room esports & event-ops war room, as a Switch template.
+#
+# SOURCE FILE. Edit this file, then run `python scripts/build_template.py` to
+# produce ../festcommand.template.yaml, the file you import into Switch.
+# Each `"@include <path>"` value below is replaced with that file's contents
+# as a YAML block scalar. Agent instructions come from agents/*/SKILL.md (with
+# their front matter stripped), and room documents come from documents/.
+# That way the template, the skills and the documents can't drift apart.
+#
+# Written in version 2 of the Switch template language (docs/TEMPLATES.md in
+# sandbox-quantum/switch) because it creates three agents, three rooms and a
+# group of linked rooms in one pass:
+#
+#   helpdesk ──disputes & results──▶ ops ──payout triggers──▶ finance
+#            ◀──approved announcements──
+#
+# Topology at a glance
+#   agent            rooms it is in            addressing
+#   concierge        helpdesk, ops             anyone in helpdesk or ops
+#   bracket_marshal  ops                       owner-agents (Fest Lead + agents)
+#   sponsor_tracker  ops, finance              owner-agents
+#
+# Cross-room hand-offs happen because an agent sits in both rooms: the
+# concierge carries reports from the public helpdesk into ops, and the
+# sponsor tracker carries tournament results from ops into finance. The
+# group's `links:` document those flows on the room map.
+version: 2
+
+params:
+  fest:
+    type: string
+    label: Fest name
+    description: Short, lowercase name of your fest. Every room and agent name starts with it.
+    default: techstorm
+    pattern: "[a-z][a-z0-9-]*"
+  bridge:
+    type: bridge
+    label: Messaging app
+    description: Where the three rooms are created (Discord, Slack, Mattermost…).
+    default: [$first]
+  provider:
+    type: provider
+    description: The coding agent that runs all three FestCommand agents.
+    default: [claude, codex, opencode]
+    input: advanced
+  machine:
+    type: machine
+    description: The machine the agents run on.
+    default: [$first]
+    input: advanced
+  agents_dir:
+    type: directory
+    description: Parent directory; each agent gets its own folder inside it.
+    default: "{$agents_dir}"
+    input: advanced
+
+form:
+  advanced: { label: Advanced, open: false }
+
+resources:
+  # ─────────────────────────────── agents ───────────────────────────────
+  concierge:
+    type: agent
+    name: "{fest}-concierge"
+    display_name: "{fest} Concierge"
+    description: >-
+      Public helpdesk: answers participant questions from the schedule, files
+      match results and disputes with tournament ops, announces approved
+      outcomes.
+    provider: "{provider}"
+    machine: "{machine}"
+    directory: "{agents_dir}/{fest}-concierge"
+    addressing: { anyone_in: [helpdesk, ops] }
+    instructions: "@include agents/concierge/SKILL.md"
+
+  bracket_marshal:
+    type: agent
+    name: "{fest}-bracket-marshal"
+    display_name: "{fest} Bracket Marshal"
+    description: >-
+      Tournament ops: validates results, rules on disputes, proposes schedule
+      shifts. Changes bracket_state.json only after the Fest Lead approves.
+    provider: "{provider}"
+    machine: "{machine}"
+    directory: "{agents_dir}/{fest}-bracket-marshal"
+    addressing: owner-agents
+    instructions: "@include agents/bracket-marshal/SKILL.md"
+
+  sponsor_tracker:
+    type: agent
+    name: "{fest}-sponsor-tracker"
+    display_name: "{fest} Sponsor Tracker"
+    description: >-
+      Sponsors & finance: deliverable dashboards, budget alerts, vendor
+      payments and prize payouts, each gated on Fest Lead approval.
+    provider: "{provider}"
+    machine: "{machine}"
+    directory: "{agents_dir}/{fest}-sponsor-tracker"
+    addressing: owner-agents
+    instructions: "@include agents/sponsor-tracker/SKILL.md"
+
+  # ─────────────────────────────── group ────────────────────────────────
+  war_room:
+    type: group
+    name: "{fest} FestCommand"
+    description: The three FestCommand rooms and the hand-offs between them.
+    color: purple
+    links:
+      - { from: helpdesk, to: ops, label: "disputes & match results" }
+      - { from: ops, to: helpdesk, label: "approved announcements" }
+      - { from: ops, to: finance, label: "tournament complete → payouts" }
+
+  # ─────────────────────────────── rooms ────────────────────────────────
+  helpdesk:
+    type: room
+    group: war_room
+    name: "{fest}-public-helpdesk"
+    description: Ask about schedules, rules, venue, merch; report match results and disputes.
+    channel_type: channel_public
+    bridge: "{bridge}"
+    agents: [concierge]
+    users: ["{$creator}"]
+    instructions: |
+      Welcome to the **{fest} Public Helpdesk** 🎮
+
+      Ask @{concierge.name} about:
+      - 📅 Match times, stages and check-in
+      - 📋 Game rules and formats
+      - 🗺️ Venue map, sponsor booths, merch (Booth B6)
+      - 🎭 Cosplay registration and judging
+
+      Report a **match result** or a **dispute** here, with the match ID and
+      a screenshot link. It goes to the ops team, and a human makes every
+      ruling.
+    kickoff: |
+      @{concierge.name} you're live. Post a short welcome for participants:
+      what you can help with, and how to report a result or a dispute.
+
+  ops:
+    type: room
+    group: war_room
+    name: "{fest}-tournament-ops"
+    description: Private. Result validation, dispute rulings, schedule shifts, with Fest Lead approval on each.
+    channel_type: channel_private
+    bridge: "{bridge}"
+    agents: [bracket_marshal, concierge, sponsor_tracker]
+    users: ["{$creator}"]
+    instructions: |
+      🔒 **{fest} Tournament Ops.** Fest Lead and agents only.
+
+      - @{concierge.name} brings in results and disputes from the helpdesk.
+      - @{bracket_marshal.name} validates them and asks for approval.
+      - @{sponsor_tracker.name} picks up finished tournaments for payouts.
+
+      Approve with the exact line the marshal gives you, e.g.
+      `approve MATCH-06 #3f9a`. Reject with `reject MATCH-06 #3f9a`.
+      Approvals typed by agents never count.
+    docs:
+      - name: bracket_state.json
+        description: Live state of every bracket, plus pending approvals and the audit log.
+        instructions: Only the bracket marshal writes this, and only after a Fest Lead approval.
+        content: "@include documents/bracket_state.json"
+      - name: schedule_and_rules.md
+        description: Published schedule, rulebook, prize structure, venue and contacts.
+        instructions: The concierge answers from this. The marshal cites it in rulings and edits match times only through an approved SHIFT.
+        content: "@include documents/schedule_and_rules.md"
+    kickoff: |
+      @{bracket_marshal.name} you're live. Read bracket_state.json and post a
+      one-screen status: matches awaiting a result, open disputes, and the
+      next three scheduled matches.
+
+  finance:
+    type: room
+    group: war_room
+    name: "{fest}-sponsor-finance"
+    description: Private. Sponsor deliverables, budget, vendor payments and prize payouts.
+    channel_type: channel_private
+    bridge: "{bridge}"
+    agents: [sponsor_tracker]
+    users: ["{$creator}"]
+    instructions: |
+      💰 **{fest} Sponsor & Finance.** Fest Lead only.
+
+      @{sponsor_tracker.name} keeps sponsor_ledger.json and asks you to approve
+      every payout, vendor payment and reserve withdrawal, e.g.
+      `approve VENDOR-03 #79e1`.
+    docs:
+      - name: sponsor_ledger.json
+        description: Income, budget by category, sponsor deliverables, prize pool, vendor payments, alerts and audit log.
+        instructions: Only the sponsor tracker writes this, and only after a Fest Lead approval.
+        content: "@include documents/sponsor_ledger.json"
+    kickoff: |
+      @{sponsor_tracker.name} you're live. Post the sponsor status dashboard,
+      then list open alerts and anything waiting for my approval.

@@ -33,8 +33,8 @@
 - **4 Esports Tournaments**: Valorant, BGMI, FIFA 25, Rocket League
 - **1 Hackathon**: 24-hour continuous build (starts Day 1 evening)
 - **1 Cosplay Competition**: Open registration, judged on Day 2
-- **5 Title & Gold Sponsors**: HyperX, Monster Energy, Logitech, AMD, Jio
-- **Total Prize Pool**: ₹3,00,000+
+- **5 Sponsors & Partners**: HyperX (Title), Monster Energy & Logitech (Gold), AMD (Silver), Jio (Connectivity)
+- **Total Prize Pool**: ₹3,28,000 (esports, hackathon & cosplay)
 
 ### Venue Hours
 - **Day 1**: Gates open 8:00 AM | Events 9:00 AM – 11:00 PM
@@ -92,7 +92,7 @@
 | Time | Main Stage | Arena Alpha | Arena Beta | Workshop Hall | Hackathon Zone |
 |------|-----------|-------------|------------|---------------|----------------|
 | **08:00** | Gates Open — Registration & ID Verification | — | — | — | — |
-| **09:00** | 🎤 **Opening Ceremony** — Chief Guest: Dr. Priya Sharma (AMD India VP) | — | — | — | — |
+| **09:00** | 🎤 **Opening Ceremony** — Chief Guest: Dr. Kavitha Rao (AMD India VP) | — | — | — | — |
 | **09:30** | HyperX Product Showcase | — | — | — | — |
 | **10:00** | — | **Valorant QF 1**: Team Mayhem vs Phoenix Esports (MATCH-01) | **BGMI Round 1** — Lobby A (10 squads) (MATCH-17) | Cosplay Registration Opens | — |
 | **10:45** | — | **Valorant QF 2**: Hydra Officials vs Velocity Gaming (MATCH-02) | — | — | — |
@@ -126,7 +126,7 @@
 | **10:00** | — | **FIFA 25 Quarterfinals** (MATCH-57 to MATCH-60) | — | 🎭 **Cosplay Prejudging** (closed room) | Hacking... |
 | **11:00** | — | — | **Rocket League LB R2** (MATCH-61, MATCH-62) | — | Hacking... |
 | **11:30** | — | **FIFA 25 Semifinals** (MATCH-63, MATCH-64) | — | — | Hacking... |
-| **12:00** | 🍕 **Lunch Break** — Food Court Open | — | — | — | Hacking... (Lunch served) |
+| **12:00** | 🍕 **Lunch Break** — Food Court Open | — | **Rocket League WB Final** (MATCH-68) | — | Hacking... (Lunch served) |
 | **13:00** | — | — | **Rocket League LB Final** (MATCH-65) | Workshop: "AI in Esports Analytics" by AMD | Hacking... |
 | **13:30** | — | — | **BGMI Final Round** — Grand Lobby (20 squads) (MATCH-20) | — | Hacking... |
 | **14:00** | — | **FIFA 25 Final** (MATCH-66) | — | — | Hacking... |
@@ -147,7 +147,7 @@
 
 ### 🔫 Valorant 5v5 — "TechStorm Valorant Championship"
 
-- **Format**: 16 teams, Single Elimination (BO3 from Quarterfinals, BO5 Grand Final)
+- **Format**: 16 teams. Online qualifiers (Dec 7) → top 8 play LAN Single Elimination (BO3 Quarterfinals & Semifinals, BO5 Grand Final)
 - **Map Pool**: Ascent, Bind, Haven, Split, Lotus, Sunset, Abyss
 - **Map Veto**: Higher seed bans first, alternating. Remaining map is decider.
 - **Platform**: PC (Arena Alpha, 40 stations)
@@ -214,7 +214,7 @@
 ### ⚽ FIFA 25 1v1 — "TechStorm FIFA Cup"
 
 - **Format**: 32 players, Single Elimination (all matches BO1, Final is BO3)
-- **Platform**: PlayStation 5 (Arena Beta)
+- **Platform**: PlayStation 5 — Round of 32 in Arena Beta, Round of 16 onward in Arena Alpha
 - **Settings**: 6-minute halves, Classic controls, No custom tactics lock
 - **Team Selection**: Any licensed club or national team. Mirror matches allowed.
 - **Disconnection**: If before 20th minute with ≤1 goal difference — rematch. Otherwise, leading player wins.
@@ -385,7 +385,7 @@
 
 ## Prize Structure
 
-### 💰 Total Prize Pool: ₹3,00,000
+### 💰 Total Prize Pool: ₹3,28,000
 
 | Tournament | 🥇 1st Place | 🥈 2nd Place | 🥉 3rd Place |
 |-----------|-------------|-------------|-------------|
@@ -458,6 +458,6 @@
 
 ---
 
-*Last updated: December 13, 2026, 11:30 PM IST*
-*Document version: 2.1*
+*Last updated: December 14, 2026, 5:45 PM IST*
+*Document version: 2.2*
 *Maintained by: TechStorm Ops Team*

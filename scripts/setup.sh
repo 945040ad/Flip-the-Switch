@@ -1,80 +1,53 @@
 #!/usr/bin/env bash
-# FestCommand Quick Setup
+# FestCommand setup check
 # =======================
-# Sets up FestCommand for local testing with Switch.
+# Verifies everything needed to rehearse locally and to import the template
+# into Switch:
+#   1. Python 3.10+ is available (PyYAML optional, enables deeper template checks)
+#   2. festcommand.template.yaml was built from the current sources
+#   3. The template, the three room documents and the rulebook agree
+#      with each other (scripts/validate.py)
 #
-# Prerequisites:
-#   - Switch Core running (just run)
-#   - Switch Console installed
-#   - Python 3.10+ (for rehearsal script)
-#
-# Usage:
-#   chmod +x scripts/setup.sh
-#   ./scripts/setup.sh
+# Usage:  ./scripts/setup.sh
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_DIR"
 
-echo "🎮 FestCommand Setup"
-echo "===================="
-echo ""
+echo "🎮 FestCommand setup check"
+echo "=========================="
 
-# Check Python
-if command -v python3 &>/dev/null; then
-    PYTHON=python3
-elif command -v python &>/dev/null; then
-    PYTHON=python
-else
-    echo "❌ Python 3 not found. Please install Python 3.10+"
-    exit 1
-fi
-
-echo "✓ Python: $($PYTHON --version)"
-
-# Validate template
-echo ""
-echo "📋 Validating template..."
-if [ -f "$PROJECT_DIR/festcommand.template.yaml" ]; then
-    echo "✓ festcommand.template.yaml found"
-else
-    echo "❌ festcommand.template.yaml not found!"
-    exit 1
-fi
-
-# Check documents
-echo ""
-echo "📄 Checking documents..."
-for doc in schedule_and_rules.md bracket_state.json sponsor_ledger.json; do
-    if [ -f "$PROJECT_DIR/documents/$doc" ]; then
-        echo "✓ documents/$doc"
-    else
-        echo "❌ documents/$doc missing!"
-        exit 1
+PYTHON=""
+for candidate in python3 python; do
+    if command -v "$candidate" &>/dev/null && "$candidate" -c 'import sys; sys.exit(sys.version_info < (3, 10))' 2>/dev/null; then
+        PYTHON="$candidate"
+        break
     fi
 done
+if [ -z "$PYTHON" ]; then
+    echo "❌ Python 3.10+ not found. Install it from https://www.python.org/downloads/"
+    exit 1
+fi
+echo "✓ $($PYTHON --version)"
 
-# Check agent skills
-echo ""
-echo "🤖 Checking agent skills..."
-for agent in concierge bracket-marshal sponsor-tracker; do
-    if [ -f "$PROJECT_DIR/agents/$agent/SKILL.md" ]; then
-        echo "✓ agents/$agent/SKILL.md"
-    else
-        echo "❌ agents/$agent/SKILL.md missing!"
-        exit 1
-    fi
-done
+if "$PYTHON" -c 'import yaml' 2>/dev/null; then
+    echo "✓ PyYAML available (structural template checks enabled)"
+else
+    echo "⚠ PyYAML not installed; template structure checks will be skipped."
+    echo "  Enable them with:  $PYTHON -m pip install pyyaml"
+fi
 
 echo ""
-echo "══════════════════════════════════════════"
-echo "✅ All files validated!"
+"$PYTHON" scripts/validate.py
+
 echo ""
-echo "Next steps:"
-echo "  1. Run the rehearsal:  $PYTHON scripts/rehearse.py"
-echo "  2. Import into Switch: Open Switch Console → Import Template"
-echo "     → Select festcommand.template.yaml"
-echo "  3. Configure: Set fest name, choose Discord/Slack bridge"
-echo "  4. Launch: Click 'Create Rooms' in Switch Console"
-echo "══════════════════════════════════════════"
+echo "══════════════════════════════════════════════════════════════"
+echo "Next steps"
+echo "  1. Rehearse locally:   $PYTHON scripts/rehearse.py   (add --fast to skip pauses)"
+echo "  2. Deploy on Switch:   Switch Console → Templates → import festcommand.template.yaml"
+echo "                         set the fest name and messaging app, then create."
+echo "  3. After editing agents/ or documents/, rebuild the template:"
+echo "                         $PYTHON scripts/build_template.py"
+echo "══════════════════════════════════════════════════════════════"

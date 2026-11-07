@@ -1,13 +1,11 @@
 {
   "event": "TechStorm 2026",
   "currency": "INR",
-  "last_updated": "2026-12-14T16:30:00+05:30",
+  "last_updated": "2026-12-14T17:45:00+05:30",
   "updated_by": "sponsor-tracker",
-
-  "total_budget": 850000,
-  "total_spent": 587500,
-  "budget_utilization_pct": 69.1,
-
+  "total_budget": 988000,
+  "total_spent": 547000,
+  "budget_utilization_pct": 55.4,
   "sponsors": [
     {
       "id": "SPONSOR-01",
@@ -20,13 +18,16 @@
       "contact_email": "arvind.m@hyperx.com",
       "deliverables": {
         "booth": {
-          "location": "B1 — Main Entrance Hall",
+          "location": "B1 — Ground Floor Corridor",
           "size": "6x4m",
           "status": "ready",
           "setup_completed": "2026-12-13T18:00:00+05:30"
         },
         "banners": {
-          "locations": ["Main Stage — Center", "Arena Alpha — Left Wall"],
+          "locations": [
+            "Main Stage — Center",
+            "Arena Alpha — Left Wall"
+          ],
           "status": "installed",
           "installed_date": "2026-12-13"
         },
@@ -40,15 +41,32 @@
           "required_posts": 3,
           "completed_posts": 3,
           "posts": [
-            {"platform": "Instagram", "url": "https://instagram.com/p/hyperx_techstorm1", "date": "2026-12-10"},
-            {"platform": "Twitter/X", "url": "https://x.com/hyperx/status/123456", "date": "2026-12-12"},
-            {"platform": "LinkedIn", "url": "https://linkedin.com/post/hyperx-techstorm", "date": "2026-12-14"}
+            {
+              "platform": "Instagram",
+              "url": "https://instagram.com/p/hyperx_techstorm1",
+              "date": "2026-12-10"
+            },
+            {
+              "platform": "Twitter/X",
+              "url": "https://x.com/hyperx/status/123456",
+              "date": "2026-12-12"
+            },
+            {
+              "platform": "LinkedIn",
+              "url": "https://linkedin.com/post/hyperx-techstorm",
+              "date": "2026-12-14"
+            }
           ],
           "status": "completed"
         },
         "stage_shoutouts": {
-          "scheduled": ["Day 1 Opening Ceremony", "Valorant Grand Final"],
-          "completed": ["Day 1 Opening Ceremony"],
+          "scheduled": [
+            "Day 1 Opening Ceremony",
+            "Valorant Grand Final (Day 2, 18:00)"
+          ],
+          "completed": [
+            "Day 1 Opening Ceremony"
+          ],
           "status": "in_progress"
         }
       }
@@ -64,13 +82,15 @@
       "contact_email": "sneha.k@monsterenergy.in",
       "deliverables": {
         "booth": {
-          "location": "B3 — Food Court Area",
+          "location": "B2 — Ground Floor Corridor",
           "size": "4x3m",
           "status": "ready",
           "setup_completed": "2026-12-14T08:00:00+05:30"
         },
         "banners": {
-          "locations": ["Arena Beta — Entrance"],
+          "locations": [
+            "Arena Beta — Entrance"
+          ],
           "status": "in_progress",
           "notes": "Banner delivered but not yet hung — waiting for AV crew"
         },
@@ -89,9 +109,14 @@
           "alert": "⚠️ OVERDUE — 0/2 posts, deadline tonight"
         },
         "stage_shoutouts": {
-          "scheduled": ["BGMI Finals"],
-          "completed": ["BGMI Finals"],
-          "status": "completed"
+          "scheduled": [
+            "Day 1 DJ Set (13:00)",
+            "BGMI Final Round (Day 2, 13:30)"
+          ],
+          "completed": [
+            "Day 1 DJ Set (13:00)"
+          ],
+          "status": "in_progress"
         }
       }
     },
@@ -106,14 +131,17 @@
       "contact_email": "rohan.d@logitech.com",
       "deliverables": {
         "booth": {
-          "location": "B2 — Gaming Peripherals Zone",
+          "location": "B3 — Ground Floor Corridor",
           "size": "5x3m",
           "status": "ready",
           "setup_completed": "2026-12-13T16:00:00+05:30",
           "notes": "Demo stations with G Pro X Superlight mice"
         },
         "banners": {
-          "locations": ["Main Stage — Right", "Workshop Hall — Entrance"],
+          "locations": [
+            "Main Stage — Right",
+            "Workshop Hall — Entrance"
+          ],
           "status": "installed",
           "installed_date": "2026-12-13"
         },
@@ -129,15 +157,28 @@
           "required_posts": 2,
           "completed_posts": 2,
           "posts": [
-            {"platform": "Instagram", "url": "https://instagram.com/p/logi_techstorm", "date": "2026-12-13"},
-            {"platform": "Twitter/X", "url": "https://x.com/logitech/status/789012", "date": "2026-12-14"}
+            {
+              "platform": "Instagram",
+              "url": "https://instagram.com/p/logi_techstorm",
+              "date": "2026-12-13"
+            },
+            {
+              "platform": "Twitter/X",
+              "url": "https://x.com/logitech/status/789012",
+              "date": "2026-12-14"
+            }
           ],
           "status": "completed"
         },
         "stage_shoutouts": {
-          "scheduled": ["Rocket League Finals"],
-          "completed": ["Rocket League Finals"],
-          "status": "completed"
+          "scheduled": [
+            "Day 1 Workshop (11:00)",
+            "Rocket League Grand Final (Day 2, 14:30)"
+          ],
+          "completed": [
+            "Day 1 Workshop (11:00)"
+          ],
+          "status": "in_progress"
         }
       }
     },
@@ -152,14 +193,16 @@
       "contact_email": "karthik.n@amd.com",
       "deliverables": {
         "booth": {
-          "location": "B4 — Tech Demo Zone",
+          "location": "B4 — Ground Floor Corridor",
           "size": "3x3m",
           "status": "ready",
           "setup_completed": "2026-12-14T09:00:00+05:30",
           "notes": "Ryzen 9 + Radeon RX demo rigs for participants to test"
         },
         "banners": {
-          "locations": ["Arena Alpha — Right Wall"],
+          "locations": [
+            "Arena Alpha — Right Wall"
+          ],
           "status": "installed",
           "installed_date": "2026-12-14"
         },
@@ -168,7 +211,11 @@
           "required_posts": 2,
           "completed_posts": 1,
           "posts": [
-            {"platform": "Twitter/X", "url": "https://x.com/amd/status/345678", "date": "2026-12-14"}
+            {
+              "platform": "Twitter/X",
+              "url": "https://x.com/amd/status/345678",
+              "date": "2026-12-14"
+            }
           ],
           "status": "in_progress"
         },
@@ -182,12 +229,20 @@
       "commitment_inr": 75000,
       "payment_status": "paid",
       "payment_date": "2026-12-05",
-      "contact_person": "Priya Sharma",
-      "contact_email": "priya.s@jio.com",
+      "contact_person": "Neha Iyer",
+      "contact_email": "neha.i@jio.com",
       "deliverables": {
-        "booth": null,
+        "booth": {
+          "location": "B5 — Ground Floor Corridor",
+          "size": "3x3m",
+          "status": "ready",
+          "setup_completed": "2026-12-13T17:00:00+05:30",
+          "notes": "5G speed-test kiosk + WiFi support desk"
+        },
         "banners": {
-          "locations": ["Registration Desk"],
+          "locations": [
+            "Registration Desk"
+          ],
           "status": "installed",
           "installed_date": "2026-12-13"
         },
@@ -201,7 +256,11 @@
           "required_posts": 1,
           "completed_posts": 1,
           "posts": [
-            {"platform": "Instagram", "url": "https://instagram.com/p/jio_techstorm", "date": "2026-12-14"}
+            {
+              "platform": "Instagram",
+              "url": "https://instagram.com/p/jio_techstorm",
+              "date": "2026-12-14"
+            }
           ],
           "status": "completed"
         },
@@ -215,69 +274,157 @@
       }
     }
   ],
-
   "prize_pool": {
-    "total_allocated": 270000,
+    "total_allocated": 328000,
     "total_disbursed": 0,
     "tournaments": {
       "valorant": {
         "sponsored_by": "HyperX",
         "prizes": {
-          "first": {"amount": 50000, "status": "pending"},
-          "second": {"amount": 25000, "status": "pending"},
-          "third": {"amount": 10000, "status": "pending"},
-          "mvp": {"amount": 5000, "status": "pending"}
+          "first": {
+            "amount": 50000,
+            "status": "pending"
+          },
+          "second": {
+            "amount": 25000,
+            "status": "pending"
+          },
+          "third": {
+            "amount": 10000,
+            "status": "pending"
+          }
         },
-        "total": 90000
+        "total": 85000
       },
       "bgmi": {
         "sponsored_by": "Monster Energy",
         "prizes": {
-          "first": {"amount": 40000, "status": "pending"},
-          "second": {"amount": 20000, "status": "pending"},
-          "third": {"amount": 10000, "status": "pending"}
+          "first": {
+            "amount": 40000,
+            "status": "pending"
+          },
+          "second": {
+            "amount": 20000,
+            "status": "pending"
+          },
+          "third": {
+            "amount": 10000,
+            "status": "pending"
+          },
+          "mvp": {
+            "amount": 5000,
+            "status": "pending"
+          }
         },
-        "total": 70000
+        "total": 75000
       },
       "fifa25": {
         "sponsored_by": "Logitech",
         "prizes": {
-          "first": {"amount": 25000, "status": "pending"},
-          "second": {"amount": 15000, "status": "pending"},
-          "third": {"amount": 5000, "status": "pending"}
+          "first": {
+            "amount": 20000,
+            "status": "pending"
+          },
+          "second": {
+            "amount": 10000,
+            "status": "pending"
+          },
+          "third": {
+            "amount": 5000,
+            "status": "pending"
+          }
         },
-        "total": 45000
+        "total": 35000
       },
       "rocket_league": {
         "sponsored_by": "AMD",
         "prizes": {
-          "first": {"amount": 20000, "status": "pending"},
-          "second": {"amount": 10000, "status": "pending"},
-          "third": {"amount": 5000, "status": "pending"}
+          "first": {
+            "amount": 25000,
+            "status": "pending"
+          },
+          "second": {
+            "amount": 12000,
+            "status": "pending"
+          },
+          "third": {
+            "amount": 5000,
+            "status": "pending"
+          }
         },
-        "total": 35000
+        "total": 42000
       },
       "hackathon": {
         "sponsored_by": "HyperX + Jio",
         "prizes": {
-          "first": {"amount": 15000, "status": "pending"},
-          "second": {"amount": 10000, "status": "pending"},
-          "third": {"amount": 5000, "status": "pending"}
+          "first": {
+            "amount": 30000,
+            "status": "pending"
+          },
+          "second": {
+            "amount": 15000,
+            "status": "pending"
+          },
+          "third": {
+            "amount": 8000,
+            "status": "pending"
+          },
+          "peoples_choice": {
+            "amount": 5000,
+            "status": "pending"
+          }
         },
-        "total": 30000
+        "total": 58000
+      },
+      "cosplay": {
+        "sponsored_by": "General fund",
+        "prizes": {
+          "best_overall": {
+            "amount": 10000,
+            "status": "pending"
+          },
+          "best_gaming_character": {
+            "amount": 7000,
+            "status": "pending"
+          },
+          "best_craftsmanship": {
+            "amount": 5000,
+            "status": "pending"
+          },
+          "best_group": {
+            "amount": 8000,
+            "status": "pending"
+          },
+          "audience_choice": {
+            "amount": 3000,
+            "status": "pending"
+          }
+        },
+        "total": 33000
       }
     }
   },
-
   "expenses": {
     "categories": {
       "venue_rental": {
         "allocated": 200000,
         "spent": 200000,
-        "utilization_pct": 100,
+        "utilization_pct": 100.0,
         "items": [
-          {"description": "Nexus Convention Center — 2-day rental", "amount": 180000, "status": "paid", "vendor": "Nexus Venues Pvt Ltd", "invoice": "NV-2026-1847"},
-          {"description": "Additional parking lot rental", "amount": 20000, "status": "paid", "vendor": "Nexus Venues Pvt Ltd", "invoice": "NV-2026-1848"}
+          {
+            "description": "Nexus Convention Center — 2-day rental",
+            "amount": 180000,
+            "status": "paid",
+            "vendor": "Nexus Venues Pvt Ltd",
+            "invoice": "NV-2026-1847"
+          },
+          {
+            "description": "Additional parking lot rental",
+            "amount": 20000,
+            "status": "paid",
+            "vendor": "Nexus Venues Pvt Ltd",
+            "invoice": "NV-2026-1848"
+          }
         ]
       },
       "stage_and_av": {
@@ -285,29 +432,84 @@
         "spent": 142000,
         "utilization_pct": 94.7,
         "items": [
-          {"description": "Main Stage setup + LED wall (12x6ft)", "amount": 80000, "status": "paid", "vendor": "SoundCraft Productions", "invoice": "SC-4521"},
-          {"description": "Arena Alpha + Beta PA systems", "amount": 45000, "status": "paid", "vendor": "SoundCraft Productions", "invoice": "SC-4522"},
-          {"description": "Tournament PC rentals (20 gaming rigs)", "amount": 17000, "status": "paid", "vendor": "RentAPC Gaming", "invoice": "RAP-881"}
+          {
+            "description": "Main Stage setup + LED wall (12x6ft)",
+            "amount": 80000,
+            "status": "paid",
+            "vendor": "SoundCraft Productions",
+            "invoice": "SC-4521"
+          },
+          {
+            "description": "Arena Alpha + Beta PA systems",
+            "amount": 45000,
+            "status": "paid",
+            "vendor": "SoundCraft Productions",
+            "invoice": "SC-4522"
+          },
+          {
+            "description": "Tournament PC rentals (20 gaming rigs)",
+            "amount": 17000,
+            "status": "paid",
+            "vendor": "RentAPC Gaming",
+            "invoice": "RAP-881"
+          }
         ]
       },
       "catering": {
         "allocated": 100000,
-        "spent": 65500,
-        "utilization_pct": 65.5,
+        "spent": 55000,
+        "utilization_pct": 55.0,
         "items": [
-          {"description": "Day 1 lunch + snacks (800 pax)", "amount": 40000, "status": "paid", "vendor": "Campus Bites Catering", "invoice": "CBC-2210"},
-          {"description": "Day 1 dinner (hackathon participants, 200 pax)", "amount": 15000, "status": "paid", "vendor": "Campus Bites Catering", "invoice": "CBC-2211"},
-          {"description": "Day 2 lunch + snacks (800 pax)", "amount": 10500, "status": "pending_approval", "vendor": "Campus Bites Catering", "invoice": "CBC-2212"}
-        ]
+          {
+            "description": "Day 1 lunch + snacks (800 pax)",
+            "amount": 40000,
+            "status": "paid",
+            "vendor": "Campus Bites Catering",
+            "invoice": "CBC-2210"
+          },
+          {
+            "description": "Day 1 dinner (hackathon participants, 200 pax)",
+            "amount": 15000,
+            "status": "paid",
+            "vendor": "Campus Bites Catering",
+            "invoice": "CBC-2211"
+          },
+          {
+            "description": "Day 2 lunch + snacks (800 pax)",
+            "amount": 10500,
+            "status": "pending_approval",
+            "vendor": "Campus Bites Catering",
+            "invoice": "CBC-2212"
+          }
+        ],
+        "pending_approval": 10500
       },
       "merch_production": {
         "allocated": 80000,
         "spent": 72000,
         "utilization_pct": 90.0,
         "items": [
-          {"description": "TechStorm 2026 t-shirts (500 units)", "amount": 50000, "status": "paid", "vendor": "PrintHub India", "invoice": "PHI-3302"},
-          {"description": "Lanyards + ID badges (1000 units)", "amount": 12000, "status": "paid", "vendor": "PrintHub India", "invoice": "PHI-3303"},
-          {"description": "Sticker packs (1000 units)", "amount": 10000, "status": "paid", "vendor": "StickerMule India", "invoice": "SMI-7741"}
+          {
+            "description": "TechStorm 2026 t-shirts (500 units)",
+            "amount": 50000,
+            "status": "paid",
+            "vendor": "PrintHub India",
+            "invoice": "PHI-3302"
+          },
+          {
+            "description": "Lanyards + ID badges (1000 units)",
+            "amount": 12000,
+            "status": "paid",
+            "vendor": "PrintHub India",
+            "invoice": "PHI-3303"
+          },
+          {
+            "description": "Sticker packs (1000 units)",
+            "amount": 10000,
+            "status": "paid",
+            "vendor": "StickerMule India",
+            "invoice": "SMI-7741"
+          }
         ]
       },
       "marketing": {
@@ -316,9 +518,27 @@
         "utilization_pct": 96.0,
         "alert": "⚠️ 96% utilized — approach with caution",
         "items": [
-          {"description": "Instagram + YouTube ads campaign", "amount": 30000, "status": "paid", "vendor": "DigiBoost Media", "invoice": "DBM-1129"},
-          {"description": "Campus posters + banners printing", "amount": 12000, "status": "paid", "vendor": "PrintHub India", "invoice": "PHI-3301"},
-          {"description": "Influencer collaboration (2 gaming creators)", "amount": 6000, "status": "paid", "vendor": "Direct Payment", "invoice": "DP-001"}
+          {
+            "description": "Instagram + YouTube ads campaign",
+            "amount": 30000,
+            "status": "paid",
+            "vendor": "DigiBoost Media",
+            "invoice": "DBM-1129"
+          },
+          {
+            "description": "Campus posters + banners printing",
+            "amount": 12000,
+            "status": "paid",
+            "vendor": "PrintHub India",
+            "invoice": "PHI-3301"
+          },
+          {
+            "description": "Influencer collaboration (2 gaming creators)",
+            "amount": 6000,
+            "status": "paid",
+            "vendor": "Direct Payment",
+            "invoice": "DP-001"
+          }
         ]
       },
       "miscellaneous": {
@@ -326,26 +546,43 @@
         "spent": 30000,
         "utilization_pct": 60.0,
         "items": [
-          {"description": "First aid kit + medical volunteer stipend", "amount": 8000, "status": "paid", "vendor": "MedReady Services", "invoice": "MRS-442"},
-          {"description": "Security personnel (6 guards, 2 days)", "amount": 12000, "status": "paid", "vendor": "SecureGuard Solutions", "invoice": "SGS-1187"},
-          {"description": "Emergency supplies + water bottles", "amount": 10000, "status": "paid", "vendor": "Campus Store", "invoice": "CS-2026-88"}
+          {
+            "description": "First aid kit + medical volunteer stipend",
+            "amount": 8000,
+            "status": "paid",
+            "vendor": "MedReady Services",
+            "invoice": "MRS-442"
+          },
+          {
+            "description": "Security personnel (6 guards, 2 days)",
+            "amount": 12000,
+            "status": "paid",
+            "vendor": "SecureGuard Solutions",
+            "invoice": "SGS-1187"
+          },
+          {
+            "description": "Emergency supplies + water bottles",
+            "amount": 10000,
+            "status": "paid",
+            "vendor": "Campus Store",
+            "invoice": "CS-2026-88"
+          }
         ]
       },
       "unallocated_reserve": {
         "allocated": 30000,
         "spent": 0,
-        "utilization_pct": 0,
+        "utilization_pct": 0.0,
         "notes": "Emergency fund — requires Fest Lead approval for any withdrawal"
       }
     },
     "summary": {
       "total_allocated": 660000,
-      "total_spent": 557500,
-      "remaining": 102500,
-      "overall_utilization_pct": 84.5
+      "total_spent": 547000,
+      "remaining": 113000,
+      "overall_utilization_pct": 82.9
     }
   },
-
   "vendor_payments": [
     {
       "id": "VENDOR-01",
@@ -377,7 +614,7 @@
       "invoice": "CBC-2212",
       "status": "pending_approval",
       "submitted_at": "2026-12-14T14:00:00+05:30",
-      "approval_hash": "#e7a3",
+      "approval_hash": "#79e1",
       "notes": "Day 2 catering — awaiting Fest Lead approval"
     },
     {
@@ -392,9 +629,7 @@
       "paid_at": "2026-12-11T10:00:00+05:30"
     }
   ],
-
   "payout_log": [],
-
   "alerts": [
     {
       "type": "warning",
@@ -406,23 +641,50 @@
     {
       "type": "info",
       "category": "sponsor_deliverable",
-      "message": "Logitech: Swag mousepads in transit — ETA 3 PM today",
-      "created_at": "2026-12-14T10:00:00+05:30",
+      "message": "Logitech: swag mousepads in transit (DTDC-98765432) — ETA was 3 PM, now overdue",
+      "created_at": "2026-12-14T15:30:00+05:30",
       "resolved": false
     },
     {
       "type": "warning",
       "category": "budget",
-      "message": "Marketing budget at 96% utilization",
+      "message": "venue_rental at 100.0% of allocation (fully spent)",
+      "created_at": "2026-12-14T09:00:00+05:30",
+      "resolved": false
+    },
+    {
+      "type": "warning",
+      "category": "budget",
+      "message": "marketing at 96.0% of allocation",
+      "created_at": "2026-12-14T09:00:00+05:30",
+      "resolved": false
+    },
+    {
+      "type": "warning",
+      "category": "budget",
+      "message": "stage_and_av at 94.7% of allocation",
+      "created_at": "2026-12-14T09:00:00+05:30",
+      "resolved": false
+    },
+    {
+      "type": "warning",
+      "category": "budget",
+      "message": "merch_production at 90.0% of allocation",
       "created_at": "2026-12-14T09:00:00+05:30",
       "resolved": false
     },
     {
       "type": "action_required",
       "category": "vendor_payment",
-      "message": "VENDOR-03 (Campus Bites Day 2) awaiting approval — ₹10,500",
+      "message": "VENDOR-03 (Campus Bites, Day 2 catering) awaiting approval — ₹10,500",
       "created_at": "2026-12-14T14:00:00+05:30",
       "resolved": false
     }
-  ]
+  ],
+  "income": {
+    "sponsorship": 850000,
+    "ticket_sales": 138000,
+    "notes": "Ticket sales: pre-sold passes as of 2026-12-13 (General ₹299 / All-Access ₹499 / Spectator ₹149)."
+  },
+  "audit_log": []
 }

@@ -24,348 +24,200 @@ You end up with 12 WhatsApp groups, zero accountability, and a festival that run
 
 ## The Solution: FestCommand
 
-FestCommand turns your Discord server into a **structured, AI-powered event operations war room** using Switch's multi-room orchestration.
+FestCommand turns your Discord, Slack, or Mattermost server into a **structured event-operations war room**. It is one Switch template that creates:
 
-**Three specialized rooms. Three AI agents. One command center.**
-
-Each room has a clear purpose, scoped permissions, shared documents, and AI agents that coordinate across rooms — with human approval gates at every critical decision.
+- **three rooms** with different visibility: a public helpdesk, a private ops room, and a private finance room;
+- **three AI agents** with different reach: who can address each one is set per agent;
+- **three room documents** the agents work from: the schedule & rulebook, the live bracket, and the sponsor ledger;
+- **a human approval gate**: no result, ruling, schedule change, or rupee moves until the Fest Lead types `approve <TYPE>-<ID> #<code>`.
 
 ---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                          FestCommand on Switch                         │
-│                                                                        │
-│  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │                     #public-helpdesk                              │  │
-│  │                   addressing: anyone                              │  │
-│  │                                                                   │  │
-│  │   👥 Participants ──► @concierge-agent                           │  │
-│  │                        │                                          │  │
-│  │   📄 schedule_and_rules.md                                       │  │
-│  │                        │                                          │  │
-│  │   Functions:           │                                          │  │
-│  │   • Answer FAQs        │   ┌─── Dispute escalation ──────┐       │  │
-│  │   • Share schedules    │   │                              │       │  │
-│  │   • Announce results   ◄───┼── Resolution announcements   │       │  │
-│  │   • Escalate disputes ─┼───┘                              │       │  │
-│  └────────────────────────┼──────────────────────────────────┼───┘  │
-│                           │                                  │       │
-│           ┌───────────────▼──────────────────────────────────▼──┐   │
-│           │                  #tournament-ops                     │   │
-│           │               addressing: owner-agents               │   │
-│           │                                                      │   │
-│           │   🧑 Fest Lead + @bracket-marshal + @sponsor-tracker │   │
-│           │                                                      │   │
-│           │   📄 bracket_state.json                              │   │
-│           │   📄 schedule_and_rules.md                           │   │
-│           │                                                      │   │
-│           │   Functions:                                         │   │
-│           │   • Validate match results (proof required)          │   │
-│           │   • Investigate & resolve disputes                   │   │
-│           │   • Update brackets (after human approval)           │   │
-│           │   • Schedule changes                                 │   │
-│           │                                                      │   │
-│           │   Approval: "approve MATCH-14 #a8f2"                │   │
-│           │   Approval: "approve DISPUTE-05 #c4d1"              │   │
-│           │             │                                        │   │
-│           └─────────────┼────────────────────────────────────┘   │
-│                         │                                         │
-│              Prize payout triggers                                │
-│                         │                                         │
-│           ┌─────────────▼────────────────────────────────────┐   │
-│           │              #sponsor-finance                      │   │
-│           │           addressing: owner-agents                 │   │
-│           │                                                    │   │
-│           │   🧑 Fest Lead + @sponsor-tracker                  │   │
-│           │                                                    │   │
-│           │   📄 sponsor_ledger.json                           │   │
-│           │                                                    │   │
-│           │   Functions:                                       │   │
-│           │   • Prize pool payouts                             │   │
-│           │   • Budget monitoring & alerts                     │   │
-│           │   • Vendor payment tracking                        │   │
-│           │   • Sponsor deliverable dashboards                 │   │
-│           │                                                    │   │
-│           │   Approval: "approve PAYOUT-03 #b7e9"             │   │
-│           └────────────────────────────────────────────────┘   │
-│                                                                  │
-│  Cross-Room Flows (via Switch Group Links):                      │
-│  ─────────────────────────────────────────                       │
-│  #public-helpdesk ◄──► #tournament-ops   (dispute escalation     │
-│                                           + bracket announces)   │
-│  #tournament-ops  ───► #sponsor-finance  (prize payout triggers) │
-│                                                                  │
-└──────────────────────────────────────────────────────────────────┘
+   #public-helpdesk  (public)          #tournament-ops  (private)          #sponsor-finance  (private)
+  ┌───────────────────────┐          ┌───────────────────────────┐        ┌────────────────────────┐
+  │ 👥 participants        │          │ 🧑 Fest Lead               │        │ 🧑 Fest Lead            │
+  │                       │ reports  │                           │ "tour- │                        │
+  │ 🤖 concierge ─────────┼─────────►│ 🤖 concierge               │ nament │ 🤖 sponsor-tracker     │
+  │                       │◄─────────┤ 🤖 bracket-marshal         │ done"  │                        │
+  │                       │ approved │ 🤖 sponsor-tracker ────────┼───────►│                        │
+  │                       │ outcomes │                           │        │ 📄 sponsor_ledger.json │
+  │                       │          │ 📄 bracket_state.json      │        │                        │
+  │                       │          │ 📄 schedule_and_rules.md   │        │ ✋ approve PAYOUT-01 #… │
+  │                       │          │ ✋ approve MATCH-06 #…     │        │ ✋ approve VENDOR-03 #… │
+  └───────────────────────┘          └───────────────────────────┘        └────────────────────────┘
+                     group "techstorm FestCommand": links helpdesk ⇄ ops → finance
 ```
 
-### Data Flow Summary
+| Agent | Rooms | Addressing (who can make it act) | Writes |
+|---|---|---|---|
+| `{fest}-concierge` | helpdesk, ops | `anyone_in: [helpdesk, ops]` | nothing: files reports, posts announcements |
+| `{fest}-bracket-marshal` | ops | `owner-agents`: the Fest Lead and their agents | `bracket_state.json`, after approval |
+| `{fest}-sponsor-tracker` | ops, finance | `owner-agents` | `sponsor_ledger.json`, after approval |
+
+**How hand-offs cross rooms.** An agent that is a member of two rooms is the bridge between them. The concierge carries a participant's report from the helpdesk into ops, and carries the approved outcome back out. The sponsor tracker hears "tournament complete" in ops and opens payouts in finance, the only room where money is discussed. The group's `links:` show those flows on Switch's room map.
+
+**Why the public can't tamper with results.** Participants can address only the concierge, and the concierge only files reports. The bracket marshal and sponsor tracker use `owner-agents` addressing, so no participant can talk to them at all. On top of that, the agents' instructions accept an `approve` line only when the Fest Lead typed it. An approval relayed by any agent doesn't count.
+
+### Data flow
 
 ```
-Participant question ──► @concierge reads schedule_and_rules.md ──► Instant answer
+Question  ─► concierge reads schedule + bracket ─► answer                         (no human needed)
 
-Match result ──► @bracket-marshal validates proof
-             ──► Posts approval request in #tournament-ops
-             ──► 🧑 Fest Lead approves
-             ──► bracket_state.json updated
-             ──► @concierge announces in #public-helpdesk
+Result    ─► concierge ─► ops: marshal validates (exists? legal score? proof?)
+          ─► "approve MATCH-06 #da40"  ◄── 🧑 Fest Lead
+          ─► bracket_state.json updated, winner slotted into the next match, audit_log += entry
+          ─► marshal: 📣 ANNOUNCE ─► concierge posts in helpdesk
 
-Dispute ──► @concierge formats & escalates to #tournament-ops
-        ──► @bracket-marshal investigates
-        ──► 🧑 Fest Lead approves ruling
-        ──► bracket_state.json updated
-        ──► @concierge announces resolution in #public-helpdesk
+Dispute   ─► same path; the marshal quotes the rulebook, flags rule gaps, finds a free slot for a replay
 
-Prize payout ──► @sponsor-tracker calculates from bracket_state.json
-             ──► Posts approval in #sponsor-finance
-             ──► 🧑 Fest Lead approves
-             ──► sponsor_ledger.json updated
+Payout    ─► marshal posts final standings in ops ─► tracker opens PAYOUT-xx in finance
+          ─► 🧑 approves ─► sponsor_ledger.json: prize status, payout_log, budget recomputed
 ```
 
 ---
 
-## Why Switch is Essential (Not Optional)
+## Why Switch is essential
 
-FestCommand **cannot work** without Switch. Here's why:
-
-| Feature | Without Switch | With Switch (FestCommand) |
+| Need | What Switch provides | Where in the template |
 |---|---|---|
-| **Multi-room linking** | Agents can't see or post across channels | Agents hand off structured data between rooms via group links |
-| **Room-scoped documents** | No shared persistent memory | `bracket_state.json` and `sponsor_ledger.json` are live, versioned, shared across agents |
-| **Addressing policies** | Anyone can prompt-inject the ops agent | `addressing: owner-agents` on bracket-marshal blocks unauthorized access |
-| **Human-in-the-loop** | No approval gates | `approve MATCH-14 #a8f2` pattern with audit trail |
-| **Cross-room notifications** | Copy-paste between channels | Bracket updates auto-announced in helpdesk when approved in ops |
-| **Template portability** | Manual setup per event | One YAML template → spin up a war room for any fest in minutes |
-
-Switch provides the **infrastructure** — room topology, document sharing, addressing rules, and cross-room message routing — that makes FestCommand's multi-agent coordination possible. Without it, you're back to one monolithic bot in one channel with no structure, no approval flow, and no scoped access.
+| Stand up 3 agents + 3 rooms + docs in one go, for any fest | Templates with typed params; one import creates everything and posts a kickoff into each room | `festcommand.template.yaml` (v2 `resources:`) |
+| Keep participants away from the agents that change state | Per-agent `addressing` | `owner-agents` on marshal & tracker; `anyone_in` on concierge |
+| Keep money out of the public agent's reach | Rooms with their own members and documents | `sponsor_ledger.json` lives only in the finance room |
+| Shared, persistent state the agents read and write | Room documents | `docs:` on the ops and finance rooms |
+| Move work between rooms without one all-seeing bot | Agents that belong to several rooms, plus a group with links | concierge ∈ helpdesk+ops, tracker ∈ ops+finance |
+| Agents start working without anyone prompting them | Per-room `kickoff:` that mentions the agent | each room's kickoff |
 
 ---
 
-## Rooms & Agents
+## Quick start
 
-### Room 1: `#public-helpdesk`
-
-| Property | Value |
-|---|---|
-| **Agent** | `@concierge-agent` |
-| **Addressing** | `anyone` — open to all participants |
-| **Purpose** | Answer participant questions, announce bracket updates, escalate disputes |
-| **Documents** | `schedule_and_rules.md` |
-
-The concierge is the **public face** of FestCommand. It answers questions from the live schedule document, formats dispute reports, and announces bracket results — but it **never** makes operational decisions. Those are escalated.
-
-### Room 2: `#tournament-ops`
-
-| Property | Value |
-|---|---|
-| **Agents** | `@bracket-marshal` + `@sponsor-tracker` |
-| **Addressing** | `owner-agents` — only fest lead and agents can post |
-| **Purpose** | Validate match results, resolve disputes, manage schedule changes |
-| **Documents** | `bracket_state.json`, `schedule_and_rules.md` |
-
-The ops room is the **nerve center**. The bracket-marshal validates match results (requiring screenshot proof URLs), investigates disputes, and proposes resolutions — but **every state change** requires explicit fest lead approval via the `approve` command.
-
-### Room 3: `#sponsor-finance`
-
-| Property | Value |
-|---|---|
-| **Agent** | `@sponsor-tracker` |
-| **Addressing** | `owner-agents` — restricted to fest lead and agent |
-| **Purpose** | Prize payouts, budget monitoring, vendor payments, sponsor deliverable tracking |
-| **Documents** | `sponsor_ledger.json` |
-
-The finance room handles the money. The sponsor-tracker calculates prize distributions from bracket results, tracks sponsor deliverables, monitors budget burn rates, and generates status dashboards — with **all payouts requiring fest lead approval**.
-
----
-
-## Demo Scenarios
-
-The rehearsal script ([`scripts/rehearse.py`](scripts/rehearse.py)) walks through 5 real-world scenarios:
-
-### 1. 📅 Schedule Question
-> A participant asks: "When is the Valorant semifinal?"
-
-The concierge agent reads `schedule_and_rules.md` and responds with the exact time, map pool, and check-in instructions — no human intervention needed.
-
-### 2. ✅ Match Validation
-> A referee submits: "TeamAlpha beat TeamBeta 13-7 on Ascent" with a screenshot URL.
-
-The bracket-marshal validates the proof exists, checks the match ID against `bracket_state.json`, and posts an approval request. The fest lead types `approve MATCH-14 #a8f2`. The bracket updates. The concierge announces the result in helpdesk.
-
-### 3. ⚖️ Dispute Resolution
-> A player reports: "TeamGamma used a player not on their registered roster in MATCH-09."
-
-The concierge formats a dispute report and escalates to tournament-ops. The bracket-marshal checks the roster in `bracket_state.json`, finds a violation, drafts a ruling (forfeit + warning), and requests approval. The fest lead approves. The concierge announces the resolution publicly.
-
-### 4. 💰 Prize Payout
-> The Valorant tournament concludes. Prize pool: ₹50,000.
-
-The sponsor-tracker calculates the split (1st: ₹25,000, 2nd: ₹15,000, 3rd: ₹10,000), cross-references against the sponsor ledger, and posts a payout approval request. The fest lead approves. The ledger updates with disbursement records.
-
-### 5. 📊 Sponsor Status
-> The fest lead asks: "What's HyperX's deliverable status?"
-
-The sponsor-tracker reads `sponsor_ledger.json` and generates a dashboard showing: booth setup ✅, logo on stream overlay ✅, product giveaway ⏳, social media shoutout ❌. Tracks completion percentage and remaining obligations.
-
----
-
-## Quick Start
-
-### Prerequisites
-
-- [Switch](https://github.com/sandbox-quantum/switch) installed and running
-- Claude Code (or any supported AI agent) enrolled in Switch
-- Python 3.10+ (for rehearsal script)
-- Discord server (or Slack/Mattermost)
-
-### Run the Rehearsal (No Switch Required)
+### 1. Rehearse locally (no Switch needed)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/festcommand.git
-cd festcommand
-python scripts/rehearse.py
+git clone https://github.com/945040ad/Flip-the-Switch.git
+cd Flip-the-Switch
+./scripts/setup.sh            # checks Python 3.10+, runs the validator
+python scripts/rehearse.py    # ~60 s; add --fast to skip pauses
 ```
 
-This simulates the full workflow locally with colored terminal output — no Switch instance needed.
+The rehearsal plays six scenarios across the three rooms **against the real documents**. Every team, time, rule and amount is read from `documents/`, approval codes are generated per request, and each approval changes the state that the next scenario reads. Use `--write OUT/` to save the post-rehearsal documents. `documents/` itself is never modified.
 
-### Deploy on Switch
+### 2. Deploy on Switch
 
-1. Open the Switch Console
-2. Click **Import Template** → select `festcommand.template.yaml`
-3. Set your fest name (default: `techstorm`)
-4. Choose your chat platform bridge (Discord / Slack / Mattermost)
-5. Upload the three room documents from `documents/`
-6. Click **Create Rooms** → Start chatting!
+1. Open **Switch Console → Templates** and import `festcommand.template.yaml`.
+2. Set **Fest name** (default `techstorm`) and the **Messaging app**. Provider, machine and directory are under *Advanced*.
+3. Create. Switch makes the three agents, the three rooms with their documents, and the group. Each room's kickoff wakes its agent: the concierge posts a welcome, the marshal posts a bracket status, and the tracker posts the sponsor dashboard.
 
-### Validate Setup
+You don't need to upload any documents. They're embedded in the template.
+
+### 3. Make it yours
+
+Edit `documents/` (your schedule, teams, sponsors, budget) and `agents/*/SKILL.md` (agent behaviour), then:
 
 ```bash
-chmod +x scripts/setup.sh
-./scripts/setup.sh
+python scripts/validate.py         # 579 consistency checks; fix anything it flags
+python scripts/build_template.py   # re-embed into festcommand.template.yaml
 ```
 
-The setup script checks that:
-- All required files exist and are valid JSON/Markdown
-- The template YAML references match the document directory
-- Python dependencies are satisfied
+Edit `template/festcommand.template.src.yaml`, not the generated file. CI (`.github/workflows/validate.yml`) fails if the generated template is stale or the documents contradict each other.
 
 ---
 
-## Project Structure
+## Demo scenarios
+
+Run `python scripts/rehearse.py`. The clock starts at the documents' snapshot, **Day 1, 17:45 IST**.
+
+| # | Scenario | Rooms | What it shows |
+|---|---|---|---|
+| 1 | 📅 *"When is our final?"* (Team Mayhem) | helpdesk | Answer built from bracket + schedule: MATCH-07, Day 2 18:00, Main Stage, BO5 |
+| 2 | ✅ Referee reports Valorant SF2 (MATCH-06) | helpdesk → ops → helpdesk | Validation (match exists, legal map scores incl. 14-12 OT, BO3 decided). A participant's `approve …` in public is **refused**. Fest Lead approves; Enigma Gaming slotted into the final; announced |
+| 3 | ⚖️ FIFA disconnect at 1-1 in the 85th minute (MATCH-47) | helpdesk → ops → helpdesk | Marshal quotes both disconnect rules, **flags the rule gap**, recommends a rematch, finds a free Arena Alpha slot with no player clash. A wrong approval code is rejected |
+| 4 | 💳 Day 2 catering invoice (VENDOR-03, ₹10,500) | finance | Category impact 55% → 65.5% of budget, alert resolved after approval |
+| 5 | 📊 Sponsor dashboard | finance | 5 sponsors × 5 deliverables, plus *Action required*: Monster Energy 0/2 posts due tonight, Logitech swag **overdue** vs its 15:00 ETA |
+| 6 | 💰 BGMI finishes → payouts | ops → finance | ⏩ Day 2. Podium from cumulative points (rounds 2-3 simulated from a fixed seed), 3 PAYOUT approvals, ledger and budget recomputed |
+
+---
+
+## Project structure
 
 ```
-festcommand/
-├── festcommand.template.yaml     # Switch template — 3 rooms, 3 agents, group links
-├── documents/
-│   ├── schedule_and_rules.md     # Live event schedule & rules (room document)
-│   ├── bracket_state.json        # Tournament bracket state
-│   └── sponsor_ledger.json       # Sponsor commitments & financials
+Flip-the-Switch/
+├── festcommand.template.yaml          # GENERATED: import this into Switch
+├── template/
+│   └── festcommand.template.src.yaml  # template source (edit this)
 ├── agents/
-│   ├── concierge/
-│   │   └── SKILL.md              # Concierge agent instructions
-│   ├── bracket-marshal/
-│   │   └── SKILL.md              # Bracket marshal instructions
-│   └── sponsor-tracker/
-│       └── SKILL.md              # Sponsor tracker instructions
+│   ├── concierge/SKILL.md             # agent instructions, embedded into the template
+│   ├── bracket-marshal/SKILL.md
+│   └── sponsor-tracker/SKILL.md
+├── documents/                         # room documents, embedded into the template
+│   ├── schedule_and_rules.md          # schedule, rulebook, prizes, venue, contacts
+│   ├── bracket_state.json             # 4 tournaments, 55 matches, approvals, audit log
+│   └── sponsor_ledger.json            # income, budget, sponsors, prizes, vendors, alerts
 ├── scripts/
-│   ├── rehearse.py               # 60-second workflow simulation
-│   └── setup.sh                  # Setup validator
-├── demo/
-│   └── video-script.md           # Demo video script (2 min)
-├── blog/
-│   └── devto-draft.md            # DEV.to blog post draft
-├── README.md
+│   ├── build_template.py              # source + skills + documents → template
+│   ├── validate.py                    # 579 cross-document consistency checks
+│   ├── rehearse.py                    # six-scenario simulation, data-driven
+│   └── setup.sh                       # environment + validation in one command
+├── .github/workflows/validate.yml     # CI: build check, validate, rehearse
+├── demo/video-script.md               # 2-minute demo video script
+├── blog/devto-draft.md                # DEV.to post draft
 └── LICENSE
 ```
 
 ---
 
-## Sample Event: TechStorm 2026
+## Sample event: TechStorm 2026
 
-FestCommand ships with a complete sample dataset for **TechStorm 2026** — a 2-day campus tech fest featuring:
+FestCommand ships with a complete dataset for **TechStorm 2026**, a 2-day fest (Dec 14–15) at a Bengaluru convention centre.
 
 | Track | Events |
 |---|---|
-| 🎮 **Esports** | Valorant 5v5, BGMI Squad, FIFA 25 1v1, Rocket League 2v2 |
-| 💻 **Hackathon** | 24-hour open track with 4 sponsor challenges |
-| 🎭 **Stage** | Cosplay competition, DJ night, award ceremony |
-| 🛍️ **Expo** | Merch booths, sponsor demo stations, VR arcade |
-| 🤝 **Sponsors** | HyperX, Monster Energy, Logitech, AMD, Jio |
+| 🎮 **Esports** | Valorant 5v5 (8-team LAN playoff), BGMI 20 squads × 3 rounds, FIFA 25 1v1 (32 players), Rocket League 3v3 (double elimination) |
+| 💻 **Hackathon** | 24-hour build, 2–4 per team |
+| 🎭 **Stage** | Cosplay showdown, DJ sets, awards ceremony |
+| 🛍️ **Expo** | Sponsor booths B1–B5, merch booth B6 |
+| 🤝 **Sponsors** | HyperX (Title), Monster Energy & Logitech (Gold), AMD (Silver), Jio (Connectivity) |
 
-**Total prize pool**: ₹2,00,000 across all tracks
-**Expected footfall**: 2,000+ participants over 2 days
-**Budget**: ₹5,00,000 (tracked in `sponsor_ledger.json`)
+| Money | |
+|---|---|
+| Income | ₹9,88,000 (₹8,50,000 sponsorship + ₹1,38,000 tickets) |
+| Expense budget | ₹6,60,000 across 7 categories (₹5,47,000 spent at snapshot) |
+| Prize pool | ₹3,28,000 (esports, hackathon, cosplay) |
 
-All sample data in `documents/` is realistic and internally consistent — match IDs reference real teams, payouts reference real sponsors, and the schedule has no conflicts.
-
----
-
-## The Human-in-the-Loop Flow
-
-Every critical decision in FestCommand passes through a **human approval gate**. No AI agent can unilaterally change bracket state, disburse funds, or announce rulings.
-
-```
-Participant reports dispute in #public-helpdesk
-        │
-        ▼
-@concierge-agent formats structured Dispute Report
-  (player, match ID, category, evidence)
-        │
-        ▼
-Escalates to @bracket-marshal in #tournament-ops
-        │
-        ▼
-@bracket-marshal investigates:
-  • Checks bracket_state.json for match details
-  • Verifies roster, seed, and rule references
-  • Drafts resolution with reasoning
-        │
-        ▼
-Posts approval request:
-  "⚖️ DISPUTE-05 | TeamGamma forfeits MATCH-09 (roster violation)
-   Approve: approve DISPUTE-05 #c4d1"
-        │
-        ▼
-🧑 Fest Lead reviews evidence and reasoning
-  Types: "approve DISPUTE-05 #c4d1"
-        │
-        ▼
-@bracket-marshal updates bracket_state.json
-  (match result, team status, audit log entry)
-        │
-        ▼
-Notifies @concierge-agent via cross-room link
-        │
-        ▼
-@concierge-agent announces resolution in #public-helpdesk
-  "⚖️ Ruling: TeamGamma forfeits MATCH-09 due to roster violation.
-   TeamDelta advances to the quarterfinal."
-```
-
-The `#c4d1` hash is a 4-character verification code generated from the dispute content. It prevents accidental approvals of the wrong item and creates a tamper-evident audit trail.
+The data is a mid-event snapshot: Valorant SF2 played but unreported, a FIFA dispute under review, BGMI round 2 in progress, a catering invoice awaiting approval, and Monster Energy behind on social posts. `scripts/validate.py` keeps the three documents mutually consistent.
 
 ---
 
-## Limitations (Honest Assessment)
+## The human-in-the-loop protocol
 
-We believe in transparency. Here's what FestCommand **doesn't** do:
+1. The agent drafts the change and records it in the document's `pending_approvals` with a fresh 4-hex code.
+2. It posts the request, ending in the exact line to type, e.g. `Fest Lead: approve DISPUTE-47 #f6e4`.
+3. Only that exact line, **typed by the Fest Lead in that room**, applies the change. A wrong code gets "code mismatch" and nothing changes. A line relayed by another agent is ignored. `reject …` drops the request.
+4. The change is written, the entry moves to `audit_log` with who approved it and when, and the announcement or next hand-off goes out.
 
-- **No real screenshot analysis**: Bracket-marshal validates that a screenshot URL exists but cannot perform image analysis to verify the actual game score. A future version could integrate vision models.
-- **No live bracket visualization**: Bracket state is stored as JSON — a future version could render interactive bracket graphics (e.g., with Challonge or custom React components).
-- **Single fest lead approval**: Currently only one approval flow — a production version would support role-based multi-approver chains (e.g., finance head approves payouts, tournament director approves disputes).
-- **No payment gateway integration**: Payout tracking is ledger-based — actual bank/UPI transfers require manual execution outside FestCommand.
-- **No real-time game API integration**: Match results are submitted manually by referees. Integration with game APIs (Riot, Krafton) would enable automatic result ingestion.
+The code is there to stop you approving the wrong item and to make the audit log easy to search. It isn't a cryptographic signature. The security boundary is Switch's addressing: only the Fest Lead and their own agents can address the agents that write state.
 
 ---
 
-## Built With
+## Limitations
 
-- **[Switch](https://github.com/sandbox-quantum/switch)** — Multi-agent orchestration platform (rooms, documents, addressing, group links)
-- **[Claude Code](https://claude.ai)** — AI agent provider powering all three agents
-- **Python 3.10+** — Rehearsal simulation script
-- **Markdown + JSON** — Room documents and state management
+- **The gate is policy, not a platform primitive.** It's enforced by the agents' instructions plus Switch addressing. A cryptographically enforced approval would need a tool the agents call.
+- **No screenshot analysis.** The marshal checks that a proof URL is present, not what the image shows.
+- **Single approver.** A real deployment would split approval roles, e.g. a finance head for payouts and a tournament director for rulings.
+- **No payment rails.** Payouts are recorded in the ledger. UPI or bank transfers happen outside FestCommand.
+- **No game APIs.** Results are reported by referees, not pulled from Riot or Krafton.
+- **Template features beyond the documented ones are untested.** The template follows Switch's documented v2 language. How `links:` behave at runtime isn't documented, so FestCommand doesn't depend on them for hand-offs. Room membership does that job.
+
+---
+
+## Built with
+
+- **[Switch](https://github.com/sandbox-quantum/switch)**: templates, rooms, room documents, per-agent addressing, groups
+- **[Claude Code](https://claude.com/claude-code)** (or Codex / OpenCode): the coding agent behind each FestCommand agent
+- **Python 3.10+, standard library only** (PyYAML optional): build, validation and rehearsal scripts
 
 ---
 
@@ -378,10 +230,10 @@ Built for the **[Flip the Switch Hackathon](https://wemakedevs.org)** by WeMakeD
 **Rubric alignment**:
 | Criteria | Weight | How FestCommand addresses it |
 |---|---|---|
-| Switch Features | 40% | Multi-room, documents, addressing policies, group links, human-in-the-loop |
-| Usefulness & Impact | 20% | Solves real campus fest chaos — tested against actual event scenarios |
-| Code Quality | 20% | Clean YAML template, modular agent skills, validated JSON schemas |
-| Presentation & Docs | 20% | This README, demo video, blog post, rehearsal script |
+| Switch Features | 30% | v2 template creating 3 agents, 3 rooms and a linked group; room documents; per-agent addressing as the security boundary; per-room kickoffs; multi-room agents for hand-offs |
+| Technical Execution | 25% | Template built from single-source skills + documents, 579-check cross-document validator, data-driven rehearsal with a working approval gate, CI |
+| Creativity & Impact | 25% | Solves real campus fest chaos — a pain point felt by thousands of student organizers |
+| Presentation & Docs | 20% | Architecture diagram, demo video script, DEV.to blog draft, comprehensive README |
 
 ---
 

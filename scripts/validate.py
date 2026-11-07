@@ -1,0 +1,391 @@
+#!/usr/bin/env python3
+"""
+FestCommand consistency checker.
+
+Agents answer from the room documents, so a contradiction between documents
+turns into a confidently wrong answer in chat. This script checks that:
+
+  * the template is valid YAML, uses the Switch v2 shape, every reference
+    resolves, and it was built from the current sources;
+  * every match in the published schedule exists in bracket_state.json at the
+    same time and stage, and vice versa;
+  * bracket progression is consistent (winners flow into the next match,
+    scores are legal, nothing after the snapshot time is already completed);
+  * the ledger's arithmetic adds up, the budget is not over-allocated, prize
+    amounts match the rulebook's prize table, and booth numbers match the venue
+    map;
+  * every approval code is a 4-character hex code.
+
+Usage:  python scripts/validate.py          (exit code 1 on any error)
+Standard library only; template checks use PyYAML when it is installed.
+"""
+from __future__ import annotations
+
+import json
+import re
+import subprocess
+import sys
+from datetime import datetime
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+DOCS = ROOT / "documents"
+
+errors: list[str] = []
+passes = 0
+
+
+def check(cond: bool, msg: str) -> bool:
+    global passes
+    if cond:
+        passes += 1
+    else:
+        errors.append(msg)
+    return cond
+
+
+def section(title: str) -> None:
+    print(f"\n── {title}")
+
+
+def done(title: str, before: int) -> None:
+    new = errors[before:]
+    if new:
+        for e in new:
+            print(f"  ✗ {e}")
+    else:
+        print(f"  ✓ {title}")
+
+
+# ─────────────────────────────── loading ────────────────────────────────
+
+def load():
+    bracket = json.loads((DOCS / "bracket_state.json").read_text(encoding="utf-8"))
+    ledger = json.loads((DOCS / "sponsor_ledger.json").read_text(encoding="utf-8"))
+    schedule = (DOCS / "schedule_and_rules.md").read_text(encoding="utf-8")
+    return bracket, ledger, schedule
+
+
+def all_matches(bracket: dict) -> dict[str, dict]:
+    """Flatten every match-like object (anything with a match_id) with its game."""
+    found: dict[str, dict] = {}
+
+    def walk(obj, game):
+        if isinstance(obj, dict):
+            if "match_id" in obj and ("scheduled_time" in obj or "status" in obj):
+                found.setdefault(obj["match_id"], {**obj, "_game": game})
+            for v in obj.values():
+                walk(v, game)
+        elif isinstance(obj, list):
+            for v in obj:
+                walk(v, game)
+
+    for game, t in bracket["tournaments"].items():
+        walk(t, game)
+    return found
+
+
+# ─────────────────────────────── schedule ───────────────────────────────
+
+DAY_DATES = {"1": "2026-12-14", "2": "2026-12-15"}
+
+
+def schedule_slots(schedule: str) -> dict[str, tuple[str, str]]:
+    """MATCH-ID -> (ISO local time 'YYYY-MM-DDTHH:MM', stage) from the day tables."""
+    slots: dict[str, tuple[str, str]] = {}
+    for day, body in re.findall(r"## Day (\d) Schedule.*?\n(.*?)(?=\n---|\n## )", schedule, re.S):
+        lines = [l for l in body.splitlines() if l.startswith("|")]
+        header = [c.strip() for c in lines[0].strip("|").split("|")]
+        for row in lines[2:]:
+            cells = [c.strip() for c in row.strip("|").split("|")]
+            t = re.sub(r"\*", "", cells[0])
+            for col, cell in zip(header[1:], cells[1:]):
+                ids = re.findall(r"MATCH-(\d+)", cell)
+                rng = re.search(r"MATCH-(\d+) to MATCH-(\d+)", cell)
+                if rng:
+                    ids = [f"{i:02d}" for i in range(int(rng[1]), int(rng[2]) + 1)]
+                for i in ids:
+                    slots[f"MATCH-{i}"] = (f"{DAY_DATES[day]}T{t}", col)
+    return slots
+
+
+def check_schedule_vs_bracket(bracket, schedule):
+    b0 = len(errors)
+    matches = all_matches(bracket)
+    slots = schedule_slots(schedule)
+    for mid, (when, stage) in sorted(slots.items()):
+        if not check(mid in matches, f"schedule lists {mid} but bracket_state.json has no such match"):
+            continue
+        m = matches[mid]
+        bt = m.get("scheduled_time", "")[:16]
+        check(bt == when, f"{mid}: schedule says {when}, bracket says {bt}")
+        if "stage" in m:
+            check(m["stage"] == stage, f"{mid}: schedule says {stage}, bracket says {m['stage']}")
+    for mid, m in matches.items():
+        check(mid in slots, f"{mid} ({m['_game']}) is in the bracket but not in the published schedule")
+    done(f"{len(slots)} scheduled matches agree with bracket_state.json (time + stage)", b0)
+
+
+# ─────────────────────────────── bracket ────────────────────────────────
+
+HEX = re.compile(r"^#[0-9a-f]{4}$")
+
+
+def legal_valorant_map(a: int, b: int) -> bool:
+    hi, lo = max(a, b), min(a, b)
+    return (hi == 13 and lo <= 11) or (hi >= 14 and hi - lo == 2)
+
+
+def check_bracket(bracket):
+    b0 = len(errors)
+    snap = datetime.fromisoformat(bracket["last_updated"])
+    matches = all_matches(bracket)
+    winners = {mid: m.get("winner") for mid, m in matches.items()}
+
+    for mid, m in matches.items():
+        when = m.get("scheduled_time")
+        if when and m.get("status") == "completed":
+            check(datetime.fromisoformat(when) <= snap,
+                  f"{mid} is 'completed' but scheduled after the snapshot ({when} > {bracket['last_updated']})")
+        if when and m.get("status") == "pending":
+            overdue = (snap - datetime.fromisoformat(when)).total_seconds() / 3600
+            check(overdue < 2, f"{mid} is still 'pending' {overdue:.1f}h after its slot. Mark it "
+                               "in_progress / awaiting_result, or record the result")
+        if m.get("status") == "completed" and "winner" in m:
+            check(bool(m.get("winner")), f"{mid} is completed but has no winner")
+        if "approval_hash" in m:
+            check(bool(HEX.match(m["approval_hash"])), f"{mid}: approval code {m['approval_hash']!r} is not 4 hex chars")
+
+        # Progression: "Winner of MATCH-X vs Winner of MATCH-Y" fills team_a/team_b (or player_a/b).
+        notes = m.get("notes") or ""
+        refs = re.findall(r"(Winner|Loser) of (?:[A-Z ]+\()?(MATCH-\d+)", notes)
+        if len(refs) == 2:
+            for side, (kind, src) in zip(("a", "b"), refs):
+                if kind != "Winner" or src not in matches:
+                    continue
+                field = f"team_{side}" if f"team_{side}" in m else f"player_{side}"
+                expected = winners.get(src)
+                actual = m.get(field)
+                check(actual == expected,
+                      f"{mid}.{field} is {actual!r} but {src} winner is {expected!r}")
+
+    # Valorant series scores
+    val = bracket["tournaments"]["valorant"]
+    for m in val["matches"]:
+        sc = m.get("score")
+        if not sc:
+            continue
+        need = 3 if m["round"] == "grand_final" else 2
+        wins_a = sum(1 for mp in sc["maps"] if mp["winner"] == m["team_a"])
+        wins_b = sum(1 for mp in sc["maps"] if mp["winner"] == m["team_b"])
+        check((wins_a, wins_b) == (sc["team_a_maps"], sc["team_b_maps"]), f"{m['match_id']}: map tally mismatch")
+        check(max(wins_a, wins_b) == need, f"{m['match_id']}: winner needs {need} maps")
+        check(m["winner"] == (m["team_a"] if wins_a > wins_b else m["team_b"]), f"{m['match_id']}: winner mismatch")
+        for mp in sc["maps"]:
+            check(legal_valorant_map(mp["score_a"], mp["score_b"]),
+                  f"{m['match_id']}: {mp['map']} {mp['score_a']}-{mp['score_b']} is not a legal Valorant map score")
+
+    # BGMI points arithmetic
+    bg = bracket["tournaments"]["bgmi"]
+    pts = bg["points_system"]
+
+    def placement_points(p: int) -> int:
+        for k, v in pts["placement"].items():
+            lo, _, hi = k.partition("-")
+            if int(lo) <= p <= int(hi or lo):
+                return v
+        return 0
+
+    squads = {s["name"] for s in bg["squads"]}
+    for rnd in bg["rounds"]:
+        for lobby in rnd["lobbies"]:
+            for r in lobby.get("results") or []:
+                check(r["squad"] in squads, f"BGMI {lobby['match_id']}: unknown squad {r['squad']}")
+                check(r["placement_points"] == placement_points(r["placement"]),
+                      f"BGMI {lobby['match_id']}: {r['squad']} placement points wrong")
+                check(r["kill_points"] == r["kills"] * pts["per_kill"], f"BGMI {lobby['match_id']}: kill points wrong")
+                check(r["total"] == r["placement_points"] + r["kill_points"], f"BGMI {lobby['match_id']}: total wrong")
+
+    for p in bracket.get("pending_approvals", []):
+        check(bool(HEX.match(p.get("code", ""))), f"pending approval {p.get('id')} has a bad code")
+    done(f"{len(matches)} matches: progression, scores, statuses and approval codes are consistent", b0)
+
+
+# ─────────────────────────────── ledger ─────────────────────────────────
+
+ORDINAL = {"first": "🥇 1st Place", "second": "🥈 2nd Place", "third": "🥉 3rd Place"}
+GAME_ROWS = {"valorant": "Valorant 5v5", "bgmi": "BGMI 4-Squad", "fifa25": "FIFA 25 1v1",
+             "rocket_league": "Rocket League 3v3", "hackathon": "Hackathon"}
+COSPLAY_ROWS = {"best_overall": "Best Overall", "best_gaming_character": "Best Gaming Character",
+                "best_craftsmanship": "Best Craftsmanship", "best_group": "Best Group",
+                "audience_choice": "Audience Choice"}
+EXTRA = {("bgmi", "mvp"): "BGMI MVP", ("hackathon", "peoples_choice"): "Hackathon People's Choice"}
+
+
+def inr(text: str) -> int:
+    return int(re.sub(r"[^\d]", "", text))
+
+
+def check_ledger(ledger, schedule):
+    b0 = len(errors)
+    sponsorship = sum(s["commitment_inr"] for s in ledger["sponsors"])
+    inc = ledger.get("income", {})
+    check(inc.get("sponsorship") == sponsorship, "income.sponsorship != sum of sponsor commitments")
+    check(ledger["total_budget"] == sum(v for v in inc.values() if isinstance(v, int)),
+          "total_budget != sum of income lines")
+
+    cats = ledger["expenses"]["categories"]
+    alloc = spent = 0
+    for name, c in cats.items():
+        paid = sum(i["amount"] for i in c.get("items", []) if i["status"] == "paid")
+        check(c["spent"] == paid, f"expenses.{name}.spent is {c['spent']} but paid items sum to {paid}")
+        pct = round(100 * c["spent"] / c["allocated"], 1)
+        check(abs(c["utilization_pct"] - pct) < 0.05, f"expenses.{name}.utilization_pct should be {pct}")
+        if pct > 80:
+            check(any(name in a["message"] and not a["resolved"] for a in ledger["alerts"]),
+                  f"expenses.{name} is at {pct}% but has no open budget alert")
+        alloc += c["allocated"]
+        spent += c["spent"]
+    s = ledger["expenses"]["summary"]
+    check(s["total_allocated"] == alloc and s["total_spent"] == spent and s["remaining"] == alloc - spent,
+          "expenses.summary does not match the categories")
+
+    pp = ledger["prize_pool"]
+    for g, t in pp["tournaments"].items():
+        check(t["total"] == sum(p["amount"] for p in t["prizes"].values()), f"prize_pool.{g}.total is wrong")
+    check(pp["total_allocated"] == sum(t["total"] for t in pp["tournaments"].values()), "prize_pool.total_allocated is wrong")
+    check(alloc + pp["total_allocated"] <= ledger["total_budget"],
+          f"over-allocated: expenses {alloc} + prizes {pp['total_allocated']} > budget {ledger['total_budget']}")
+    check(ledger["total_spent"] == spent + pp["total_disbursed"], "total_spent != expenses spent + prizes disbursed")
+    check(abs(ledger["budget_utilization_pct"] - round(100 * ledger["total_spent"] / ledger["total_budget"], 1)) < 0.05,
+          "budget_utilization_pct is wrong")
+
+    # Prize table in the rulebook
+    tbl = re.search(r"\| Tournament \|.*?\n\|[-| ]+\n(.*?)\n\n", schedule, re.S)
+    rows = {r.split("|")[1].strip(): [inr(c) for c in r.split("|")[2:5]] for r in tbl[1].splitlines()}
+    tours = pp["tournaments"]
+
+    def amount(game: str, key: str):
+        return ((tours.get(game) or {}).get("prizes", {}).get(key) or {}).get("amount")
+
+    for g, label in GAME_ROWS.items():
+        want = [amount(g, k) for k in ("first", "second", "third")]
+        check(rows.get(label) == want, f"prizes for {label}: rulebook {rows.get(label)} vs ledger {want}")
+    for key, label in COSPLAY_ROWS.items():
+        m = re.search(rf"\| {re.escape(label)} \| ₹([\d,]+)", schedule)
+        check(bool(m) and inr(m[1]) == amount("cosplay", key),
+              f"cosplay '{label}' prize differs between rulebook and ledger")
+    for (g, key), label in EXTRA.items():
+        m = re.search(rf"\*\*{re.escape(label)}\*\*.*?₹([\d,]+)", schedule)
+        check(bool(m) and inr(m[1]) == amount(g, key),
+              f"'{label}' prize differs between rulebook and ledger")
+    m = re.search(r"Total Prize Pool: ₹([\d,]+)", schedule)
+    check(bool(m) and inr(m[1]) == pp["total_allocated"], "rulebook 'Total Prize Pool' != ledger prize_pool.total_allocated")
+
+    # Booths
+    for s_ in ledger["sponsors"]:
+        booth = (s_["deliverables"] or {}).get("booth")
+        m = re.search(rf"\| \*\*(B\d)\*\* \| {re.escape(s_['name'])} \|", schedule)
+        if booth and m:
+            check(booth["location"].startswith(m[1]), f"{s_['name']}: ledger booth {booth['location']!r} vs rulebook {m[1]}")
+        check(bool(m) == bool(booth), f"{s_['name']}: booth present in only one of ledger / rulebook")
+
+    for v in ledger["vendor_payments"]:
+        if "approval_hash" in v:
+            check(bool(HEX.match(v["approval_hash"])), f"{v['id']}: approval code is not 4 hex chars")
+    lakh = re.sub(r"(\d)(?=(\d\d)+\d{3}$)", r"\1,", str(ledger["total_budget"]))
+    lakh = lakh[:-3] + "," + lakh[-3:] if len(lakh) > 3 else lakh
+    done(f"ledger arithmetic, budget, prize table and booths agree (budget ₹{lakh})", b0)
+
+
+# ─────────────────────────────── template ───────────────────────────────
+
+ADDRESSING = {"owner", "owner-agents", "anyone"}
+AGENT_REQUIRED = ("provider", "directory", "instructions")
+
+
+def check_template():
+    b0 = len(errors)
+    built = subprocess.run([sys.executable, str(ROOT / "scripts" / "build_template.py"), "--check"],
+                           capture_output=True, text=True)
+    check(built.returncode == 0, "festcommand.template.yaml is stale. Run: python scripts/build_template.py")
+    try:
+        import yaml  # type: ignore
+    except ImportError:
+        print("  ⚠ PyYAML not installed: skipping structural template checks (pip install pyyaml)")
+        done("template is up to date with its sources", b0)
+        return
+    t = yaml.safe_load((ROOT / "festcommand.template.yaml").read_text(encoding="utf-8"))
+    check(t.get("version") == 2, "template should be version 2")
+    check(not ({"agents", "rooms", "groups", "kickoff"} & set(t)), "v2 template must not use top-level agents/rooms/groups/kickoff")
+    res = t["resources"]
+    params = set(t.get("params", {}))
+    kinds = {k: r.get("type") for k, r in res.items()}
+    check(all(re.fullmatch(r"[A-Za-z0-9_]+", k) for k in res), "resource keys must be letters, digits, _")
+    for k, r in res.items():
+        if r["type"] == "agent":
+            for f in AGENT_REQUIRED:
+                check(bool(r.get(f)), f"agent {k} is missing {f}")
+            check(bool(r.get("machine") or r.get("location")), f"agent {k} needs machine or location")
+            a = r.get("addressing", "owner")
+            if isinstance(a, dict):
+                for room in a.get("anyone_in", []):
+                    check(kinds.get(room) == "room", f"agent {k}: anyone_in references unknown room {room}")
+            else:
+                check(a in ADDRESSING, f"agent {k}: bad addressing {a!r}")
+        elif r["type"] == "room":
+            for ag in r.get("agents", []):
+                check(kinds.get(ag) == "agent", f"room {k}: unknown agent {ag}")
+            check(kinds.get(r.get("group")) == "group", f"room {k}: group {r.get('group')!r} is not a group resource")
+            check("users" in r and "people" not in r, f"room {k}: use users:, not people:")
+            for d in r.get("docs", []):
+                check(set(d) <= {"name", "description", "instructions", "content"}, f"room {k}: doc has unknown keys")
+                check(bool(d.get("content")), f"room {k}: doc {d.get('name')} is empty")
+                hits = [p for p in params if "{" + p + "}" in d.get("content", "")]
+                check(not hits, f"room {k}: doc {d['name']} contains placeholder(s) {hits} that Switch would substitute")
+            if r.get("kickoff"):
+                check(bool(re.search(r"@\{(\w+)\.name\}", r["kickoff"])), f"room {k}: kickoff mentions no agent")
+        elif r["type"] == "group":
+            for l in r.get("links", []):
+                check(kinds.get(l["from"]) == "room" and kinds.get(l["to"]) == "room", f"group {k}: bad link {l}")
+    # Each agent must be in a room with every agent it hands off to.
+    rooms_of = {k: {rk for rk, r in res.items() if r["type"] == "room" and k in r.get("agents", [])}
+                for k, r in res.items() if r["type"] == "agent"}
+    for k in rooms_of:
+        check(bool(rooms_of[k]), f"agent {k} is in no room")
+    for k, r in res.items():
+        if r["type"] == "agent":
+            for other in re.findall(r"@\{(\w+)\.name\}", r["instructions"]):
+                check(bool(rooms_of[k] & rooms_of.get(other, set())),
+                      f"agent {k} mentions @{other} but they share no room")
+    refs = set(re.findall(r"\{(\w+)\.name\}", (ROOT / "festcommand.template.yaml").read_text(encoding="utf-8")))
+    check(refs <= set(res), f"unknown resource references: {sorted(refs - set(res))}")
+    done(f"template: {sum(1 for v in kinds.values() if v == 'agent')} agents, "
+         f"{sum(1 for v in kinds.values() if v == 'room')} rooms, 1 group, all references resolve", b0)
+
+
+def main() -> int:
+    print("🎮 FestCommand validation")
+    try:
+        bracket, ledger, schedule = load()
+    except (OSError, json.JSONDecodeError) as e:
+        print(f"✗ could not load documents: {e}")
+        return 1
+    section("Template")
+    check_template()
+    section("Schedule ↔ bracket")
+    check_schedule_vs_bracket(bracket, schedule)
+    section("Bracket")
+    check_bracket(bracket)
+    section("Ledger ↔ rulebook")
+    check_ledger(ledger, schedule)
+    print()
+    if errors:
+        print(f"✗ {len(errors)} problem(s), {passes} checks passed")
+        return 1
+    print(f"✅ All {passes} checks passed")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

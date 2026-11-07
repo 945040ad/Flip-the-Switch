@@ -34,12 +34,12 @@
 > "FestCommand is a multi-room AI war room built on Switch. Three rooms. Three AI agents. One command center. Instead of chaos, you get structure."
 
 ### 📺 On Screen:
-- **0:15–0:20**: Switch Console opens. Click **Import Template** → select `festcommand.template.yaml`
-- **0:20–0:25**: The YAML file briefly scrolls on screen. Highlight the three room definitions with colored boxes:
+- **0:15–0:20**: Switch Console → **Templates** → import `festcommand.template.yaml`. The form asks for *Fest name* and *Messaging app* only.
+- **0:20–0:25**: The YAML file briefly scrolls on screen. Highlight the three room resources with colored boxes:
   - 🟢 `#public-helpdesk` (green)
   - 🟡 `#tournament-ops` (yellow)
   - 🔴 `#sponsor-finance` (red)
-- **0:25–0:30**: Animated transition showing the three Discord channels appearing in the sidebar. Zoom into the channel list.
+- **0:25–0:30**: The three Discord channels appear in the sidebar, and each agent posts its kickoff message (welcome, bracket status, sponsor dashboard). Zoom into the channel list.
 
 ### 🎨 Visual Notes:
 - Use colored labels/boxes overlaid on the YAML to match each room
@@ -51,27 +51,29 @@
 ## [0:30 – 1:00] Live Demo — Schedule Question
 
 ### 🎙️ Voiceover:
-> "Let's see it in action. A participant drops into the public helpdesk and asks: 'When is the Valorant semifinal?'"
+> "Let's see it in action. A player from Team Mayhem drops into the public helpdesk and asks: 'When is our Valorant final?'"
 >
 > *[2-second pause while the message appears]*
 >
-> "The concierge agent reads the live schedule document and responds instantly. Match time, map pool, check-in instructions — all accurate, all from a single source of truth that the ops team can update in real time."
+> "The concierge reads the live bracket and the schedule document and answers instantly: match, time, stage, format, check-in. All of it comes from the same documents the ops team updates."
 >
 > "No more 'check the pinned message.' No more 'ask in the other group.'"
 
 ### 📺 On Screen:
-- **0:30–0:35**: Discord `#public-helpdesk` channel is visible. A user named `@gamer_priya` types: *"When is the Valorant semifinal?"*
-- **0:35–0:42**: `@concierge-agent` responds with a formatted message:
+- **0:30–0:35**: Discord `#techstorm-public-helpdesk` is visible. A user named `@rahul_mayhem` types: *"we won our semi!! when and where is the Valorant final?"*
+- **0:35–0:42**: `@techstorm-concierge` responds with a formatted message:
   ```
-  🎮 Valorant Semifinal — Day 2
-  📅 Sunday, March 15 | 2:00 PM IST
-  📍 Main Stage (Hall A)
-  🗺️ Map Pool: Ascent, Bind, Haven (Bo3)
-  ⏰ Check-in opens at 1:30 PM
+  GG Rahul! 🏆 Team Mayhem 2-1 Velocity Gaming
 
-  Good luck! 🔥
+  🎮 Valorant Grand Final: MATCH-07
+  • When: Day 2 (Dec 15), 18:00 IST
+  • Where: Main Stage
+  • Format: BO5
+  • Opponent: winner of MATCH-06 (result pending)
+
+  Check in 15 min early with your roster (5 + 1 sub). GL HF! 🎮
   ```
-- **0:42–0:50**: Quick side-by-side showing `schedule_and_rules.md` in the Switch document panel alongside the Discord response. Draw a line connecting the source to the answer.
+- **0:42–0:50**: Quick side-by-side: the `MATCH-07` entry in `bracket_state.json` and the Day 2 row of `schedule_and_rules.md` (both room documents in `#tournament-ops`) next to the Discord reply. Draw lines from the sources to the answer.
 - **0:50–1:00**: Zoom out to show the full channel. Another participant asks a different question; the concierge handles it.
 
 ### 🎨 Visual Notes:
@@ -84,48 +86,46 @@
 ## [1:00 – 1:30] Live Demo — Match Dispute + Human Approval
 
 ### 🎙️ Voiceover:
-> "Now watch the real magic. A player reports cheating in the public helpdesk."
+> "Now the hard case. A FIFA player's opponent disconnects at 1-1 in the 85th minute, and they want the win."
 >
 > *[Brief pause]*
 >
 > "The concierge doesn't try to resolve it — it formats a structured dispute report and escalates to tournament ops, a restricted room that participants can't access."
 >
-> "The bracket marshal checks the roster in the bracket state file, finds a violation, and asks ME for approval. Watch."
+> "The bracket marshal quotes the rulebook and notices the rules don't actually cover this case. It flags that as a judgment call, recommends a rematch, finds a free slot, and asks ME. Watch."
 >
 > *[Pause as approval appears]*
 >
-> "I type 'approve DISPUTE-05 #c4d1'. That hash is a verification code. One command."
+> "I type 'approve DISPUTE-47' with its code. The code is unique to this request, so I can't approve the wrong thing. One line."
 >
 > "The bracket updates. And back in the helpdesk — the concierge announces the ruling. Two rooms, two agents, one human gate, thirty seconds."
 
 ### 📺 On Screen:
-- **1:00–1:05**: In `#public-helpdesk`, user `@rage_quit_ravi` types: *"TeamGamma used a player not on their roster in MATCH-09. This is cheating."*
-- **1:05–1:08**: `@concierge-agent` responds:
+- **1:00–1:05**: In `#techstorm-public-helpdesk`, user `@TikiTaka_Pro` types: *"dispute on MATCH-47! Opponent disconnected at 1-1 in 85th minute, claims server lag. I had possession in the attacking third."*
+- **1:05–1:08**: `@techstorm-concierge` responds:
   ```
-  ⚖️ Dispute Report Filed
-  📋 ID: DISPUTE-05
-  🎮 Match: MATCH-09 (BGMI Squad)
-  📝 Category: Roster violation
-  ⬆️ Escalating to tournament ops...
+  Got it. Disputes go to the ops team, who review
+  within 15 minutes. I'll post the ruling here. ⚔️
   ```
 - **1:08–1:12**: **Transition animation**: A message arrow flies from `#public-helpdesk` to `#tournament-ops`. Switch to the `#tournament-ops` channel view.
-- **1:12–1:18**: In `#tournament-ops`, `@bracket-marshal` posts:
+- **1:12–1:18**: In `#techstorm-tournament-ops`, `@techstorm-bracket-marshal` posts:
   ```
-  ⚖️ DISPUTE-05 Investigation
-  Match: MATCH-09 | TeamGamma vs TeamDelta
-  Finding: Player "ShadowX" is NOT on TeamGamma's registered roster.
-  Rule: Section 4.2 — All players must be registered 24h before match.
-  Recommendation: TeamGamma forfeits MATCH-09. TeamDelta advances.
+  ⚖️ DISPUTE: MATCH-47, TikiTaka_Pro vs Mbappe_Rush
+  • FIFA 25: "If before 20th minute with ≤1 goal difference — rematch.
+    Otherwise, leading player wins."
+  ⚠️ RULE GAP: a level score at 85' isn't covered. This is a judgment call.
+  Recommendation: full BO1 rematch, Day 1 20:00, Arena Alpha (free, no clashes)
+  Impact: winner still plays MATCH-58, nothing downstream moves.
 
-  🔒 Requires approval: approve DISPUTE-05 #c4d1
+  Fest Lead: approve DISPUTE-47 #f6e4
   ```
-- **1:18–1:22**: The fest lead (you) types: `approve DISPUTE-05 #c4d1`. Highlight the command with a yellow glow as it's sent.
-- **1:22–1:25**: `@bracket-marshal` confirms: *"✅ DISPUTE-05 approved. Bracket updated. Notifying helpdesk..."*
-- **1:25–1:30**: **Switch back to `#public-helpdesk`**. `@concierge-agent` posts:
+- **1:18–1:22**: The fest lead (you) types: `approve DISPUTE-47 #f6e4`. Highlight the command with a yellow glow as it's sent. (Use the code your marshal actually generated.)
+- **1:22–1:25**: `@techstorm-bracket-marshal` confirms: *"✅ APPROVED: DISPUTE-47. MATCH-47 → rematch_scheduled. 📣 ANNOUNCE @techstorm-concierge"*
+- **1:25–1:30**: **Switch back to `#public-helpdesk`**. `@techstorm-concierge` posts:
   ```
-  📢 Dispute Resolution — DISPUTE-05
-  ⚖️ Ruling: TeamGamma forfeits MATCH-09 (roster violation).
-  ➡️ TeamDelta advances to the quarterfinal.
+  📢 RULING: FIFA 25 MATCH-47 ⚖️
+  TikiTaka_Pro vs Mbappe_Rush will be replayed in full (BO1)
+  🕕 Day 1 (Dec 14), 20:00 IST, Arena Alpha
   ```
 
 ### 🎨 Visual Notes:
@@ -139,21 +139,21 @@
 ## [1:30 – 1:50] Why Switch?
 
 ### 🎙️ Voiceover:
-> "So how does this all work under the hood? This entire topology — three rooms, three agents, addressing policies, shared documents, cross-room links — is defined in one YAML file."
+> "So how does this work under the hood? The whole topology is one YAML file: three rooms, three agents, who can address each agent, and the documents each room holds."
 >
 > *[Pause while YAML is on screen]*
 >
-> "Switch handles the routing. It scopes who can talk to which agent. It shares documents across rooms so every agent sees the same bracket state. And it enforces human approval gates."
+> "Switch scopes who can talk to which agent. Participants can only reach the concierge, and the concierge can only file reports. The agents that change state answer only to me. The money lives in a room the public agent isn't even in."
 >
-> "Take Switch away, and none of this works. You can't do cross-room escalation. You can't scope agent access. You can't share live documents. FestCommand isn't a bot sitting on top of Switch — Switch IS the infrastructure."
+> "Take Switch away and you're back to one all-powerful bot in one channel. FestCommand isn't a bot sitting on top of Switch. Switch draws the boundaries that make it safe."
 
 ### 📺 On Screen:
 - **1:30–1:35**: Full-screen view of `festcommand.template.yaml`. Slow scroll through the file.
 - **1:35–1:40**: Highlight key sections with colored overlays and callout labels:
-  - `addressing: anyone` → **"Open to all participants"** (green label)
-  - `addressing: owner-agents` → **"Restricted to fest lead + agents"** (red label)
-  - `documents:` section → **"Shared live state"** (blue label)
-  - `group-links:` section → **"Cross-room routing"** (purple label)
+  - `addressing: { anyone_in: [helpdesk, ops] }` on the concierge → **"Participants reach only this agent"** (green label)
+  - `addressing: owner-agents` on marshal & tracker → **"Answers only to the Fest Lead"** (red label)
+  - `docs:` on the ops & finance rooms → **"Shared live state"** (blue label)
+  - `agents: [bracket_marshal, concierge, sponsor_tracker]` on ops → **"Agents in two rooms carry the hand-offs"** (purple label)
 - **1:40–1:45**: Animated diagram: show the 3 rooms with arrows. Highlight each arrow as you mention cross-room features.
 - **1:45–1:50**: Quick comparison table (from README) flashes on screen:
 
@@ -180,7 +180,7 @@
 ### 📺 On Screen:
 - **1:50–1:55**: FestCommand logo, large and centered. Below it:
   ```
-  github.com/YOUR_USERNAME/festcommand
+  github.com/945040ad/Flip-the-Switch
   ```
 - **1:55–2:00**: Badges fade in below:
   - "Built for Flip the Switch 2026"
@@ -221,7 +221,7 @@
 
 ### Assets Needed
 - [ ] FestCommand logo (PNG, transparent background)
-- [ ] Discord server with 3 channels set up (or convincing mockup)
+- [ ] Discord server with FestCommand deployed from the template (run `python scripts/rehearse.py` first to rehearse the exact lines)
 - [ ] WhatsApp chaos screenshots (mockup — use placeholder names)
 - [ ] Background music (royalty-free, lo-fi or electronic)
 - [ ] OBS scene layouts for each section

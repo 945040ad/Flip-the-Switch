@@ -46,7 +46,7 @@
           "proof_screenshot": "https://imgur.com/ts2026/val-qf1-result.png",
           "approved_by": "FestLead",
           "approved_at": "2026-12-14T10:52:00+05:30",
-          "approval_hash": "#a1b2"
+          "approval_hash": "#074d"
         },
         {
           "match_id": "MATCH-02",
@@ -87,7 +87,7 @@
           "proof_screenshot": "https://imgur.com/ts2026/val-qf2-result.png",
           "approved_by": "FestLead",
           "approved_at": "2026-12-14T12:05:00+05:30",
-          "approval_hash": "#c3d4"
+          "approval_hash": "#bc05"
         },
         {
           "match_id": "MATCH-03",
@@ -122,7 +122,7 @@
           "proof_screenshot": "https://imgur.com/ts2026/val-qf3-result.png",
           "approved_by": "FestLead",
           "approved_at": "2026-12-14T12:48:00+05:30",
-          "approval_hash": "#e5f6"
+          "approval_hash": "#1db3"
         },
         {
           "match_id": "MATCH-04",
@@ -163,7 +163,7 @@
           "proof_screenshot": "https://imgur.com/ts2026/val-qf4-result.png",
           "approved_by": "FestLead",
           "approved_at": "2026-12-14T13:55:00+05:30",
-          "approval_hash": "#g7h8"
+          "approval_hash": "#0999"
         },
         {
           "match_id": "MATCH-05",
@@ -175,11 +175,37 @@
           "team_b": "Velocity Gaming",
           "seed_a": 1,
           "seed_b": 6,
-          "status": "pending",
-          "winner": null,
-          "score": null,
-          "proof_screenshot": null,
-          "notes": "Winner of MATCH-01 vs Winner of MATCH-02"
+          "status": "completed",
+          "winner": "Team Mayhem",
+          "score": {
+            "team_a_maps": 2,
+            "team_b_maps": 1,
+            "maps": [
+              {
+                "map": "Lotus",
+                "score_a": 13,
+                "score_b": 10,
+                "winner": "Team Mayhem"
+              },
+              {
+                "map": "Split",
+                "score_a": 9,
+                "score_b": 13,
+                "winner": "Velocity Gaming"
+              },
+              {
+                "map": "Sunset",
+                "score_a": 14,
+                "score_b": 12,
+                "winner": "Team Mayhem"
+              }
+            ]
+          },
+          "proof_screenshot": "https://imgur.com/ts2026/val-sf1-result.png",
+          "notes": "Winner of MATCH-01 vs Winner of MATCH-02",
+          "approved_by": "FestLead",
+          "approved_at": "2026-12-14T15:58:00+05:30",
+          "approval_hash": "#ecac"
         },
         {
           "match_id": "MATCH-06",
@@ -191,11 +217,11 @@
           "team_b": "GodLike Esports",
           "seed_a": 7,
           "seed_b": 8,
-          "status": "pending",
+          "status": "awaiting_result",
           "winner": null,
           "score": null,
           "proof_screenshot": null,
-          "notes": "Winner of MATCH-03 vs Winner of MATCH-04"
+          "notes": "Winner of MATCH-03 vs Winner of MATCH-04. Started 16:10 after an 85-minute delay (Arena Alpha PC failures). Played; result not yet submitted."
         },
         {
           "match_id": "MATCH-07",
@@ -203,7 +229,7 @@
           "round_number": 1,
           "scheduled_time": "2026-12-15T18:00:00+05:30",
           "stage": "Main Stage",
-          "team_a": null,
+          "team_a": "Team Mayhem",
           "team_b": null,
           "status": "pending",
           "winner": null,
@@ -211,7 +237,8 @@
           "proof_screenshot": null,
           "notes": "Winner of MATCH-05 vs Winner of MATCH-06. BO5."
         }
-      ]
+      ],
+      "qualification": "16 teams played online qualifiers on 2026-12-07; the top 8 seeds advanced to the LAN quarterfinals below."
     },
     "bgmi": {
       "name": "TechStorm Battle Royale Cup",
@@ -231,31 +258,94 @@
         "per_kill": 1
       },
       "squads": [
-        { "name": "Hydra Officials", "tag": "HYDRA" },
-        { "name": "GodLike Esports", "tag": "GL" },
-        { "name": "Team SouL", "tag": "SOUL" },
-        { "name": "Orangutan Gaming", "tag": "OR" },
-        { "name": "Blind Esports", "tag": "BLIND" },
-        { "name": "Team XSpark", "tag": "XS" },
-        { "name": "Enigma Gaming", "tag": "EG" },
-        { "name": "Skylightz Gaming", "tag": "SLG" },
-        { "name": "Global Esports", "tag": "GE" },
-        { "name": "7Sea Esports", "tag": "7SEA" },
-        { "name": "Chemin Esports", "tag": "CE" },
-        { "name": "Marcos Gaming", "tag": "MG" },
-        { "name": "Reckoning Esports", "tag": "RE" },
-        { "name": "Tactical Tigers", "tag": "TT" },
-        { "name": "Campus Clutch Squad", "tag": "CCS" },
-        { "name": "Nexus Warriors", "tag": "NW" },
-        { "name": "Pixel Pushers", "tag": "PP" },
-        { "name": "Blaze Mobile", "tag": "BM" },
-        { "name": "Desi Dominators", "tag": "DD" },
-        { "name": "Chai & Clutch", "tag": "CC" }
+        {
+          "name": "Hydra Officials",
+          "tag": "HYDRA"
+        },
+        {
+          "name": "GodLike Esports",
+          "tag": "GL"
+        },
+        {
+          "name": "Team SouL",
+          "tag": "SOUL"
+        },
+        {
+          "name": "Orangutan Gaming",
+          "tag": "OR"
+        },
+        {
+          "name": "Blind Esports",
+          "tag": "BLIND"
+        },
+        {
+          "name": "Team XSpark",
+          "tag": "XS"
+        },
+        {
+          "name": "Enigma Gaming",
+          "tag": "EG"
+        },
+        {
+          "name": "Skylightz Gaming",
+          "tag": "SLG"
+        },
+        {
+          "name": "Global Esports",
+          "tag": "GE"
+        },
+        {
+          "name": "7Sea Esports",
+          "tag": "7SEA"
+        },
+        {
+          "name": "Chemin Esports",
+          "tag": "CE"
+        },
+        {
+          "name": "Marcos Gaming",
+          "tag": "MG"
+        },
+        {
+          "name": "Reckoning Esports",
+          "tag": "RE"
+        },
+        {
+          "name": "Tactical Tigers",
+          "tag": "TT"
+        },
+        {
+          "name": "Campus Clutch Squad",
+          "tag": "CCS"
+        },
+        {
+          "name": "Nexus Warriors",
+          "tag": "NW"
+        },
+        {
+          "name": "Pixel Pushers",
+          "tag": "PP"
+        },
+        {
+          "name": "Blaze Mobile",
+          "tag": "BM"
+        },
+        {
+          "name": "Desi Dominators",
+          "tag": "DD"
+        },
+        {
+          "name": "Chai & Clutch",
+          "tag": "CC"
+        }
       ],
       "rounds": [
         {
           "round_id": 1,
-          "match_ids": ["MATCH-17", "MATCH-18"],
+          "match_ids": [
+            "MATCH-17",
+            "MATCH-18"
+          ],
           "map": "Erangel",
           "status": "completed",
           "lobbies": [
@@ -264,18 +354,99 @@
               "lobby": "A",
               "scheduled_time": "2026-12-14T10:00:00+05:30",
               "status": "completed",
-              "squads": ["Hydra Officials", "GodLike Esports", "Team SouL", "Orangutan Gaming", "Blind Esports", "Team XSpark", "Enigma Gaming", "Skylightz Gaming", "Global Esports", "7Sea Esports"],
+              "squads": [
+                "Hydra Officials",
+                "GodLike Esports",
+                "Team SouL",
+                "Orangutan Gaming",
+                "Blind Esports",
+                "Team XSpark",
+                "Enigma Gaming",
+                "Skylightz Gaming",
+                "Global Esports",
+                "7Sea Esports"
+              ],
               "results": [
-                { "placement": 1, "squad": "GodLike Esports", "kills": 14, "placement_points": 15, "kill_points": 14, "total": 29 },
-                { "placement": 2, "squad": "Hydra Officials", "kills": 11, "placement_points": 12, "kill_points": 11, "total": 23 },
-                { "placement": 3, "squad": "Team SouL", "kills": 9, "placement_points": 10, "kill_points": 9, "total": 19 },
-                { "placement": 4, "squad": "Enigma Gaming", "kills": 7, "placement_points": 8, "kill_points": 7, "total": 15 },
-                { "placement": 5, "squad": "7Sea Esports", "kills": 5, "placement_points": 8, "kill_points": 5, "total": 13 },
-                { "placement": 6, "squad": "Orangutan Gaming", "kills": 6, "placement_points": 5, "kill_points": 6, "total": 11 },
-                { "placement": 7, "squad": "Blind Esports", "kills": 4, "placement_points": 5, "kill_points": 4, "total": 9 },
-                { "placement": 8, "squad": "Skylightz Gaming", "kills": 3, "placement_points": 5, "kill_points": 3, "total": 8 },
-                { "placement": 9, "squad": "Team XSpark", "kills": 2, "placement_points": 5, "kill_points": 2, "total": 7 },
-                { "placement": 10, "squad": "Global Esports", "kills": 1, "placement_points": 5, "kill_points": 1, "total": 6 }
+                {
+                  "placement": 1,
+                  "squad": "GodLike Esports",
+                  "kills": 14,
+                  "placement_points": 15,
+                  "kill_points": 14,
+                  "total": 29
+                },
+                {
+                  "placement": 2,
+                  "squad": "Hydra Officials",
+                  "kills": 11,
+                  "placement_points": 12,
+                  "kill_points": 11,
+                  "total": 23
+                },
+                {
+                  "placement": 3,
+                  "squad": "Team SouL",
+                  "kills": 9,
+                  "placement_points": 10,
+                  "kill_points": 9,
+                  "total": 19
+                },
+                {
+                  "placement": 4,
+                  "squad": "Enigma Gaming",
+                  "kills": 7,
+                  "placement_points": 8,
+                  "kill_points": 7,
+                  "total": 15
+                },
+                {
+                  "placement": 5,
+                  "squad": "7Sea Esports",
+                  "kills": 5,
+                  "placement_points": 8,
+                  "kill_points": 5,
+                  "total": 13
+                },
+                {
+                  "placement": 6,
+                  "squad": "Orangutan Gaming",
+                  "kills": 6,
+                  "placement_points": 5,
+                  "kill_points": 6,
+                  "total": 11
+                },
+                {
+                  "placement": 7,
+                  "squad": "Blind Esports",
+                  "kills": 4,
+                  "placement_points": 5,
+                  "kill_points": 4,
+                  "total": 9
+                },
+                {
+                  "placement": 8,
+                  "squad": "Skylightz Gaming",
+                  "kills": 3,
+                  "placement_points": 5,
+                  "kill_points": 3,
+                  "total": 8
+                },
+                {
+                  "placement": 9,
+                  "squad": "Team XSpark",
+                  "kills": 2,
+                  "placement_points": 5,
+                  "kill_points": 2,
+                  "total": 7
+                },
+                {
+                  "placement": 10,
+                  "squad": "Global Esports",
+                  "kills": 1,
+                  "placement_points": 5,
+                  "kill_points": 1,
+                  "total": 6
+                }
               ]
             },
             {
@@ -283,55 +454,218 @@
               "lobby": "B",
               "scheduled_time": "2026-12-14T11:00:00+05:30",
               "status": "completed",
-              "squads": ["Chemin Esports", "Marcos Gaming", "Reckoning Esports", "Tactical Tigers", "Campus Clutch Squad", "Nexus Warriors", "Pixel Pushers", "Blaze Mobile", "Desi Dominators", "Chai & Clutch"],
+              "squads": [
+                "Chemin Esports",
+                "Marcos Gaming",
+                "Reckoning Esports",
+                "Tactical Tigers",
+                "Campus Clutch Squad",
+                "Nexus Warriors",
+                "Pixel Pushers",
+                "Blaze Mobile",
+                "Desi Dominators",
+                "Chai & Clutch"
+              ],
               "results": [
-                { "placement": 1, "squad": "Marcos Gaming", "kills": 16, "placement_points": 15, "kill_points": 16, "total": 31 },
-                { "placement": 2, "squad": "Chemin Esports", "kills": 10, "placement_points": 12, "kill_points": 10, "total": 22 },
-                { "placement": 3, "squad": "Desi Dominators", "kills": 8, "placement_points": 10, "kill_points": 8, "total": 18 },
-                { "placement": 4, "squad": "Reckoning Esports", "kills": 6, "placement_points": 8, "kill_points": 6, "total": 14 },
-                { "placement": 5, "squad": "Tactical Tigers", "kills": 5, "placement_points": 8, "kill_points": 5, "total": 13 },
-                { "placement": 6, "squad": "Campus Clutch Squad", "kills": 4, "placement_points": 5, "kill_points": 4, "total": 9 },
-                { "placement": 7, "squad": "Blaze Mobile", "kills": 3, "placement_points": 5, "kill_points": 3, "total": 8 },
-                { "placement": 8, "squad": "Nexus Warriors", "kills": 3, "placement_points": 5, "kill_points": 3, "total": 8 },
-                { "placement": 9, "squad": "Pixel Pushers", "kills": 2, "placement_points": 5, "kill_points": 2, "total": 7 },
-                { "placement": 10, "squad": "Chai & Clutch", "kills": 1, "placement_points": 5, "kill_points": 1, "total": 6 }
+                {
+                  "placement": 1,
+                  "squad": "Marcos Gaming",
+                  "kills": 16,
+                  "placement_points": 15,
+                  "kill_points": 16,
+                  "total": 31
+                },
+                {
+                  "placement": 2,
+                  "squad": "Chemin Esports",
+                  "kills": 10,
+                  "placement_points": 12,
+                  "kill_points": 10,
+                  "total": 22
+                },
+                {
+                  "placement": 3,
+                  "squad": "Desi Dominators",
+                  "kills": 8,
+                  "placement_points": 10,
+                  "kill_points": 8,
+                  "total": 18
+                },
+                {
+                  "placement": 4,
+                  "squad": "Reckoning Esports",
+                  "kills": 6,
+                  "placement_points": 8,
+                  "kill_points": 6,
+                  "total": 14
+                },
+                {
+                  "placement": 5,
+                  "squad": "Tactical Tigers",
+                  "kills": 5,
+                  "placement_points": 8,
+                  "kill_points": 5,
+                  "total": 13
+                },
+                {
+                  "placement": 6,
+                  "squad": "Campus Clutch Squad",
+                  "kills": 4,
+                  "placement_points": 5,
+                  "kill_points": 4,
+                  "total": 9
+                },
+                {
+                  "placement": 7,
+                  "squad": "Blaze Mobile",
+                  "kills": 3,
+                  "placement_points": 5,
+                  "kill_points": 3,
+                  "total": 8
+                },
+                {
+                  "placement": 8,
+                  "squad": "Nexus Warriors",
+                  "kills": 3,
+                  "placement_points": 5,
+                  "kill_points": 3,
+                  "total": 8
+                },
+                {
+                  "placement": 9,
+                  "squad": "Pixel Pushers",
+                  "kills": 2,
+                  "placement_points": 5,
+                  "kill_points": 2,
+                  "total": 7
+                },
+                {
+                  "placement": 10,
+                  "squad": "Chai & Clutch",
+                  "kills": 1,
+                  "placement_points": 5,
+                  "kill_points": 1,
+                  "total": 6
+                }
               ]
             }
           ],
           "cumulative_standings_after_round_1": [
-            { "rank": 1, "squad": "Marcos Gaming", "total_points": 31 },
-            { "rank": 2, "squad": "GodLike Esports", "total_points": 29 },
-            { "rank": 3, "squad": "Hydra Officials", "total_points": 23 },
-            { "rank": 4, "squad": "Chemin Esports", "total_points": 22 },
-            { "rank": 5, "squad": "Team SouL", "total_points": 19 },
-            { "rank": 6, "squad": "Desi Dominators", "total_points": 18 },
-            { "rank": 7, "squad": "Enigma Gaming", "total_points": 15 },
-            { "rank": 8, "squad": "Reckoning Esports", "total_points": 14 },
-            { "rank": 9, "squad": "7Sea Esports", "total_points": 13 },
-            { "rank": 10, "squad": "Tactical Tigers", "total_points": 13 },
-            { "rank": 11, "squad": "Orangutan Gaming", "total_points": 11 },
-            { "rank": 12, "squad": "Blind Esports", "total_points": 9 },
-            { "rank": 13, "squad": "Campus Clutch Squad", "total_points": 9 },
-            { "rank": 14, "squad": "Skylightz Gaming", "total_points": 8 },
-            { "rank": 15, "squad": "Blaze Mobile", "total_points": 8 },
-            { "rank": 16, "squad": "Nexus Warriors", "total_points": 8 },
-            { "rank": 17, "squad": "Team XSpark", "total_points": 7 },
-            { "rank": 18, "squad": "Pixel Pushers", "total_points": 7 },
-            { "rank": 19, "squad": "Global Esports", "total_points": 6 },
-            { "rank": 20, "squad": "Chai & Clutch", "total_points": 6 }
+            {
+              "rank": 1,
+              "squad": "Marcos Gaming",
+              "total_points": 31
+            },
+            {
+              "rank": 2,
+              "squad": "GodLike Esports",
+              "total_points": 29
+            },
+            {
+              "rank": 3,
+              "squad": "Hydra Officials",
+              "total_points": 23
+            },
+            {
+              "rank": 4,
+              "squad": "Chemin Esports",
+              "total_points": 22
+            },
+            {
+              "rank": 5,
+              "squad": "Team SouL",
+              "total_points": 19
+            },
+            {
+              "rank": 6,
+              "squad": "Desi Dominators",
+              "total_points": 18
+            },
+            {
+              "rank": 7,
+              "squad": "Enigma Gaming",
+              "total_points": 15
+            },
+            {
+              "rank": 8,
+              "squad": "Reckoning Esports",
+              "total_points": 14
+            },
+            {
+              "rank": 9,
+              "squad": "7Sea Esports",
+              "total_points": 13
+            },
+            {
+              "rank": 10,
+              "squad": "Tactical Tigers",
+              "total_points": 13
+            },
+            {
+              "rank": 11,
+              "squad": "Orangutan Gaming",
+              "total_points": 11
+            },
+            {
+              "rank": 12,
+              "squad": "Blind Esports",
+              "total_points": 9
+            },
+            {
+              "rank": 13,
+              "squad": "Campus Clutch Squad",
+              "total_points": 9
+            },
+            {
+              "rank": 14,
+              "squad": "Skylightz Gaming",
+              "total_points": 8
+            },
+            {
+              "rank": 15,
+              "squad": "Blaze Mobile",
+              "total_points": 8
+            },
+            {
+              "rank": 16,
+              "squad": "Nexus Warriors",
+              "total_points": 8
+            },
+            {
+              "rank": 17,
+              "squad": "Team XSpark",
+              "total_points": 7
+            },
+            {
+              "rank": 18,
+              "squad": "Pixel Pushers",
+              "total_points": 7
+            },
+            {
+              "rank": 19,
+              "squad": "Global Esports",
+              "total_points": 6
+            },
+            {
+              "rank": 20,
+              "squad": "Chai & Clutch",
+              "total_points": 6
+            }
           ]
         },
         {
           "round_id": 2,
-          "match_ids": ["MATCH-19"],
+          "match_ids": [
+            "MATCH-19"
+          ],
           "map": "Miramar",
-          "status": "pending",
+          "status": "in_progress",
           "lobbies": [
             {
               "match_id": "MATCH-19",
               "lobby": "Combined",
               "scheduled_time": "2026-12-14T17:00:00+05:30",
-              "status": "pending",
+              "status": "in_progress",
               "squads": "all_20",
               "results": null
             }
@@ -339,7 +673,9 @@
         },
         {
           "round_id": 3,
-          "match_ids": ["MATCH-20"],
+          "match_ids": [
+            "MATCH-20"
+          ],
           "map": "Erangel",
           "status": "pending",
           "lobbies": [
@@ -364,14 +700,38 @@
         "final": 3
       },
       "players": [
-        "Rohan_FIFA", "ProStriker99", "DribbleKing", "GoalMachine",
-        "TikiTaka_Pro", "ChipShotKing", "Volley_Master", "FinesseGod",
-        "CrossSpammer", "PaceAbuser", "SkillMove_X", "FreeKickAce",
-        "GKlegend", "Penalty_Pro", "WingWizard", "HeaderKing",
-        "Sweaty_SZN", "ParkTheBus", "GegenPress", "TotalFootball",
-        "CatenaccioX", "JogaBonito", "R9_Fan", "Messi_Mode",
-        "CR7_Siu", "Neymar_Jr", "Mbappe_Rush", "Haaland_9",
-        "Vini_Dancin", "Salah_Speed", "Bellingham_5", "Modric_10"
+        "Rohan_FIFA",
+        "ProStriker99",
+        "DribbleKing",
+        "GoalMachine",
+        "TikiTaka_Pro",
+        "ChipShotKing",
+        "Volley_Master",
+        "FinesseGod",
+        "CrossSpammer",
+        "PaceAbuser",
+        "SkillMove_X",
+        "FreeKickAce",
+        "GKlegend",
+        "Penalty_Pro",
+        "WingWizard",
+        "HeaderKing",
+        "Sweaty_SZN",
+        "ParkTheBus",
+        "GegenPress",
+        "TotalFootball",
+        "CatenaccioX",
+        "JogaBonito",
+        "R9_Fan",
+        "Messi_Mode",
+        "CR7_Siu",
+        "Neymar_Jr",
+        "Mbappe_Rush",
+        "Haaland_9",
+        "Vini_Dancin",
+        "Salah_Speed",
+        "Bellingham_5",
+        "Modric_10"
       ],
       "matches": [
         {
@@ -385,7 +745,7 @@
           "winner": "Rohan_FIFA",
           "score": "3-1",
           "approved_by": "FestLead",
-          "approval_hash": "#r1a1"
+          "approval_hash": "#cfde"
         },
         {
           "match_id": "MATCH-26",
@@ -398,7 +758,7 @@
           "winner": "ProStriker99",
           "score": "2-0",
           "approved_by": "FestLead",
-          "approval_hash": "#r1a2"
+          "approval_hash": "#330d"
         },
         {
           "match_id": "MATCH-27",
@@ -411,7 +771,7 @@
           "winner": "DribbleKing",
           "score": "4-2",
           "approved_by": "FestLead",
-          "approval_hash": "#r1a3"
+          "approval_hash": "#5b56"
         },
         {
           "match_id": "MATCH-28",
@@ -424,7 +784,7 @@
           "winner": "GoalMachine",
           "score": "2-1",
           "approved_by": "FestLead",
-          "approval_hash": "#r1a4"
+          "approval_hash": "#07d1"
         },
         {
           "match_id": "MATCH-29",
@@ -437,7 +797,7 @@
           "winner": "TikiTaka_Pro",
           "score": "3-2",
           "approved_by": "FestLead",
-          "approval_hash": "#r1a5"
+          "approval_hash": "#4c2e"
         },
         {
           "match_id": "MATCH-30",
@@ -450,7 +810,7 @@
           "winner": "Mbappe_Rush",
           "score": "1-3",
           "approved_by": "FestLead",
-          "approval_hash": "#r1a6"
+          "approval_hash": "#0d31"
         },
         {
           "match_id": "MATCH-31",
@@ -463,7 +823,7 @@
           "winner": "Volley_Master",
           "score": "2-1",
           "approved_by": "FestLead",
-          "approval_hash": "#r1a7"
+          "approval_hash": "#71a3"
         },
         {
           "match_id": "MATCH-32",
@@ -476,7 +836,7 @@
           "winner": "CR7_Siu",
           "score": "0-2",
           "approved_by": "FestLead",
-          "approval_hash": "#r1a8"
+          "approval_hash": "#4371"
         },
         {
           "match_id": "MATCH-33",
@@ -489,7 +849,7 @@
           "winner": "Messi_Mode",
           "score": "1-4",
           "approved_by": "FestLead",
-          "approval_hash": "#r1b1"
+          "approval_hash": "#c036"
         },
         {
           "match_id": "MATCH-34",
@@ -502,7 +862,7 @@
           "winner": "PaceAbuser",
           "score": "3-2",
           "approved_by": "FestLead",
-          "approval_hash": "#r1b2"
+          "approval_hash": "#1b5e"
         },
         {
           "match_id": "MATCH-35",
@@ -515,7 +875,7 @@
           "winner": "SkillMove_X",
           "score": "2-0",
           "approved_by": "FestLead",
-          "approval_hash": "#r1b3"
+          "approval_hash": "#ddd8"
         },
         {
           "match_id": "MATCH-36",
@@ -528,7 +888,7 @@
           "winner": "FreeKickAce",
           "score": "1-0",
           "approved_by": "FestLead",
-          "approval_hash": "#r1b4"
+          "approval_hash": "#949d"
         },
         {
           "match_id": "MATCH-37",
@@ -541,7 +901,7 @@
           "winner": "TotalFootball",
           "score": "0-1",
           "approved_by": "FestLead",
-          "approval_hash": "#r1b5"
+          "approval_hash": "#0024"
         },
         {
           "match_id": "MATCH-38",
@@ -554,7 +914,7 @@
           "winner": "Penalty_Pro",
           "score": "2-1",
           "approved_by": "FestLead",
-          "approval_hash": "#r1b6"
+          "approval_hash": "#c1ba"
         },
         {
           "match_id": "MATCH-39",
@@ -567,7 +927,7 @@
           "winner": "WingWizard",
           "score": "3-0",
           "approved_by": "FestLead",
-          "approval_hash": "#r1b7"
+          "approval_hash": "#6e7a"
         },
         {
           "match_id": "MATCH-40",
@@ -580,39 +940,39 @@
           "winner": "Sweaty_SZN",
           "score": "1-2",
           "approved_by": "FestLead",
-          "approval_hash": "#r1b8"
+          "approval_hash": "#55b7"
         },
         {
           "match_id": "MATCH-45",
           "round": "round_of_16",
           "scheduled_time": "2026-12-14T17:00:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": "Rohan_FIFA",
           "player_b": "ProStriker99",
           "status": "completed",
           "winner": "Rohan_FIFA",
           "score": "2-1",
           "approved_by": "FestLead",
-          "approval_hash": "#r2a1"
+          "approval_hash": "#5f82"
         },
         {
           "match_id": "MATCH-46",
           "round": "round_of_16",
           "scheduled_time": "2026-12-14T17:00:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": "DribbleKing",
           "player_b": "GoalMachine",
           "status": "completed",
           "winner": "GoalMachine",
           "score": "1-3",
           "approved_by": "FestLead",
-          "approval_hash": "#r2a2"
+          "approval_hash": "#897f"
         },
         {
           "match_id": "MATCH-47",
           "round": "round_of_16",
           "scheduled_time": "2026-12-14T17:00:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": "TikiTaka_Pro",
           "player_b": "Mbappe_Rush",
           "status": "disputed",
@@ -630,33 +990,31 @@
           "match_id": "MATCH-48",
           "round": "round_of_16",
           "scheduled_time": "2026-12-14T17:00:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": "Volley_Master",
           "player_b": "CR7_Siu",
           "status": "completed",
           "winner": "CR7_Siu",
           "score": "0-2",
           "approved_by": "FestLead",
-          "approval_hash": "#r2a4"
+          "approval_hash": "#1d4a"
         },
         {
           "match_id": "MATCH-49",
           "round": "round_of_16",
           "scheduled_time": "2026-12-14T19:00:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": "Messi_Mode",
           "player_b": "PaceAbuser",
-          "status": "completed",
-          "winner": "Messi_Mode",
-          "score": "4-1",
-          "approved_by": "FestLead",
-          "approval_hash": "#r2b1"
+          "status": "pending",
+          "winner": null,
+          "score": null
         },
         {
           "match_id": "MATCH-50",
           "round": "round_of_16",
           "scheduled_time": "2026-12-14T19:00:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": "SkillMove_X",
           "player_b": "FreeKickAce",
           "status": "pending",
@@ -667,7 +1025,7 @@
           "match_id": "MATCH-51",
           "round": "round_of_16",
           "scheduled_time": "2026-12-14T19:00:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": "TotalFootball",
           "player_b": "Penalty_Pro",
           "status": "pending",
@@ -678,7 +1036,7 @@
           "match_id": "MATCH-52",
           "round": "round_of_16",
           "scheduled_time": "2026-12-14T19:00:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": "WingWizard",
           "player_b": "Sweaty_SZN",
           "status": "pending",
@@ -689,7 +1047,7 @@
           "match_id": "MATCH-57",
           "round": "quarterfinal",
           "scheduled_time": "2026-12-15T10:00:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": "Rohan_FIFA",
           "player_b": "GoalMachine",
           "status": "pending",
@@ -701,7 +1059,7 @@
           "match_id": "MATCH-58",
           "round": "quarterfinal",
           "scheduled_time": "2026-12-15T10:00:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": null,
           "player_b": "CR7_Siu",
           "status": "pending",
@@ -713,8 +1071,8 @@
           "match_id": "MATCH-59",
           "round": "quarterfinal",
           "scheduled_time": "2026-12-15T10:00:00+05:30",
-          "stage": "Arena Beta",
-          "player_a": "Messi_Mode",
+          "stage": "Arena Alpha",
+          "player_a": null,
           "player_b": null,
           "status": "pending",
           "winner": null,
@@ -725,7 +1083,7 @@
           "match_id": "MATCH-60",
           "round": "quarterfinal",
           "scheduled_time": "2026-12-15T10:00:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": null,
           "player_b": null,
           "status": "pending",
@@ -737,7 +1095,7 @@
           "match_id": "MATCH-63",
           "round": "semifinal",
           "scheduled_time": "2026-12-15T11:30:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": null,
           "player_b": null,
           "status": "pending",
@@ -749,7 +1107,7 @@
           "match_id": "MATCH-64",
           "round": "semifinal",
           "scheduled_time": "2026-12-15T11:30:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": null,
           "player_b": null,
           "status": "pending",
@@ -761,7 +1119,7 @@
           "match_id": "MATCH-66",
           "round": "grand_final",
           "scheduled_time": "2026-12-15T14:00:00+05:30",
-          "stage": "Arena Beta",
+          "stage": "Arena Alpha",
           "player_a": null,
           "player_b": null,
           "status": "pending",
@@ -780,14 +1138,38 @@
         "grand_final": 7
       },
       "teams": [
-        { "name": "Aerial Aces", "seed": 1 },
-        { "name": "Boost Bandits", "seed": 2 },
-        { "name": "Ceiling Shotters", "seed": 3 },
-        { "name": "Demo Derby", "seed": 4 },
-        { "name": "Flip Reset FC", "seed": 5 },
-        { "name": "Ground Zero", "seed": 6 },
-        { "name": "Half-Flip Heroes", "seed": 7 },
-        { "name": "Musty Flickers", "seed": 8 }
+        {
+          "name": "Aerial Aces",
+          "seed": 1
+        },
+        {
+          "name": "Boost Bandits",
+          "seed": 2
+        },
+        {
+          "name": "Ceiling Shotters",
+          "seed": 3
+        },
+        {
+          "name": "Demo Derby",
+          "seed": 4
+        },
+        {
+          "name": "Flip Reset FC",
+          "seed": 5
+        },
+        {
+          "name": "Ground Zero",
+          "seed": 6
+        },
+        {
+          "name": "Half-Flip Heroes",
+          "seed": 7
+        },
+        {
+          "name": "Musty Flickers",
+          "seed": 8
+        }
       ],
       "winners_bracket": [
         {
@@ -803,14 +1185,34 @@
             "team_a_games": 3,
             "team_b_games": 1,
             "games": [
-              { "game": 1, "score_a": 4, "score_b": 2, "winner": "Aerial Aces" },
-              { "game": 2, "score_a": 1, "score_b": 3, "winner": "Musty Flickers" },
-              { "game": 3, "score_a": 5, "score_b": 0, "winner": "Aerial Aces" },
-              { "game": 4, "score_a": 3, "score_b": 2, "winner": "Aerial Aces" }
+              {
+                "game": 1,
+                "score_a": 4,
+                "score_b": 2,
+                "winner": "Aerial Aces"
+              },
+              {
+                "game": 2,
+                "score_a": 1,
+                "score_b": 3,
+                "winner": "Musty Flickers"
+              },
+              {
+                "game": 3,
+                "score_a": 5,
+                "score_b": 0,
+                "winner": "Aerial Aces"
+              },
+              {
+                "game": 4,
+                "score_a": 3,
+                "score_b": 2,
+                "winner": "Aerial Aces"
+              }
             ]
           },
           "approved_by": "FestLead",
-          "approval_hash": "#rl01"
+          "approval_hash": "#4d81"
         },
         {
           "match_id": "MATCH-42",
@@ -825,15 +1227,40 @@
             "team_a_games": 3,
             "team_b_games": 2,
             "games": [
-              { "game": 1, "score_a": 2, "score_b": 3, "winner": "Half-Flip Heroes" },
-              { "game": 2, "score_a": 4, "score_b": 1, "winner": "Boost Bandits" },
-              { "game": 3, "score_a": 1, "score_b": 2, "winner": "Half-Flip Heroes" },
-              { "game": 4, "score_a": 6, "score_b": 0, "winner": "Boost Bandits" },
-              { "game": 5, "score_a": 3, "score_b": 2, "winner": "Boost Bandits" }
+              {
+                "game": 1,
+                "score_a": 2,
+                "score_b": 3,
+                "winner": "Half-Flip Heroes"
+              },
+              {
+                "game": 2,
+                "score_a": 4,
+                "score_b": 1,
+                "winner": "Boost Bandits"
+              },
+              {
+                "game": 3,
+                "score_a": 1,
+                "score_b": 2,
+                "winner": "Half-Flip Heroes"
+              },
+              {
+                "game": 4,
+                "score_a": 6,
+                "score_b": 0,
+                "winner": "Boost Bandits"
+              },
+              {
+                "game": 5,
+                "score_a": 3,
+                "score_b": 2,
+                "winner": "Boost Bandits"
+              }
             ]
           },
           "approved_by": "FestLead",
-          "approval_hash": "#rl02"
+          "approval_hash": "#46b7"
         },
         {
           "match_id": "MATCH-43",
@@ -848,13 +1275,28 @@
             "team_a_games": 3,
             "team_b_games": 0,
             "games": [
-              { "game": 1, "score_a": 5, "score_b": 1, "winner": "Ceiling Shotters" },
-              { "game": 2, "score_a": 3, "score_b": 2, "winner": "Ceiling Shotters" },
-              { "game": 3, "score_a": 4, "score_b": 3, "winner": "Ceiling Shotters" }
+              {
+                "game": 1,
+                "score_a": 5,
+                "score_b": 1,
+                "winner": "Ceiling Shotters"
+              },
+              {
+                "game": 2,
+                "score_a": 3,
+                "score_b": 2,
+                "winner": "Ceiling Shotters"
+              },
+              {
+                "game": 3,
+                "score_a": 4,
+                "score_b": 3,
+                "winner": "Ceiling Shotters"
+              }
             ]
           },
           "approved_by": "FestLead",
-          "approval_hash": "#rl03"
+          "approval_hash": "#4882"
         },
         {
           "match_id": "MATCH-44",
@@ -869,14 +1311,34 @@
             "team_a_games": 1,
             "team_b_games": 3,
             "games": [
-              { "game": 1, "score_a": 3, "score_b": 4, "winner": "Flip Reset FC" },
-              { "game": 2, "score_a": 5, "score_b": 2, "winner": "Demo Derby" },
-              { "game": 3, "score_a": 0, "score_b": 3, "winner": "Flip Reset FC" },
-              { "game": 4, "score_a": 1, "score_b": 4, "winner": "Flip Reset FC" }
+              {
+                "game": 1,
+                "score_a": 3,
+                "score_b": 4,
+                "winner": "Flip Reset FC"
+              },
+              {
+                "game": 2,
+                "score_a": 5,
+                "score_b": 2,
+                "winner": "Demo Derby"
+              },
+              {
+                "game": 3,
+                "score_a": 0,
+                "score_b": 3,
+                "winner": "Flip Reset FC"
+              },
+              {
+                "game": 4,
+                "score_a": 1,
+                "score_b": 4,
+                "winner": "Flip Reset FC"
+              }
             ]
           },
           "approved_by": "FestLead",
-          "approval_hash": "#rl04"
+          "approval_hash": "#db1f"
         },
         {
           "match_id": "MATCH-53",
@@ -990,5 +1452,8 @@
         "notes": "Winner of WB Final (MATCH-68) vs Winner of LB Final (MATCH-65). BO7. WB winner has 1-game advantage."
       }
     }
-  }
+  },
+  "snapshot_note": "State as of Day 1, 17:45 IST. Matches scheduled after this time are pending.",
+  "pending_approvals": [],
+  "audit_log": []
 }
