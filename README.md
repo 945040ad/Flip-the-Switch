@@ -180,7 +180,7 @@ The finance room handles the money. The sponsor-tracker calculates prize distrib
 
 ---
 
-## Demo Scenarios
+<!-- ## Demo Scenarios
 
 The rehearsal script ([`scripts/rehearse.py`](scripts/rehearse.py)) walks through 5 real-world scenarios:
 
@@ -209,7 +209,7 @@ The sponsor-tracker calculates the split (1st: ₹25,000, 2nd: ₹15,000, 3rd: �
 
 The sponsor-tracker reads `sponsor_ledger.json` and generates a dashboard showing: booth setup ✅, logo on stream overlay ✅, product giveaway ⏳, social media shoutout ❌. Tracks completion percentage and remaining obligations.
 
----
+--- -->
 
 ## Quick Start
 
