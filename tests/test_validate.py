@@ -114,6 +114,16 @@ class ValidatorCatches(unittest.TestCase):
         self.p.edit_json("documents/bracket_state.json", break_score)
         self.assertFlags(self.p.validate(), broken["id"])
 
+    def test_day_heading_date_drives_the_schedule(self):
+        self.p.edit("documents/schedule_and_rules.md", "## Day 1 Schedule — December 14", "## Day 1 Schedule — December 13")
+        self.assertFlags(self.p.validate(), "schedule says 2026-12-13")
+
+    def test_a_fest_without_a_game_gets_findings_not_a_crash(self):
+        self.p.edit_json("documents/bracket_state.json", lambda d: d["tournaments"].pop("bgmi"))
+        result = self.p.validate()
+        self.assertNotIn("Traceback", result.stderr)
+        self.assertFlags(result, "bracket_state.json has no such match")
+
     def test_rulebook_section_cited_by_an_agent_is_renamed(self):
         self.p.edit("documents/schedule_and_rules.md", "### Tournament Conduct", "### Match Conduct")
         self.assertFlags(self.p.validate(), '"Tournament Conduct"')

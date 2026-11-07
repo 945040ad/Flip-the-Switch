@@ -135,6 +135,8 @@ python scripts/validate.py         # ~690 consistency checks; fix anything it fl
 python scripts/build_template.py   # re-embed into festcommand.template.yaml
 ```
 
+Day dates come from the rulebook's `## Day N Schedule — <Month> <day>` headings, and the year from the bracket's `last_updated`. Game-specific score rules (Valorant maps, BGMI points) apply only to the games you run. If your prize table uses different row labels, edit the `GAME_ROWS` mapping marked *EDIT FOR YOUR FEST* in `scripts/validate.py`.
+
 Edit `template/festcommand.template.src.yaml`, not the generated file. CI (`.github/workflows/validate.yml`) fails if the generated template is stale or the documents contradict each other. `python -m unittest discover -s tests` breaks a throwaway copy of the project in a dozen specific ways and checks that the validator catches each one.
 
 ---

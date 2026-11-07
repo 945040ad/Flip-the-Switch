@@ -94,13 +94,17 @@ def all_matches(bracket: dict) -> dict[str, dict]:
 
 # ─────────────────────────────── schedule ───────────────────────────────
 
-DAY_DATES = {"1": "2026-12-14", "2": "2026-12-15"}
+def schedule_slots(schedule: str, year: int) -> dict[str, tuple[str, str]]:
+    """MATCH-ID -> (ISO local time 'YYYY-MM-DDTHH:MM', stage) from the day tables.
 
-
-def schedule_slots(schedule: str) -> dict[str, tuple[str, str]]:
-    """MATCH-ID -> (ISO local time 'YYYY-MM-DDTHH:MM', stage) from the day tables."""
+    Each day's date comes from its heading, e.g. "## Day 1 Schedule — December 14".
+    """
     slots: dict[str, tuple[str, str]] = {}
-    for day, body in re.findall(r"## Day (\d) Schedule.*?\n(.*?)(?=\n---|\n## )", schedule, re.S):
+    for heading, body in re.findall(r"## (Day \d+ Schedule[^\n]*)\n(.*?)(?=\n---|\n## )", schedule, re.S):
+        when = re.search(r"([A-Z][a-z]+) (\d{1,2})\s*$", heading)
+        if not check(bool(when), f"schedule heading {heading!r} should end with its date, e.g. 'December 14'"):
+            continue
+        date = datetime.strptime(f"{when[1]} {when[2]} {year}", "%B %d %Y").date().isoformat()
         lines = [row for row in body.splitlines() if row.startswith("|")]
         header = [c.strip() for c in lines[0].strip("|").split("|")]
         for row in lines[2:]:
@@ -112,14 +116,14 @@ def schedule_slots(schedule: str) -> dict[str, tuple[str, str]]:
                 if rng:
                     ids = [f"{i:02d}" for i in range(int(rng[1]), int(rng[2]) + 1)]
                 for i in ids:
-                    slots[f"MATCH-{i}"] = (f"{DAY_DATES[day]}T{t}", col)
+                    slots[f"MATCH-{i}"] = (f"{date}T{t}", col)
     return slots
 
 
 def check_schedule_vs_bracket(bracket, schedule):
     b0 = len(errors)
     matches = all_matches(bracket)
-    slots = schedule_slots(schedule)
+    slots = schedule_slots(schedule, datetime.fromisoformat(bracket["last_updated"]).year)
     for mid, (when, stage) in sorted(slots.items()):
         if not check(mid in matches, f"schedule lists {mid} but bracket_state.json has no such match"):
             continue
@@ -182,9 +186,10 @@ def check_bracket(bracket):
                 check(actual == expected,
                       f"{mid}.{field} is {actual!r} but {src} winner is {expected!r}")
 
+    # Game-specific rules, for the games this fest runs.
+    tournaments = bracket["tournaments"]
     # Valorant series scores
-    val = bracket["tournaments"]["valorant"]
-    for m in val["matches"]:
+    for m in (tournaments.get("valorant") or {}).get("matches", []):
         sc = m.get("score")
         if not sc:
             continue
@@ -199,7 +204,7 @@ def check_bracket(bracket):
                   f"{m['match_id']}: {mp['map']} {mp['score_a']}-{mp['score_b']} is not a legal Valorant map score")
 
     # BGMI points arithmetic
-    bg = bracket["tournaments"]["bgmi"]
+    bg = tournaments.get("bgmi") or {"points_system": {"placement": {}}, "squads": [], "rounds": []}
     pts = bg["points_system"]
 
     def placement_points(p: int) -> int:
@@ -227,6 +232,8 @@ def check_bracket(bracket):
 # ─────────────────────────────── ledger ─────────────────────────────────
 
 ORDINAL = {"first": "🥇 1st Place", "second": "🥈 2nd Place", "third": "🥉 3rd Place"}
+# EDIT FOR YOUR FEST: ledger prize_pool key -> its row label in the rulebook's
+# "Prize Structure" tables. Entries absent from both documents are skipped.
 GAME_ROWS = {"valorant": "Valorant 5v5", "bgmi": "BGMI 4-Squad", "fifa25": "FIFA 25 1v1",
              "rocket_league": "Rocket League 3v3", "hackathon": "Hackathon"}
 COSPLAY_ROWS = {"best_overall": "Best Overall", "best_gaming_character": "Best Gaming Character",
@@ -302,13 +309,19 @@ def check_ledger(ledger, schedule):
         return ((tours.get(game) or {}).get("prizes", {}).get(key) or {}).get("amount")
 
     for g, label in GAME_ROWS.items():
+        if g not in tours and label not in rows:
+            continue
         want = [amount(g, k) for k in ("first", "second", "third")]
         check(rows.get(label) == want, f"prizes for {label}: rulebook {rows.get(label)} vs ledger {want}")
     for key, label in COSPLAY_ROWS.items():
+        if "cosplay" not in tours and label not in schedule:
+            continue
         m = re.search(rf"\| {re.escape(label)} \| ₹([\d,]+)", schedule)
         check(bool(m) and inr(m[1]) == amount("cosplay", key),
               f"cosplay '{label}' prize differs between rulebook and ledger")
     for (g, key), label in EXTRA.items():
+        if amount(g, key) is None and label not in schedule:
+            continue
         m = re.search(rf"\*\*{re.escape(label)}\*\*.*?₹([\d,]+)", schedule)
         check(bool(m) and inr(m[1]) == amount(g, key),
               f"'{label}' prize differs between rulebook and ledger")
