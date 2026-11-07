@@ -218,11 +218,13 @@ def recompute_ledger(ledger: dict):
 
 
 def s1_schedule_question(st: Stage, bracket: dict, M: dict):
-    st.scene(1, "Participant asks about their next match", "helpdesk → reads schedule + bracket documents")
+    st.scene(1, "Participant asks about their next match", "helpdesk → ops (read bracket_live.json) → helpdesk")
     gf, sf = M["MATCH-07"], M["MATCH-05"]
     team = gf["team_a"]
     st.enter("helpdesk")
     st.say(f"👤 Rahul ({team})", f"@{FEST}-concierge we won our semi!! when and where is the Valorant final?", C.BLUE)
+    st.note("announcements.md has nothing newer → list_linked_rooms → connect_to_room(ops)")
+    st.note("load_internal_documents(bracket_live.json) → connect_to_room(helpdesk)")
     maps = ", ".join(f"{m['map']} {m['score_a']}-{m['score_b']}" for m in sf["score"]["maps"])
     opp = gf["team_b"] or "winner of MATCH-06 (result pending)"
     st.say(AGENT["concierge"], f"""
