@@ -39,7 +39,7 @@
   - 🟢 `#public-helpdesk` (green)
   - 🟡 `#tournament-ops` (yellow)
   - 🔴 `#sponsor-finance` (red)
-- **0:25–0:30**: The three Discord channels appear in the sidebar, and each agent posts its kickoff message (welcome, bracket status, sponsor dashboard). Zoom into the channel list.
+- **0:25–0:30**: The three Discord channels appear in the sidebar, and each agent posts its kickoff message (welcome, bracket status, sponsor dashboard). Flash the ops room's document list: `bracket_live_valorant.json` … `approvals_live.json` appear as the marshal creates them. Zoom into the channel list.
 
 ### 🎨 Visual Notes:
 - Use colored labels/boxes overlaid on the YAML to match each room
@@ -143,7 +143,7 @@
 >
 > *[Pause while YAML is on screen]*
 >
-> "Switch scopes who can talk to which agent. Participants can only reach the concierge, and the concierge can only file reports. The agents that change state answer only to me. The money lives in a room the public agent isn't even in."
+> "Switch scopes who can talk to which agent. Participants can only reach the concierge, and the concierge can only file reports. The agents that change state answer only to me. And each live document can be written by exactly one agent, the one that created it. Switch enforces that, not a prompt. The money lives in a room the public agent isn't even in."
 >
 > "Take Switch away and you're back to one all-powerful bot in one channel. FestCommand isn't a bot sitting on top of Switch. Switch draws the boundaries that make it safe."
 
@@ -152,7 +152,7 @@
 - **1:35–1:40**: Highlight key sections with colored overlays and callout labels:
   - `addressing: { anyone_in: [helpdesk, ops] }` on the concierge → **"Participants reach only this agent"** (green label)
   - `addressing: owner-agents` on marshal & tracker → **"Answers only to the Fest Lead"** (red label)
-  - `docs:` on the ops & finance rooms → **"Shared live state"** (blue label)
+  - `docs:` on the ops & finance rooms → **"Baseline the agents copy into documents only they can edit"** (blue label)
   - `agents: [bracket_marshal, concierge, sponsor_tracker]` on ops → **"Agents in two rooms carry the hand-offs"** (purple label)
 - **1:40–1:45**: Animated diagram: show the 3 rooms with arrows. Highlight each arrow as you mention cross-room features.
 - **1:45–1:50**: Quick comparison table (from README) flashes on screen:
