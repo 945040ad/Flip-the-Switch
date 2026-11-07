@@ -39,8 +39,11 @@ params:
   bridge:
     type: bridge
     label: Messaging app
-    description: Where the three rooms are created (Discord, Slack, Mattermost…).
+    description: >-
+      Where the three rooms are created (Discord, Slack, Mattermost…). Leave it
+      empty on a server with no messaging app: the rooms are then Switch-only.
     default: [$first]
+    required: false
   provider:
     type: provider
     description: The coding agent that runs all three FestCommand agents.
@@ -387,7 +390,10 @@ resources:
     channel_type: channel_public
     bridge: "{bridge}"
     agents: [concierge]
-    users: ["{$creator}"]
+    users:
+      - if: "{bridge}"
+        value: ["{$creator}"]
+      - value: []
     instructions: |
       Welcome to the **{fest} Public Helpdesk** 🎮
 
@@ -412,7 +418,10 @@ resources:
     channel_type: channel_private
     bridge: "{bridge}"
     agents: [bracket_marshal, concierge, sponsor_tracker]
-    users: ["{$creator}"]
+    users:
+      - if: "{bridge}"
+        value: ["{$creator}"]
+      - value: []
     instructions: |
       🔒 **{fest} Tournament Ops.** Fest Lead and agents only.
 
@@ -2367,7 +2376,10 @@ resources:
     channel_type: channel_private
     bridge: "{bridge}"
     agents: [sponsor_tracker]
-    users: ["{$creator}"]
+    users:
+      - if: "{bridge}"
+        value: ["{$creator}"]
+      - value: []
     instructions: |
       💰 **{fest} Sponsor & Finance.** Fest Lead only.
 

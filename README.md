@@ -117,7 +117,7 @@ The rehearsal plays six scenarios across the three rooms **against the real docu
 ### 2. Deploy on Switch
 
 1. Open **Switch Console → Templates** and import `festcommand.template.yaml`.
-2. Set **Fest name** (default `techstorm`) and the **Messaging app**. Provider, machine and directory are under *Advanced*.
+2. Set **Fest name** (default `techstorm`) and the **Messaging app**. Provider, machine and directory are under *Advanced*. No messaging app on your server? Leave it empty: the three rooms are created as Switch-only rooms, so you can try FestCommand on a fresh local server.
 3. Create. Switch makes the three agents, the three rooms with their documents, and the group. Each room's kickoff wakes its agent: the concierge posts a welcome, the marshal posts a bracket status, and the tracker posts the sponsor dashboard.
 
 You don't need to upload any documents. They're embedded in the template.
@@ -127,7 +127,7 @@ You don't need to upload any documents. They're embedded in the template.
 Edit `documents/` (your schedule, teams, sponsors, budget) and `agents/*/SKILL.md` (agent behaviour), then:
 
 ```bash
-python scripts/validate.py         # 580 consistency checks; fix anything it flags
+python scripts/validate.py         # ~650 consistency checks; fix anything it flags
 python scripts/build_template.py   # re-embed into festcommand.template.yaml
 ```
 
@@ -167,7 +167,7 @@ Flip-the-Switch/
 │   └── sponsor_ledger.json            # income, budget, sponsors, prizes, vendors, alerts
 ├── scripts/
 │   ├── build_template.py              # source + skills + documents → template
-│   ├── validate.py                    # 580 cross-document consistency checks
+│   ├── validate.py                    # ~650 cross-document + Switch schema checks
 │   ├── rehearse.py                    # six-scenario simulation, data-driven
 │   └── setup.sh                       # environment + validation in one command
 ├── .github/workflows/validate.yml     # CI: build check, validate, rehearse
@@ -218,7 +218,7 @@ The code is there to stop you approving the wrong item and to make the audit log
 - **Single approver.** A real deployment would split approval roles, e.g. a finance head for payouts and a tournament director for rulings.
 - **No payment rails.** Payouts are recorded in the ledger. UPI or bank transfers happen outside FestCommand.
 - **No game APIs.** Results are reported by referees, not pulled from Riot or Krafton.
-- **Template features beyond the documented ones are untested.** The template follows Switch's documented v2 language. How `links:` behave at runtime isn't documented, so FestCommand doesn't depend on them for hand-offs. Room membership does that job.
+- **Checked against Switch's source, not yet run on a live server.** Every field was traced through the server's own template code (`template_lint`, `template_v2.compile_v2`, the run planner and `rooms_yaml`), and `validate.py` mirrors those rules. A live import is still the final proof. How `links:` behave at runtime isn't documented, so FestCommand doesn't depend on them for hand-offs. Room membership does that job.
 
 ---
 
@@ -240,7 +240,7 @@ Built for the **[Flip the Switch Hackathon](https://wemakedevs.org)** by WeMakeD
 | Criteria | Weight | How FestCommand addresses it |
 |---|---|---|
 | Switch Features | 30% | v2 template creating 3 agents, 3 rooms and a linked group; room documents; per-agent addressing as the security boundary; per-room kickoffs; multi-room agents for hand-offs |
-| Technical Execution | 25% | Template built from single-source skills + documents, 580-check cross-document validator, data-driven rehearsal with a working approval gate, CI |
+| Technical Execution | 25% | Template built from single-source skills + documents, 650-check validator (cross-document + Switch schema), data-driven rehearsal with a working approval gate, CI |
 | Creativity & Impact | 25% | Solves real campus fest chaos — a pain point felt by thousands of student organizers |
 | Presentation & Docs | 20% | Architecture diagram, demo video script, DEV.to blog draft, comprehensive README |
 

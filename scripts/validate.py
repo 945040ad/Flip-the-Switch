@@ -306,6 +306,86 @@ AGENT_REQUIRED = ("provider", "directory", "instructions")
 BUILTINS = {"creator", "creator_email", "agents_dir", "date", "timestamp", "first"}
 PLACEHOLDER = re.compile(r"\{\$?[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_]+)?\}")
 
+# Mirrors of the server's own schema (sandbox-quantum/switch, core/switch_core):
+# rooms_yaml.ParamSpec / RoomSpec / GroupMeta and the fields that
+# agent_templates' planner and template_v2.compile_v2 read. Keeping them here
+# lets CI catch a template the server would refuse, without a Switch server.
+PARAM_KEYS = {"type", "description", "label", "default", "required", "input", "enum",
+              "multiline", "pattern", "min", "max", "if"}
+PARAM_TYPES = {"string", "number", "boolean", "enum", "agent", "bridge", "room", "user",
+               "provider", "location", "machine", "directory"}
+CHAIN_TYPES = {"agent", "bridge", "room", "provider", "location", "machine"}
+OPTIONAL_WITHOUT_DEFAULT = {"string", "bridge", "room"}
+AGENT_KEYS = {"type", "if", "name", "display_name", "description", "icon_url", "instructions",
+              "provider", "machine", "location", "directory", "model", "addressing", "isolation",
+              "auto_mode", "auto_approve", "allow_existing", "can_manage_agents", "connections",
+              "advanced_config", "repo", "sources", "join"}
+ROOM_KEYS = {"type", "if", "kickoff", "group", "name", "description", "instructions", "bridge",
+             "channel_type", "read_visibility", "write_visibility", "agents", "users", "roles",
+             "references", "packages", "docs", "aliases"}
+GROUP_KEYS = {"type", "if", "name", "description", "color", "links"}
+CONDITION = re.compile(r"^\{([A-Za-z_][A-Za-z0-9_]*)\}(?:\s*(==|!=)\s*(.+))?$")
+
+
+def conditional_values(node):
+    """Yield each `if:` condition written in a `[{if, value}, ...]` field."""
+    if isinstance(node, list) and node and all(isinstance(i, dict) and "value" in i for i in node):
+        for item in node:
+            if "if" in item:
+                yield item["if"]
+            yield from conditional_values(item["value"])
+    elif isinstance(node, dict):
+        for v in node.values():
+            yield from conditional_values(v)
+    elif isinstance(node, list):
+        for v in node:
+            yield from conditional_values(v)
+
+
+def check_switch_schema(t: dict) -> None:
+    """The rules the Switch server applies on upload and when planning a run."""
+    params = t.get("params") or {}
+    for name, spec in params.items():
+        check(isinstance(spec, dict) and set(spec) <= PARAM_KEYS,
+              f"param {name}: unknown key(s) {sorted(set(spec) - PARAM_KEYS)}")
+        ptype = spec.get("type", "string")
+        check(ptype in PARAM_TYPES, f"param {name}: unknown type {ptype!r}")
+        check(spec.get("input", "ask") in {"ask", "advanced", "fixed"}, f"param {name}: bad input")
+        default = spec.get("default")
+        if isinstance(default, list):
+            check(ptype in CHAIN_TYPES and bool(default), f"param {name}: a list default needs a chain type")
+        check(not (spec.get("input") == "fixed" and default is None), f"param {name}: fixed needs a default")
+        check(not (spec.get("required") is False and default is None and ptype not in OPTIONAL_WITHOUT_DEFAULT),
+              f"param {name}: a {ptype} param without a default cannot be optional")
+        check(not ({"min", "max"} & set(spec)) or ptype == "number", f"param {name}: min/max apply to number params")
+        check(ptype != "enum" or bool(spec.get("enum")), f"param {name}: an enum param needs enum: [values]")
+        if "pattern" in spec:
+            check(ptype == "string", f"param {name}: pattern applies to string params")
+            try:
+                re.compile(spec["pattern"])
+            except re.error:
+                check(False, f"param {name}: pattern is not a valid regex")
+    res = t["resources"]
+    check(sum(1 for r in res.values() if r.get("type") == "group") <= 1, "a template creates at most one group")
+    allowed = {"agent": AGENT_KEYS, "room": ROOM_KEYS, "group": GROUP_KEYS}
+    for k, r in res.items():
+        kind = r.get("type")
+        check(kind in allowed, f"resource {k}: type must be agent, room or group")
+        if kind in allowed:
+            check(set(r) <= allowed[kind], f"{kind} {k}: key(s) Switch does not read {sorted(set(r) - allowed[kind])}")
+        check(bool(r.get("name") or (kind == "agent" and r.get("display_name"))), f"resource {k} needs a name")
+        if kind == "room":
+            check(r.get("channel_type", "channel_public") in {"channel_public", "channel_private"},
+                  f"room {k}: bad channel_type")
+            for d in r.get("docs", []):
+                check({"name", "description", "instructions", "content"} <= set(d),
+                      f"room {k}: doc {d.get('name')} needs name, description, instructions and content")
+        for cond in ([r["if"]] if "if" in r else []) + list(conditional_values(r)):
+            m = CONDITION.match(str(cond))
+            check(bool(m), f"resource {k}: {cond!r} is not a Switch condition")
+            if m:
+                check(m.group(1) in params, f"resource {k}: condition reads undeclared param {m.group(1)}")
+
 
 def check_template():
     b0 = len(errors)
@@ -321,6 +401,7 @@ def check_template():
     t = yaml.safe_load((ROOT / "festcommand.template.yaml").read_text(encoding="utf-8"))
     check(t.get("version") == 2, "template should be version 2")
     check(not ({"agents", "rooms", "groups", "kickoff"} & set(t)), "v2 template must not use top-level agents/rooms/groups/kickoff")
+    check_switch_schema(t)
     res = t["resources"]
     params = set(t.get("params", {}))
     kinds = {k: r.get("type") for k, r in res.items()}

@@ -619,7 +619,7 @@ def main() -> int:
             return 2
         out.mkdir(parents=True, exist_ok=True)
         for name, doc in (("bracket_state.json", bracket), ("sponsor_ledger.json", ledger)):
-            (out / name).write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+            (out / name).write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
         print(f"\nWrote post-rehearsal documents to {out}")
     print(f"\n{C.DIM}Deploy it for real: Switch Console → Templates → import festcommand.template.yaml{C.RESET}\n")
     return 0
