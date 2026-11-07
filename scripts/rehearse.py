@@ -9,7 +9,7 @@ in-memory state that the following scenarios read.
 
     python scripts/rehearse.py              # paced playback (~60 s)
     python scripts/rehearse.py --fast       # no delays
-    python scripts/rehearse.py --write OUT  # also save the resulting documents to OUT/
+    python scripts/rehearse.py --write OUT  # also save the agents' live documents to OUT/
     python scripts/rehearse.py --no-color
 
 documents/ is never modified.
@@ -171,6 +171,21 @@ class Gate:
 
 
 # ───────────────────────────── document helpers ─────────────────────────
+
+
+def live_documents(bracket: dict, ledger: dict) -> dict[str, dict]:
+    """The documents the agents keep in Switch, split the way the marshal's
+    kickoff splits bracket_state.json: one per tournament, plus approvals."""
+    docs = {
+        f"bracket_live_{game}.json": {"event": bracket["event"], "tournament": game,
+                                      "last_updated": bracket["last_updated"], **t}
+        for game, t in bracket["tournaments"].items()
+    }
+    docs["approvals_live.json"] = {"event": bracket["event"],
+                                   "pending_approvals": bracket.get("pending_approvals", []),
+                                   "audit_log": bracket.get("audit_log", [])}
+    docs["ledger_live.json"] = ledger
+    return docs
 
 
 def live_matches(bracket: dict) -> dict[str, dict]:
@@ -589,7 +604,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="FestCommand rehearsal (no Switch needed).")
     ap.add_argument("--fast", "-f", action="store_true", help="no delays")
     ap.add_argument("--no-color", action="store_true", help="plain output")
-    ap.add_argument("--write", metavar="DIR", help="save the resulting documents to DIR (never documents/)")
+    ap.add_argument("--write", metavar="DIR", help="save the agents' live documents to DIR (never documents/)")
     args = ap.parse_args()
     if args.no_color or os.environ.get("NO_COLOR") or not sys.stdout.isatty():
         C.disable()
@@ -637,9 +652,9 @@ def main() -> int:
             print("Refusing to overwrite documents/. Pick another directory.")
             return 2
         out.mkdir(parents=True, exist_ok=True)
-        for name, doc in (("bracket_state.json", bracket), ("sponsor_ledger.json", ledger)):
+        for name, doc in live_documents(bracket, ledger).items():
             (out / name).write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
-        print(f"\nWrote post-rehearsal documents to {out}")
+        print(f"\nWrote the agents' post-rehearsal live documents to {out}")
     print(f"\n{C.DIM}Deploy it for real: Switch Console → Templates → import festcommand.template.yaml{C.RESET}\n")
     return 0
 

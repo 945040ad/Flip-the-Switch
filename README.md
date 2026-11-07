@@ -116,7 +116,7 @@ uv run --no-project python scripts/rehearse.py --fast
 
 The scripts use only the standard library. PyYAML is optional and enables the template structure checks.
 
-The rehearsal plays six scenarios across the three rooms **against the real documents**. Every team, time, rule and amount is read from `documents/`, approval codes are generated per request, and each approval changes the state that the next scenario reads. Use `--write OUT/` to save the post-rehearsal documents. `documents/` itself is never modified.
+The rehearsal plays six scenarios across the three rooms **against the real documents**. Every team, time, rule and amount is read from `documents/`, approval codes are generated per request, and each approval changes the state that the next scenario reads. Use `--write OUT/` to save the post-rehearsal live documents exactly as the agents keep them in Switch (`bracket_live_<game>.json` ×4, `approvals_live.json`, `ledger_live.json`). `documents/` itself is never modified.
 
 ### 2. Deploy on Switch
 
