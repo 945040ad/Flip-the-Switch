@@ -274,6 +274,19 @@ def check_approval_lists(doc: dict, name: str) -> None:
 def check_ledger(ledger, schedule):
     b0 = len(errors)
     check_approval_lists(ledger, "sponsor_ledger.json")
+    # A vendor payment with an issued code must be an open request, or
+    # `approve VENDOR-NN #code` gets "code mismatch" and `pending` hides it.
+    queue = {(p.get("type"), p.get("id")): p for p in ledger.get("pending_approvals") or []}
+    for v in ledger["vendor_payments"]:
+        if v.get("status") == "pending_approval":
+            entry = queue.get(("VENDOR", v["id"].split("-", 1)[-1]))
+            same_code = bool(entry) and ("approval_hash" not in v or entry.get("code") == v["approval_hash"])
+            check(same_code, f"{v['id']} awaits approval but has no matching entry in pending_approvals")
+    for (kind, ident), p in queue.items():
+        if kind == "VENDOR":
+            check(any(v["id"] == f"VENDOR-{ident}" and v.get("status") == "pending_approval"
+                      for v in ledger["vendor_payments"]),
+                  f"pending_approvals has VENDOR-{ident}, but no vendor payment awaits approval under that id")
     sponsorship = sum(s["commitment_inr"] for s in ledger["sponsors"])
     inc = ledger.get("income", {})
     check(inc.get("sponsorship") == sponsorship, "income.sponsorship != sum of sponsor commitments")

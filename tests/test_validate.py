@@ -136,6 +136,10 @@ class ValidatorCatches(unittest.TestCase):
         self.p.edit("documents/schedule_and_rules.md", "### Tournament Conduct", "### Match Conduct")
         self.assertFlags(self.p.validate(), '"Tournament Conduct"')
 
+    def test_pending_vendor_payment_missing_from_the_queue(self):
+        self.p.edit_json("documents/sponsor_ledger.json", lambda d: d["pending_approvals"].clear())
+        self.assertFlags(self.p.validate(), "VENDOR-03 awaits approval")
+
     def test_ledger_loses_its_approval_queue(self):
         self.p.edit_json("documents/sponsor_ledger.json", lambda d: d.pop("pending_approvals"))
         self.assertFlags(self.p.validate(), "pending_approvals")

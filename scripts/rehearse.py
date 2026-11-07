@@ -137,10 +137,16 @@ class Gate:
         doc.setdefault("pending_approvals", [])
         doc.setdefault("audit_log", [])
 
-    def request(self, kind: str, ident: str, summary: str, change: dict, code: str | None = None) -> str:
-        code = code or code_for(kind, ident, summary, json.dumps(change, sort_keys=True, ensure_ascii=False))
+    def request(self, kind: str, ident: str, summary: str, change: dict, **extra) -> str:
+        """Open a request, or return the code of the one already open for it.
+        `extra` carries the per-agent fields (`game` for the marshal,
+        `amount` for the tracker)."""
+        open_ = next((p for p in self.doc["pending_approvals"] if p["type"] == kind and p["id"] == ident), None)
+        if open_:
+            return open_["code"]
+        code = code_for(kind, ident, summary, json.dumps(change, sort_keys=True, ensure_ascii=False))
         self.doc["pending_approvals"].append({
-            "type": kind, "id": ident, "code": code, "summary": summary,
+            "type": kind, "id": ident, "code": code, **extra, "summary": summary,
             "proposed_change": change, "requested_at": self.stage.clock.isoformat()})
         return code
 
@@ -299,7 +305,7 @@ Reporter: Referee (Arena Alpha) via #public-helpdesk""", C.GREEN)
         (bool(proof), "proof URL present (image contents are not machine-verified)"),
     ]
     change = {"match": m["match_id"], "winner": winner, "maps": submitted, "advances_to": f"{gf['match_id']}.team_b"}
-    code = st.gate_b.request("MATCH", num, f"{winner} wins {m['match_id']}", change)
+    code = st.gate_b.request("MATCH", num, f"{winner} wins {m['match_id']}", change, game="valorant")
     lines = "\n".join(("✓ " if ok else "✗ ") + txt for ok, txt in checks)
     st.say(AGENT["marshal"], f"""
 Validating {m['match_id']}…
@@ -382,7 +388,7 @@ Reporter: {d['reported_by']} via #public-helpdesk""", C.GREEN)
                 break
     assert when, "no free slot found"
     change = {"match": m["match_id"], "status": "rematch_scheduled", "scheduled_time": when, "stage": "Arena Alpha"}
-    code = st.gate_b.request("DISPUTE", num, f"Full rematch of {m['match_id']}", change)
+    code = st.gate_b.request("DISPUTE", num, f"Full rematch of {m['match_id']}", change, game="fifa25")
     st.say(AGENT["marshal"], f"""
 ⚖️ DISPUTE: {m['match_id']}, {m['player_a']} vs {m['player_b']}
 Claim: opponent disconnected at 1-1 in the 85th minute; reporter had possession.
@@ -431,7 +437,8 @@ def s4_vendor(st: Stage, ledger: dict):
     cat = ledger["expenses"]["categories"][cat_key]
     before, after = cat["spent"], cat["spent"] + v["amount"]
     num = v["id"][7:]
-    code = st.gate_f.request("VENDOR", num, v["description"], {"vendor_payment": v["id"]}, code=v["approval_hash"])
+    code = st.gate_f.request("VENDOR", num, v["description"], {"vendor_payment": v["id"], "category": cat_key},
+                             amount=v["amount"])
     crosses = after / cat["allocated"] > 0.8 >= before / cat["allocated"]
 
     st.enter("finance")
@@ -569,7 +576,7 @@ def s6_payout(st: Stage, bracket: dict, ledger: dict):
     for i, key in enumerate(("first", "second", "third")):
         squad, amt, pid = podium[i][0], pool["prizes"][key]["amount"], f"{i + 1:02d}"
         code = st.gate_f.request("PAYOUT", pid, f"BGMI {key} → {squad}",
-                                 {"tournament": "bgmi", "place": key, "recipient": squad, "amount": amt})
+                                 {"tournament": "bgmi", "place": key, "recipient": squad, "amount": amt}, amount=amt)
         reqs.append((pid, code, squad, key, amt))
     st.enter("finance")
     body = "\n".join(f"💰 PAYOUT-{pid}: {squad} ({key}) {rupees(amt)}   →  approve PAYOUT-{pid} {code}"

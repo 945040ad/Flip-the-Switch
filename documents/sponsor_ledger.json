@@ -686,6 +686,19 @@
     "ticket_sales": 138000,
     "notes": "Ticket sales: pre-sold passes as of 2026-12-13 (General ₹299 / All-Access ₹499 / Spectator ₹149)."
   },
-  "pending_approvals": [],
+  "pending_approvals": [
+    {
+      "type": "VENDOR",
+      "id": "03",
+      "code": "#79e1",
+      "summary": "Pay Campus Bites Catering ₹10,500 (invoice CBC-2212, Day 2 lunch + snacks)",
+      "amount": 10500,
+      "proposed_change": {
+        "vendor_payment": "VENDOR-03",
+        "category": "catering"
+      },
+      "requested_at": "2026-12-14T14:00:00+05:30"
+    }
+  ],
   "audit_log": []
 }
