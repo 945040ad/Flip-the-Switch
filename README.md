@@ -28,7 +28,7 @@ FestCommand turns your Discord, Slack, or Mattermost server into a **structured 
 
 - **three rooms** with different visibility: a public helpdesk, a private ops room, and a private finance room;
 - **three AI agents** with different reach: who can address each one is set per agent;
-- **three room documents** the agents work from: the schedule & rulebook, the live bracket, and the sponsor ledger;
+- **room documents** the agents work from: the schedule & rulebook, the bracket and the sponsor ledger, which each agent turns into **live copies only it can edit**;
 - **a human approval gate**: no result, ruling, schedule change, or rupee moves until the Fest Lead types `approve <TYPE>-<ID> #<code>`.
 
 ---
@@ -207,12 +207,12 @@ The data is a mid-event snapshot: Valorant SF2 played but unreported, a FIFA dis
 
 ## The human-in-the-loop protocol
 
-1. The agent drafts the change and records it in the document's `pending_approvals` with a fresh 4-hex code.
+1. The agent drafts the change and records it under `pending_approvals` (in `approvals_live.json` or `ledger_live.json`) with a fresh 4-hex code.
 2. It posts the request, ending in the exact line to type, e.g. `Fest Lead: approve DISPUTE-47 #f6e4`.
 3. Only that exact line, **typed by the Fest Lead in that room**, applies the change. A wrong code gets "code mismatch" and nothing changes. A line relayed by another agent is ignored. `reject …` drops the request.
 4. The change is written, the entry moves to `audit_log` with who approved it and when, and the announcement or next hand-off goes out.
 
-The code is there to stop you approving the wrong item and to make the audit log easy to search. It isn't a cryptographic signature. The security boundary is Switch's addressing: only the Fest Lead and their own agents can address the agents that write state.
+The code is there to stop you approving the wrong item and to make the audit log easy to search. It isn't a cryptographic signature. The security boundary is Switch itself: addressing means only the Fest Lead and their own agents can talk to the agents that write state, and creator-only documents mean no one but that agent can write it.
 
 ---
 
@@ -244,7 +244,7 @@ Built for the **[Flip the Switch Hackathon](https://wemakedevs.org)** by WeMakeD
 **Rubric alignment**:
 | Criteria | Weight | How FestCommand addresses it |
 |---|---|---|
-| Switch Features | 30% | v2 template creating 3 agents, 3 rooms and a linked group; room documents; per-agent addressing as the security boundary; per-room kickoffs; multi-room agents for hand-offs |
+| Switch Features | 30% | v2 template creating 3 agents, 3 rooms and a linked group; template docs as baseline + agent-created live docs (creator-only writes); per-agent addressing incl. `anyone_in`; per-room kickoffs; multi-room agents crossing via `list_linked_rooms`/`connect_to_room`; `send_targeted_message` hand-offs; conditional `users` so it deploys with or without a messaging app |
 | Technical Execution | 25% | Template built from single-source skills + documents, 680-check validator (cross-document + Switch schema) with mutation tests, data-driven rehearsal with a working approval gate, CI |
 | Creativity & Impact | 25% | Solves real campus fest chaos — a pain point felt by thousands of student organizers |
 | Presentation & Docs | 20% | Architecture diagram, demo video script, DEV.to blog draft, comprehensive README |
