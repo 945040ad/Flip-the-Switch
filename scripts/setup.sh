@@ -7,6 +7,8 @@
 #   2. festcommand.template.yaml was built from the current sources
 #   3. The template, the three room documents and the rulebook agree
 #      with each other (scripts/validate.py)
+#   4. The validator still catches every class of mistake it claims to
+#      (tests/, mutation tests on a throwaway copy)
 #
 # Usage:  ./scripts/setup.sh
 
@@ -41,6 +43,10 @@ fi
 
 echo ""
 "$PYTHON" scripts/validate.py
+
+echo ""
+echo "── Mutation tests"
+"$PYTHON" -m unittest discover -s tests 2>&1 | tail -n 3
 
 echo ""
 echo "══════════════════════════════════════════════════════════════"

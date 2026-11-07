@@ -112,6 +112,7 @@ On Windows (PowerShell), skip `setup.sh` and run the scripts directly with `py` 
 ```powershell
 uv run --no-project --with pyyaml python scripts/validate.py
 uv run --no-project python scripts/rehearse.py --fast
+uv run --no-project --with pyyaml python -m unittest discover -s tests
 ```
 
 The scripts use only the standard library. PyYAML is optional and enables the template structure checks.
