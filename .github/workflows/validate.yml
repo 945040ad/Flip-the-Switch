@@ -12,7 +12,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install pyyaml
+      - run: pip install pyyaml ruff==0.6.9
+      - name: Lint
+        run: ruff check scripts tests
+      - name: Live check script compiles and parses its arguments
+        run: python scripts/live_check.py --help
       - name: Template is built from current sources
         run: python scripts/build_template.py --check
       - name: Documents and template are consistent
