@@ -544,10 +544,10 @@ def s6_payout(st: Stage, bracket: dict, ledger: dict):
     st.enter("ops")
     medals = "\n".join(f"{'🥇🥈🥉'[i]} {s}: {p} pts" for i, (s, p) in enumerate(podium))
     st.say(AGENT["marshal"], f"""
-🏆 TOURNAMENT COMPLETE: BGMI (3 rounds, cumulative points)
-{medals}
-@{FEST}-sponsor-tracker over to you for payouts.""", C.YELLOW)
+@{FEST}-sponsor-tracker 🏁 TOURNAMENT COMPLETE: BGMI (3 rounds, cumulative points)
+{medals}""", C.YELLOW)
     st.say(AGENT["tracker"], "On it. Payouts go through #sponsor-finance. 💰", C.RED, 0.4)
+    st.note("list_linked_rooms → connect_to_room(finance), label \"tournament complete → payouts\"")
 
     pool = ledger["prize_pool"]["tournaments"]["bgmi"]
     reqs = []
@@ -621,13 +621,14 @@ def main() -> int:
     s6_payout(st, bracket, ledger)
 
     s = st.stats
-    changed = [k for k in ("bracket_state.json", "sponsor_ledger.json")
-               if (bracket, ledger)[k.startswith("sponsor")] != before[k.startswith("sponsor")]]
+    changed = [k for k, doc, old in (("bracket_live_*.json + approvals_live.json", bracket, before[0]),
+                                     ("ledger_live.json", ledger, before[1])) if doc != old]
     print(f"\n\n{C.HEADER}{C.BOLD}{'═' * 64}\n  ✅ Rehearsal complete{C.RESET}")
     print(f"  Messages {s['messages']} · cross-room hand-offs {s['handoffs']}")
     print(f"  Approvals accepted {s['approvals']} · refused {s['refused']} (relayed by an agent / wrong code)")
     print(f"  Audit entries: bracket {len(bracket['audit_log'])}, ledger {len(ledger['audit_log'])}")
-    print(f"  Changed in memory: {', '.join(changed)} (documents/ untouched)")
+    print(f"  Live documents changed: {', '.join(changed) or 'none'}")
+    print("  Template baselines and documents/ untouched")
     print(f"{C.HEADER}{C.BOLD}{'═' * 64}{C.RESET}")
 
     if args.write:
