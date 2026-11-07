@@ -25,11 +25,11 @@ import random
 import re
 import sys
 import time
-from datetime import datetime, timedelta
+from datetime import date, datetime, time as clock_time, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from validate import all_matches, legal_valorant_map  # noqa: E402
+from validate import all_matches, bgmi_placement_points, day_tables, legal_valorant_map  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 DOCS = ROOT / "documents"
@@ -70,9 +70,9 @@ AGENT = {
 
 
 class Stage:
-    def __init__(self, fast: bool):
+    def __init__(self, fast: bool, start: datetime):
         self.fast = fast
-        self.clock = datetime.fromisoformat(f"2026-12-14T17:45:00{IST}")
+        self.clock = start  # the documents' snapshot time
         self.room: str | None = None
         self.stats = {"messages": 0, "approvals": 0, "refused": 0, "handoffs": 0}
         self.gate_b: Gate
@@ -121,9 +121,13 @@ def rupees(n: int) -> str:
     return f"₹{head},{s[-3:]}"
 
 
+FIRST_DAY = None  # date of the rulebook's "Day 1", set in main()
+
+
 def day_time(iso: str) -> str:
     dt = datetime.fromisoformat(iso)
-    return f"Day {1 if dt.day == 14 else 2} ({dt:%b} {dt.day}), {dt:%H:%M} IST"
+    n = (dt.date() - FIRST_DAY).days + 1 if FIRST_DAY else 1
+    return f"Day {n} ({dt:%b} {dt.day}), {dt:%H:%M} IST"
 
 
 # ───────────────────────────── approval gate ────────────────────────────
@@ -213,24 +217,17 @@ def live_matches(bracket: dict) -> dict[str, dict]:
     return found
 
 
-def schedule_grid(schedule: str) -> list[tuple[str, str, dict[str, str]]]:
-    """[(date, 'HH:MM', {column: cell})] for both day tables of the rulebook."""
-    out = []
-    dates = {"1": "2026-12-14", "2": "2026-12-15"}
-    for day, body in re.findall(r"## Day (\d) Schedule.*?\n(.*?)(?=\n---|\n## )", schedule, re.S):
-        rows = [r for r in body.splitlines() if r.startswith("|")]
-        head = [c.strip() for c in rows[0].strip("|").split("|")]
-        for r in rows[2:]:
-            cells = [c.strip() for c in r.strip("|").split("|")]
-            out.append((dates[day], cells[0].strip("*"), dict(zip(head[1:], cells[1:]))))
-    return out
+def schedule_grid(schedule: str, year: int) -> list[tuple[str, str, dict[str, str]]]:
+    """[(date, 'HH:MM', {column: cell})] for every day table of the rulebook."""
+    return [(date, cells[0].strip("*"), dict(zip(head[1:], cells[1:])))
+            for date, head, rows in day_tables(schedule, year) for cells in rows]
 
 
 def recompute_ledger(ledger: dict):
     alloc = spent = 0
     for c in ledger["expenses"]["categories"].values():
         c["spent"] = sum(i["amount"] for i in c.get("items", []) if i["status"] == "paid")
-        c["utilization_pct"] = round(100 * c["spent"] / c["allocated"], 1)
+        c["utilization_pct"] = round(100 * c["spent"] / c["allocated"], 1) if c["allocated"] else 0.0
         pend = sum(i["amount"] for i in c.get("items", []) if i["status"] == "pending_approval")
         if pend:
             c["pending_approval"] = pend
@@ -239,9 +236,10 @@ def recompute_ledger(ledger: dict):
         alloc += c["allocated"]
         spent += c["spent"]
     ledger["expenses"]["summary"] = {"total_allocated": alloc, "total_spent": spent, "remaining": alloc - spent,
-                                     "overall_utilization_pct": round(100 * spent / alloc, 1)}
+                                     "overall_utilization_pct": round(100 * spent / alloc, 1) if alloc else 0.0}
     ledger["total_spent"] = spent + ledger["prize_pool"]["total_disbursed"]
-    ledger["budget_utilization_pct"] = round(100 * ledger["total_spent"] / ledger["total_budget"], 1)
+    budget = ledger["total_budget"]
+    ledger["budget_utilization_pct"] = round(100 * ledger["total_spent"] / budget, 1) if budget else 0.0
 
 
 # ───────────────────────────── scenarios ────────────────────────────────
@@ -377,8 +375,8 @@ Reporter: {d['reported_by']} via #public-helpdesk""", C.GREEN)
     general = re.search(r"\*\*Disconnection policy\*\*:\n\s*- (.+)", schedule)[1]
     players = {m["player_a"], m["player_b"]}
     when = None
-    for date, hhmm, cells in schedule_grid(schedule):
-        t = datetime.fromisoformat(f"{date}T{hhmm}:00{IST}")
+    for day, hhmm, cells in schedule_grid(schedule, st.clock.year):
+        t = datetime.fromisoformat(f"{day}T{hhmm}:00{IST}")
         if t > st.clock + timedelta(minutes=15) and t < datetime.fromisoformat(nxt["scheduled_time"]) \
                 and cells.get("Arena Alpha", "—") == "—":
             busy = [x["match_id"] for x in M.values() if x.get("scheduled_time", "")[:16] == f"{date}T{hhmm}"
@@ -532,16 +530,12 @@ Action required:
 def s6_payout(st: Stage, bracket: dict, ledger: dict):
     st.scene(6, "Tournament complete → prize payouts",
              "⏩ Day 2, 14:15 · ops → finance · BGMI rounds 2-3 are SIMULATED from a fixed seed")
-    st.clock = datetime.fromisoformat(f"2026-12-15T14:15:00{IST}")
+    st.clock = datetime.combine(FIRST_DAY + timedelta(days=1), clock_time(14, 15), tzinfo=st.clock.tzinfo)
     bg = bracket["tournaments"]["bgmi"]
     pts = bg["points_system"]
 
     def placement_points(place: int) -> int:
-        for k, v in pts["placement"].items():
-            lo, _, hi = k.partition("-")
-            if int(lo) <= place <= int(hi or lo):
-                return v
-        return 0
+        return bgmi_placement_points(pts, place)
 
     totals = {s["name"]: 0 for s in bg["squads"]}
     for lobby in bg["rounds"][0]["lobbies"]:
@@ -621,7 +615,11 @@ def main() -> int:
     schedule = (DOCS / "schedule_and_rules.md").read_text(encoding="utf-8")
     before = (copy.deepcopy(bracket), copy.deepcopy(ledger))
 
-    st = Stage(args.fast)
+    global FIRST_DAY
+    snapshot = datetime.fromisoformat(bracket["last_updated"])
+    days = [date.fromisoformat(d) for d, _, _ in day_tables(schedule, snapshot.year)]
+    FIRST_DAY = min(days) if days else snapshot.date()
+    st = Stage(args.fast, snapshot)
     st.gate_b, st.gate_f = Gate(st, bracket), Gate(st, ledger)
     M = live_matches(bracket)
 

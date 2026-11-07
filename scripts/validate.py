@@ -100,21 +100,28 @@ def all_matches(bracket: dict) -> dict[str, dict]:
 
 # ─────────────────────────────── schedule ───────────────────────────────
 
-def schedule_slots(schedule: str, year: int) -> dict[str, tuple[str, str]]:
-    """MATCH-ID -> (ISO local time 'YYYY-MM-DDTHH:MM', stage) from the day tables.
-
-    Each day's date comes from its heading, e.g. "## Day 1 Schedule — December 14".
-    """
-    slots: dict[str, tuple[str, str]] = {}
-    for heading, body in re.findall(r"## (Day \d+ Schedule[^\n]*)\n(.*?)(?=\n---|\n## )", schedule, re.S):
+def day_tables(schedule: str, year: int) -> list[tuple[str, list[str], list[list[str]]]]:
+    """[(ISO date, header cells, row cells)] for each "## Day N Schedule — Month D"
+    table. The date comes from the heading; the year from the caller."""
+    out = []
+    for heading, body in re.findall(r"## (Day \d+ Schedule[^\n]*)\n(.*?)(?=\n---|\n## |\Z)", schedule, re.S):
         when = re.search(r"([A-Z][a-z]+) (\d{1,2})\s*$", heading)
         if not check(bool(when), f"schedule heading {heading!r} should end with its date, e.g. 'December 14'"):
             continue
         date = datetime.strptime(f"{when[1]} {when[2]} {year}", "%B %d %Y").date().isoformat()
         lines = [row for row in body.splitlines() if row.startswith("|")]
+        if not check(len(lines) >= 2, f"'{heading}' has no schedule table"):
+            continue
         header = [c.strip() for c in lines[0].strip("|").split("|")]
-        for row in lines[2:]:
-            cells = [c.strip() for c in row.strip("|").split("|")]
+        out.append((date, header, [[c.strip() for c in row.strip("|").split("|")] for row in lines[2:]]))
+    return out
+
+
+def schedule_slots(schedule: str, year: int) -> dict[str, tuple[str, str]]:
+    """MATCH-ID -> (ISO local time 'YYYY-MM-DDTHH:MM', stage) from the day tables."""
+    slots: dict[str, tuple[str, str]] = {}
+    for date, header, rows in day_tables(schedule, year):
+        for cells in rows:
             t = re.sub(r"\*", "", cells[0])
             for col, cell in zip(header[1:], cells[1:]):
                 ids = re.findall(r"MATCH-(\d+)", cell)
@@ -146,6 +153,15 @@ def check_schedule_vs_bracket(bracket, schedule):
 # ─────────────────────────────── bracket ────────────────────────────────
 
 HEX = re.compile(r"^#[0-9a-f]{4}$")
+
+
+def bgmi_placement_points(points_system: dict, place: int) -> int:
+    """Points for a finishing place, from ranges like {"1": 10, "4-5": 4}."""
+    for k, v in points_system["placement"].items():
+        lo, _, hi = k.partition("-")
+        if int(lo) <= place <= int(hi or lo):
+            return v
+    return 0
 
 
 def legal_valorant_map(a: int, b: int) -> bool:
@@ -213,12 +229,8 @@ def check_bracket(bracket):
     bg = tournaments.get("bgmi") or {"points_system": {"placement": {}}, "squads": [], "rounds": []}
     pts = bg["points_system"]
 
-    def placement_points(p: int) -> int:
-        for k, v in pts["placement"].items():
-            lo, _, hi = k.partition("-")
-            if int(lo) <= p <= int(hi or lo):
-                return v
-        return 0
+    def placement_points(place: int) -> int:
+        return bgmi_placement_points(pts, place)
 
     squads = {s["name"] for s in bg["squads"]}
     for rnd in bg["rounds"]:
@@ -248,8 +260,10 @@ COSPLAY_ROWS = {"best_overall": "Best Overall", "best_gaming_character": "Best G
 EXTRA = {("bgmi", "mvp"): "BGMI MVP", ("hackathon", "peoples_choice"): "Hackathon People's Choice"}
 
 
-def inr(text: str) -> int:
-    return int(re.sub(r"[^\d]", "", text))
+def inr(text: str) -> int | None:
+    """₹1,00,000 -> 100000; None for a cell with no amount ('—', 'TBD')."""
+    digits = re.sub(r"[^\d]", "", text)
+    return int(digits) if digits else None
 
 
 def check_cited_sections() -> None:
@@ -282,7 +296,7 @@ def check_ledger(ledger, schedule):
             entry = queue.get(("VENDOR", v["id"].split("-", 1)[-1]))
             same_code = bool(entry) and ("approval_hash" not in v or entry.get("code") == v["approval_hash"])
             check(same_code, f"{v['id']} awaits approval but has no matching entry in pending_approvals")
-    for (kind, ident), p in queue.items():
+    for kind, ident in queue:
         if kind == "VENDOR":
             check(any(v["id"] == f"VENDOR-{ident}" and v.get("status") == "pending_approval"
                       for v in ledger["vendor_payments"]),
@@ -298,7 +312,9 @@ def check_ledger(ledger, schedule):
     for name, c in cats.items():
         paid = sum(i["amount"] for i in c.get("items", []) if i["status"] == "paid")
         check(c["spent"] == paid, f"expenses.{name}.spent is {c['spent']} but paid items sum to {paid}")
-        pct = round(100 * c["spent"] / c["allocated"], 1)
+        if not check(c["allocated"] > 0 or c["spent"] == 0, f"expenses.{name} has spending but no allocation"):
+            continue
+        pct = round(100 * c["spent"] / c["allocated"], 1) if c["allocated"] else 0.0
         check(abs(c["utilization_pct"] - pct) < 0.05, f"expenses.{name}.utilization_pct should be {pct}")
         if pct > 80:
             check(any(name in a["message"] and not a["resolved"] for a in ledger["alerts"]),
@@ -316,12 +332,15 @@ def check_ledger(ledger, schedule):
     check(alloc + pp["total_allocated"] <= ledger["total_budget"],
           f"over-allocated: expenses {alloc} + prizes {pp['total_allocated']} > budget {ledger['total_budget']}")
     check(ledger["total_spent"] == spent + pp["total_disbursed"], "total_spent != expenses spent + prizes disbursed")
-    check(abs(ledger["budget_utilization_pct"] - round(100 * ledger["total_spent"] / ledger["total_budget"], 1)) < 0.05,
-          "budget_utilization_pct is wrong")
+    if check(ledger["total_budget"] > 0, "total_budget must be positive"):
+        check(abs(ledger["budget_utilization_pct"] - round(100 * ledger["total_spent"] / ledger["total_budget"], 1)) < 0.05,
+              "budget_utilization_pct is wrong")
 
     # Prize table in the rulebook
-    tbl = re.search(r"\| Tournament \|.*?\n\|[-| ]+\n(.*?)\n\n", schedule, re.S)
-    rows = {r.split("|")[1].strip(): [inr(c) for c in r.split("|")[2:5]] for r in tbl[1].splitlines()}
+    tbl = re.search(r"\| Tournament \|.*?\n\|[-| ]+\n(.*?)(?:\n\n|\Z)", schedule, re.S)
+    check(bool(tbl), "rulebook has no '| Tournament |' prize table")
+    rows = {r.split("|")[1].strip(): [inr(c) for c in r.split("|")[2:5]]
+            for r in (tbl[1].splitlines() if tbl else []) if r.count("|") >= 5}
     tours = pp["tournaments"]
 
     def amount(game: str, key: str):

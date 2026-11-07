@@ -132,6 +132,29 @@ class ValidatorCatches(unittest.TestCase):
         self.assertNotIn("Traceback", result.stderr)
         self.assertFlags(result, "bracket_state.json has no such match")
 
+    def test_unparseable_prize_cell_is_a_finding_not_a_crash(self):
+        self.p.edit("documents/schedule_and_rules.md", "| Valorant 5v5 |", "| Valorant 5v5 | — |", )
+        result = self.p.validate()
+        self.assertNotIn("Traceback", result.stderr)
+        self.assertFlags(result, "prizes for Valorant 5v5")
+
+    def test_zero_allocation_is_a_finding_not_a_crash(self):
+        self.p.edit_json("documents/sponsor_ledger.json",
+                         lambda d: d["expenses"]["categories"]["catering"].update(allocated=0))
+        result = self.p.validate()
+        self.assertNotIn("Traceback", result.stderr)
+        self.assertFlags(result, "spending but no allocation")
+
+    def test_last_day_table_may_end_the_file(self):
+        def move_day2_to_end(text):
+            start = text.index("## Day 2 Schedule")
+            end = text.index("\n---", start)
+            return text[:start] + text[end + 4:] + "\n" + text[start:end].rstrip() + "\n"
+        path = self.p.root / "documents" / "schedule_and_rules.md"
+        path.write_text(move_day2_to_end(path.read_text(encoding="utf-8")), encoding="utf-8", newline="\n")
+        result = self.p.validate()
+        self.assertNotIn("not in the published schedule", result.stdout)
+
     def test_rulebook_section_cited_by_an_agent_is_renamed(self):
         self.p.edit("documents/schedule_and_rules.md", "### Tournament Conduct", "### Match Conduct")
         self.assertFlags(self.p.validate(), '"Tournament Conduct"')
@@ -198,6 +221,13 @@ class ValidatorCatches(unittest.TestCase):
 
 
 class Rehearsal(unittest.TestCase):
+    def test_pauses_still_work(self):
+        # --fast skips time.sleep, so a shadowed `time` would only break the live demo.
+        sys.path.insert(0, str(REPO / "scripts"))
+        self.addCleanup(sys.path.remove, str(REPO / "scripts"))
+        import rehearse
+        self.assertTrue(callable(getattr(rehearse.time, "sleep", None)))
+
     def test_runs_and_leaves_documents_untouched(self):
         p = Project()
         self.addCleanup(p.close)
