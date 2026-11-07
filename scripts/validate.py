@@ -5,8 +5,15 @@ FestCommand consistency checker.
 Agents answer from the room documents, so a contradiction between documents
 turns into a confidently wrong answer in chat. This script checks that:
 
-  * the template is valid YAML, uses the Switch v2 shape, every reference
-    resolves, and it was built from the current sources;
+  * the template was built from the current sources, and passes the rules
+    the Switch server applies (mirrored from sandbox-quantum/switch core:
+    param specs, the fields each resource type reads, `if:` conditions,
+    agent-name and display-name limits, at most one group);
+  * every placeholder is a param, a `{key.name}` or a Switch built-in, and
+    no embedded document contains one (Switch has no brace escape);
+  * agents mention only agents they share a room with, and each live
+    document created at kickoff copies a baseline from its own room without
+    colliding with a provisioned name;
   * every match in the published schedule exists in bracket_state.json at the
     same time and stage, and vice versa;
   * bracket progression is consistent (winners flow into the next match,
