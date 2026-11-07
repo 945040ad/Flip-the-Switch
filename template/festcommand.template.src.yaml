@@ -22,8 +22,18 @@
 #
 # Cross-room hand-offs happen because an agent sits in both rooms: the
 # concierge carries reports from the public helpdesk into ops, and the
-# sponsor tracker carries tournament results from ops into finance. The
-# group's `links:` document those flows on the room map.
+# sponsor tracker carries tournament results from ops into finance. Every
+# Switch agent operation acts on the one room its session is connected to,
+# so an agent crosses over with list_linked_rooms -> connect_to_room. The
+# group's `links:` are what list_linked_rooms returns: labelled pointers,
+# with no access of their own.
+#
+# Documents. Switch lets only the agent that created a room document update
+# it, and documents a template provisions have no creating agent. So the
+# documents below are the deploy-time baseline, read-only to everyone. At
+# kickoff the marshal copies bracket_state.json to bracket_live.json and the
+# tracker copies sponsor_ledger.json to ledger_live.json. Each agent created
+# its live copy, so Switch itself guarantees it is the only writer.
 version: 2
 
 params:
@@ -138,9 +148,21 @@ resources:
       Report a **match result** or a **dispute** here, with the match ID and
       a screenshot link. It goes to the ops team, and a human makes every
       ruling.
+
+      Every approved result, ruling and schedule change is logged in the
+      room document announcements.md.
+    docs:
+      - name: schedule_and_rules.md
+        description: Published schedule, rulebook, prize structure, venue and contacts (as of deploy).
+        instructions: >-
+          Answer participants from this. A newer entry in announcements.md
+          (results, rulings, schedule changes) overrides it.
+        content: "@include documents/schedule_and_rules.md"
     kickoff: |
-      @{concierge.name} you're live. Post a short welcome for participants:
-      what you can help with, and how to report a result or a dispute.
+      @{concierge.name} you're live. If this room has no announcements.md yet,
+      create it (create_room_document) as an empty log. Then post a short
+      welcome for participants: what you can help with, and how to report a
+      result or a dispute.
 
   ops:
     type: room
@@ -166,17 +188,24 @@ resources:
       Approvals typed by agents never count.
     docs:
       - name: bracket_state.json
-        description: Live state of every bracket, plus pending approvals and the audit log.
-        instructions: Only the bracket marshal writes this, and only after a Fest Lead approval.
+        description: Every bracket as of deploy, plus pending approvals and the audit log. Read-only baseline.
+        instructions: >-
+          Baseline only; no agent can edit it. The bracket marshal copies it to
+          bracket_live.json at kickoff and keeps that copy. Read bracket_live.json
+          for current state.
         content: "@include documents/bracket_state.json"
       - name: schedule_and_rules.md
-        description: Published schedule, rulebook, prize structure, venue and contacts.
-        instructions: The concierge answers from this. The marshal cites it in rulings and edits match times only through an approved SHIFT.
+        description: Published schedule, rulebook, prize structure, venue and contacts (as of deploy).
+        instructions: >-
+          Cite it in rulings. Approved schedule changes live in
+          bracket_live.json (scheduled_time), which overrides the times here.
         content: "@include documents/schedule_and_rules.md"
     kickoff: |
-      @{bracket_marshal.name} you're live. Read bracket_state.json and post a
-      one-screen status: matches awaiting a result, open disputes, and the
-      next three scheduled matches.
+      @{bracket_marshal.name} you're live. If this room has no
+      bracket_live.json yet, create it (create_room_document) with the exact
+      content of bracket_state.json; from now on you only ever update that
+      copy. Then post a one-screen status: matches awaiting a result, open
+      disputes, and the next three scheduled matches.
 
   finance:
     type: room
@@ -193,14 +222,20 @@ resources:
     instructions: |
       💰 **{fest} Sponsor & Finance.** Fest Lead only.
 
-      @{sponsor_tracker.name} keeps sponsor_ledger.json and asks you to approve
+      @{sponsor_tracker.name} keeps ledger_live.json and asks you to approve
       every payout, vendor payment and reserve withdrawal, e.g.
       `approve VENDOR-03 #79e1`.
     docs:
       - name: sponsor_ledger.json
-        description: Income, budget by category, sponsor deliverables, prize pool, vendor payments, alerts and audit log.
-        instructions: Only the sponsor tracker writes this, and only after a Fest Lead approval.
+        description: Income, budget by category, sponsor deliverables, prize pool, vendor payments, alerts and audit log, as of deploy. Read-only baseline.
+        instructions: >-
+          Baseline only; no agent can edit it. The sponsor tracker copies it to
+          ledger_live.json at kickoff and updates that copy only after a Fest
+          Lead approval. Read ledger_live.json for current figures.
         content: "@include documents/sponsor_ledger.json"
     kickoff: |
-      @{sponsor_tracker.name} you're live. Post the sponsor status dashboard,
-      then list open alerts and anything waiting for my approval.
+      @{sponsor_tracker.name} you're live. If this room has no ledger_live.json
+      yet, create it (create_room_document) with the exact content of
+      sponsor_ledger.json; from now on you only ever update that copy. Then
+      post the sponsor status dashboard, open alerts and anything waiting for
+      my approval.

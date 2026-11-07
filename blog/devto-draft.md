@@ -34,10 +34,12 @@ Think of it as mission control for your fest — except the mission controllers 
   │ participants         │ reports  │ Fest Lead                │ payout │ Fest Lead             │
   │ @concierge ──────────┼─────────►│ @concierge               │ trigger│ @sponsor-tracker      │
   │                      │◄─────────┤ @bracket-marshal         ├───────►│                       │
-  │                      │ approved │ @sponsor-tracker         │        │ 📄 sponsor_ledger.json│
-  │                      │ results  │ 📄 bracket_state.json    │        │                       │
+  │ 📄 schedule_and_rules│ approved │ @sponsor-tracker         │        │ 📄 sponsor_ledger.json│
+  │ ✏️ announcements.md   │ results  │ 📄 bracket_state.json    │        │ ✏️ ledger_live.json    │
   │                      │          │ 📄 schedule_and_rules.md │        │                       │
+  │                      │          │ ✏️ bracket_live.json      │        │                       │
   └──────────────────────┘          └──────────────────────────┘        └───────────────────────┘
+   📄 template baseline, read-only · ✏️ created at kickoff by the only agent that can edit it
 ```
 
 1. **`#public-helpdesk`**: open to everyone. The concierge answers questions from the live schedule, takes match results and dispute reports, and announces approved outcomes. It's the information desk at the venue entrance.
@@ -87,13 +89,18 @@ resources:
     group: war_room
     channel_type: channel_private
     agents: [bracket_marshal, concierge, sponsor_tracker]
-    users: ["{$creator}"]
+    users:
+      - if: "{bridge}"            # no messaging app? Switch-only rooms
+        value: ["{$creator}"]
+      - value: []
     docs:
       - name: bracket_state.json
         content: |
           …contents of documents/bracket_state.json…
     kickoff: |
-      @{bracket_marshal.name} you're live. Post a one-screen status…
+      @{bracket_marshal.name} you're live. If this room has no
+      bracket_live.json yet, create it with the exact content of
+      bracket_state.json… Then post a one-screen status…
 ```
 
 The agent instructions and the room documents live in their own files (`agents/*/SKILL.md`, `documents/*`). A small build script inlines them into the template, so the instructions an agent runs with and the document it reads can never drift from what's in the repo.
@@ -112,11 +119,15 @@ So a participant can't message the bracket marshal at all, let alone prompt-inje
 
 ### 3. Rooms scope the documents
 
-Each room carries its own documents (`docs:` in the template). The bracket and the rulebook live in `#tournament-ops`. The money lives in `#sponsor-finance`, a room the concierge isn't in, so sponsor commitments and vendor invoices are never in the public agent's reach.
+Each room carries its own documents (`docs:` in the template). The bracket and the rulebook live in `#tournament-ops`. The public rulebook is also in the helpdesk. The money lives in `#sponsor-finance`, a room the concierge isn't in, so sponsor commitments and vendor invoices are never in the public agent's reach.
+
+There's a second, stronger property. Switch lets only the agent that **created** a room document update it, and documents a template provisions have no creating agent. So the template's documents are a read-only baseline. At kickoff, the marshal copies the bracket into `bracket_live.json`, and the tracker copies the ledger into `ledger_live.json`. From then on, the platform itself guarantees each one has exactly one writer. The concierge owns `announcements.md`, a public log of approved changes that overrides the rulebook's times.
 
 ### 4. Cross-room hand-offs come from membership
 
-An agent that sits in two rooms is the bridge between them. The concierge is in both helpdesk and ops, so it carries a dispute report into ops and carries the approved ruling back out. The sponsor tracker is in both ops and finance, so it hears "tournament complete" and opens payouts where the money is. The group's `links:` draw those flows on the room map.
+An agent that sits in two rooms is the bridge between them. The concierge is in both helpdesk and ops, so it carries a dispute report into ops and carries the approved ruling back out. The sponsor tracker is in both ops and finance, so it hears "tournament complete" and opens payouts where the money is.
+
+Mechanically, every Switch agent operation acts on the *one* room a session is connected to. An agent crosses over by calling `list_linked_rooms`, which returns the group's labelled `links:`, then `connect_to_room`. It addresses the next agent with `send_targeted_message`.
 
 ### 5. The human gate
 
@@ -126,7 +137,7 @@ Every state change waits for the fest lead to type an exact line:
 approve DISPUTE-47 #f6e4
 ```
 
-The code is fresh for each request, so you can't approve the wrong item by accident, and each request plus its approval lands in an `audit_log` inside the document. The gate is enforced by the agents' instructions, and Switch's addressing backs it up. The marshal and tracker accept an approval only when the fest lead typed it, never one relayed by another agent. Participants can't address them at all.
+The code is fresh for each request, so you can't approve the wrong item by accident, and each request plus its approval lands in an `audit_log` inside the document. Checking that the approval came from the fest lead is the agents' job, written into their instructions. Switch backs it up twice: addressing decides who can talk to an agent, and creator-only documents decide who can write the state. The marshal and tracker accept an approval only when the fest lead typed it, never one relayed by another agent. Participants can't address them at all.
 
 ## The Scenarios
 
@@ -157,14 +168,18 @@ My first instinct was to automate everything. But for high-stakes decisions like
 
 I almost set everything to `anyone` for simplicity. Then I realized any participant could talk the bracket marshal into "correcting" a score. With `owner-agents` on the marshal, the attack surface is one agent (the concierge) that is only allowed to file reports.
 
-### 4. Your documents are your prompt
+### 4. Read the platform's code, not just its docs
+
+My first design had the marshal editing the template's `bracket_state.json` directly. It read fine against the docs. Then I traced it through Switch's server code. `update_room_document` refuses any agent that didn't create the document, and template documents have no creator. The design would have imported cleanly and then failed on the first approval. The fix (agent-owned live copies seeded at kickoff) turned out *better*, because single-writer is now a platform guarantee instead of a promise in a prompt.
+
+### 5. Your documents are your prompt
 
 The agents are only as right as the data they read. My first sample data had the booths swapped between two files and a pending invoice counted as spent. It also had two different prize tables. A validator caught all of it. Write one.
 
 ## Limitations
 
 - **No image analysis**: the marshal checks that a proof URL exists but can't read the score in the image.
-- **The approval gate is policy, not platform**: it's enforced by agent instructions plus addressing, not by a Switch primitive. A cryptographic approval would need a tool the agents call.
+- **The approval check is policy**: Switch enforces who can write each live document and who can address each agent, but checking that an `approve` line came from the fest lead is done by the agents' instructions. A cryptographic approval would need a tool the agents call.
 - **Single approver**: one fest lead. A real deployment wants a finance head for payouts and a tournament director for rulings.
 - **No payment integration**: payouts are recorded in the ledger, and the UPI/bank transfer happens outside FestCommand.
 - **No game API integration**: results are submitted by referees, not pulled from Riot or Krafton.

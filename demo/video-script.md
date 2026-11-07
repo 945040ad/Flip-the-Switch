@@ -73,7 +73,7 @@
 
   Check in 15 min early with your roster (5 + 1 sub). GL HF! 🎮
   ```
-- **0:42–0:50**: Quick side-by-side: the `MATCH-07` entry in `bracket_state.json` and the Day 2 row of `schedule_and_rules.md` (both room documents in `#tournament-ops`) next to the Discord reply. Draw lines from the sources to the answer.
+- **0:42–0:50**: Quick side-by-side: the `MATCH-07` entry in `bracket_live.json` (the marshal's live copy in `#tournament-ops`) and the Day 2 row of `schedule_and_rules.md` (in the helpdesk) next to the Discord reply. Draw lines from the sources to the answer.
 - **0:50–1:00**: Zoom out to show the full channel. Another participant asks a different question; the concierge handles it.
 
 ### 🎨 Visual Notes:

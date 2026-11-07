@@ -43,38 +43,42 @@ FestCommand turns your Discord, Slack, or Mattermost server into a **structured 
   │ 🤖 concierge ─────────┼─────────►│ 🤖 concierge               │ nament │ 🤖 sponsor-tracker     │
   │                       │◄─────────┤ 🤖 bracket-marshal         │ done"  │                        │
   │                       │ approved │ 🤖 sponsor-tracker ────────┼───────►│                        │
-  │                       │ outcomes │                           │        │ 📄 sponsor_ledger.json │
-  │                       │          │ 📄 bracket_state.json      │        │                        │
+  │ 📄 schedule_and_rules │ outcomes │                           │        │ 📄 sponsor_ledger.json │
+  │ ✏️ announcements.md    │          │ 📄 bracket_state.json      │        │ ✏️ ledger_live.json     │
   │                       │          │ 📄 schedule_and_rules.md   │        │ ✋ approve PAYOUT-01 #… │
-  │                       │          │ ✋ approve MATCH-06 #…     │        │ ✋ approve VENDOR-03 #… │
+  │                       │          │ ✏️ bracket_live.json        │        │ ✋ approve VENDOR-03 #… │
+  │                       │          │ ✋ approve MATCH-06 #…     │        │                        │
   └───────────────────────┘          └───────────────────────────┘        └────────────────────────┘
                      group "techstorm FestCommand": links helpdesk ⇄ ops → finance
+   📄 provisioned by the template, read-only to every agent · ✏️ created at kickoff by the one agent that can edit it
 ```
 
 | Agent | Rooms | Addressing (who can make it act) | Writes |
 |---|---|---|---|
-| `{fest}-concierge` | helpdesk, ops | `anyone_in: [helpdesk, ops]` | nothing: files reports, posts announcements |
-| `{fest}-bracket-marshal` | ops | `owner-agents`: the Fest Lead and their agents | `bracket_state.json`, after approval |
-| `{fest}-sponsor-tracker` | ops, finance | `owner-agents` | `sponsor_ledger.json`, after approval |
+| `{fest}-concierge` | helpdesk, ops | `anyone_in: [helpdesk, ops]` | `announcements.md`: approved outcomes only |
+| `{fest}-bracket-marshal` | ops | `owner-agents`: the Fest Lead and their agents | `bracket_live.json`, after approval |
+| `{fest}-sponsor-tracker` | ops, finance | `owner-agents` | `ledger_live.json`, after approval |
 
-**How hand-offs cross rooms.** An agent that is a member of two rooms is the bridge between them. The concierge carries a participant's report from the helpdesk into ops, and carries the approved outcome back out. The sponsor tracker hears "tournament complete" in ops and opens payouts in finance, the only room where money is discussed. The group's `links:` show those flows on Switch's room map.
+**How hand-offs cross rooms.** An agent that is a member of two rooms is the bridge between them. The concierge carries a participant's report from the helpdesk into ops, and carries the approved outcome back out. The sponsor tracker hears "tournament complete" in ops and opens payouts in finance, the only room where money is discussed. Every Switch agent operation acts on the one room a session is connected to. So an agent crosses with `list_linked_rooms` (which returns the group's labelled `links:`) and `connect_to_room`, and addresses the next agent with `send_targeted_message`.
+
+**Who can write what is enforced by Switch, not just by instructions.** Switch lets only the agent that *created* a room document update it, and documents a template provisions have no creating agent. So the template's documents are a read-only baseline, and at kickoff each stateful agent copies its document into one it owns: `bracket_live.json` for the marshal and `ledger_live.json` for the tracker. The concierge does the same with `announcements.md`, a public log of approved changes. No other agent, and no participant, can alter them.
 
 **Why the public can't tamper with results.** Participants can address only the concierge, and the concierge only files reports. The bracket marshal and sponsor tracker use `owner-agents` addressing, so no participant can talk to them at all. On top of that, the agents' instructions accept an `approve` line only when the Fest Lead typed it. An approval relayed by any agent doesn't count.
 
 ### Data flow
 
 ```
-Question  ─► concierge reads schedule + bracket ─► answer                         (no human needed)
+Question  ─► concierge reads announcements.md, then the rulebook ─► answer       (no human needed)
 
 Result    ─► concierge ─► ops: marshal validates (exists? legal score? proof?)
           ─► "approve MATCH-06 #da40"  ◄── 🧑 Fest Lead
-          ─► bracket_state.json updated, winner slotted into the next match, audit_log += entry
-          ─► marshal: 📣 ANNOUNCE ─► concierge posts in helpdesk
+          ─► bracket_live.json updated, winner slotted into the next match, audit_log += entry
+          ─► marshal: 📣 ANNOUNCE ─► concierge logs it in announcements.md and posts in helpdesk
 
 Dispute   ─► same path; the marshal quotes the rulebook, flags rule gaps, finds a free slot for a replay
 
-Payout    ─► marshal posts final standings in ops ─► tracker opens PAYOUT-xx in finance
-          ─► 🧑 approves ─► sponsor_ledger.json: prize status, payout_log, budget recomputed
+Payout    ─► marshal: 🏁 TOURNAMENT COMPLETE in ops ─► tracker opens PAYOUT-xx in finance
+          ─► 🧑 approves ─► ledger_live.json: prize status, payout_log, budget recomputed
 ```
 
 ---
@@ -85,8 +89,8 @@ Payout    ─► marshal posts final standings in ops ─► tracker opens PAYOU
 |---|---|---|
 | Stand up 3 agents + 3 rooms + docs in one go, for any fest | Templates with typed params; one import creates everything and posts a kickoff into each room | `festcommand.template.yaml` (v2 `resources:`) |
 | Keep participants away from the agents that change state | Per-agent `addressing` | `owner-agents` on marshal & tracker; `anyone_in` on concierge |
-| Keep money out of the public agent's reach | Rooms with their own members and documents | `sponsor_ledger.json` lives only in the finance room |
-| Shared, persistent state the agents read and write | Room documents | `docs:` on the ops and finance rooms |
+| Keep money out of the public agent's reach | Rooms with their own members and documents | the ledger lives only in the finance room |
+| Shared state with exactly one writer | Room documents, which only their creating agent can update | template `docs:` as baseline; `*_live.json` created at kickoff |
 | Move work between rooms without one all-seeing bot | Agents that belong to several rooms, plus a group with links | concierge ∈ helpdesk+ops, tracker ∈ ops+finance |
 | Agents start working without anyone prompting them | Per-room `kickoff:` that mentions the agent | each room's kickoff |
 
@@ -213,12 +217,12 @@ The code is there to stop you approving the wrong item and to make the audit log
 
 ## Limitations
 
-- **The gate is policy, not a platform primitive.** It's enforced by the agents' instructions plus Switch addressing. A cryptographically enforced approval would need a tool the agents call.
+- **The approval check itself is policy.** Switch enforces *who can write* each live document (only the agent that created it) and *who can talk to* each agent (addressing). Whether an `approve` line came from the Fest Lead is still checked by the agent's instructions. A cryptographically enforced approval would need a tool the agents call.
 - **No screenshot analysis.** The marshal checks that a proof URL is present, not what the image shows.
 - **Single approver.** A real deployment would split approval roles, e.g. a finance head for payouts and a tournament director for rulings.
 - **No payment rails.** Payouts are recorded in the ledger. UPI or bank transfers happen outside FestCommand.
 - **No game APIs.** Results are reported by referees, not pulled from Riot or Krafton.
-- **Checked against Switch's source, not yet run on a live server.** Every field was traced through the server's own template code (`template_lint`, `template_v2.compile_v2`, the run planner and `rooms_yaml`), and `validate.py` mirrors those rules. A live import is still the final proof. How `links:` behave at runtime isn't documented, so FestCommand doesn't depend on them for hand-offs. Room membership does that job.
+- **Checked against Switch's source, not yet run on a live server.** Every field was traced through the server's own template code (`template_lint`, `template_v2.compile_v2`, the run planner and `rooms_yaml`), and `validate.py` mirrors those rules. The agents' room mechanics (one connected room per session, `connect_to_room`, `list_linked_rooms`, creator-only document updates, `send_targeted_message`) were read from the server's agent operations. A live import is still the final proof.
 
 ---
 

@@ -431,6 +431,14 @@ def check_template():
                 check(not hits, f"room {k}: doc {d['name']} contains placeholder(s) {hits} that Switch would substitute")
             if r.get("kickoff"):
                 check(bool(re.search(r"@\{(\w+)\.name\}", r["kickoff"])), f"room {k}: kickoff mentions no agent")
+                # Agents can only update documents they created, so live state is
+                # an agent-created copy made at kickoff. Switch needs room-unique
+                # names, and the baseline being copied must be in the same room.
+                provisioned = {d["name"] for d in r.get("docs", [])}
+                for live in re.findall(r"no\s+([\w.]+\.(?:json|md))\s+yet", r["kickoff"]):
+                    check(live not in provisioned, f"room {k}: kickoff creates {live}, which the template already provisions")
+                for base in re.findall(r"exact\s+content\s+of\s+([\w.]+\.(?:json|md))", r["kickoff"]):
+                    check(base in provisioned, f"room {k}: kickoff copies {base}, which is not a document in this room")
         elif r["type"] == "group":
             for l in r.get("links", []):
                 check(kinds.get(l["from"]) == "room" and kinds.get(l["to"]) == "room", f"group {k}: bad link {l}")

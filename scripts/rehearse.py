@@ -240,7 +240,7 @@ Check in 15 min early with your roster (5 + 1 sub). GL HF! 🎮""", C.GREEN)
 
 def s2_match_result(st: Stage, bracket: dict, M: dict):
     st.scene(2, "Match result → validation → human approval → announcement",
-             "helpdesk → ops → approval gate → bracket_state.json → helpdesk")
+             "helpdesk → ops → approval gate → bracket_live.json → announcements.md")
     m, gf = M["MATCH-06"], M["MATCH-07"]
     a, b = m["team_a"], m["team_b"]
     submitted = [("Bind", 13, 9), ("Haven", 10, 13), ("Ascent", 14, 12)]
@@ -307,9 +307,11 @@ Fest Lead: approve MATCH-{num} {code}""", C.YELLOW, 1.4)
 • {m['match_id']}: status → completed, winner → {winner}
 • {gf['match_id']}: team_b → {winner}
 • audit_log += MATCH-{num} (Fest Lead, {st.clock:%H:%M})
+  (written to bracket_live.json, the copy only the marshal can edit)
 📣 ANNOUNCE @{FEST}-concierge""", C.YELLOW)
 
     st.enter("helpdesk")
+    st.note(f"concierge appends MATCH-{num} to announcements.md, then posts")
     st.say(AGENT["concierge"], f"""
 📢 BRACKET UPDATE: VALORANT ⚔️
 {winner} take Semifinal 2 over {loser}, 2-1
@@ -385,6 +387,7 @@ Fest Lead: approve DISPUTE-{num} {code}""", C.YELLOW, 1.4)
 📣 ANNOUNCE @{FEST}-concierge""", C.YELLOW)
 
     st.enter("helpdesk")
+    st.note(f"concierge appends DISPUTE-{num} to announcements.md, then posts")
     st.say(AGENT["concierge"], f"""
 📢 RULING: FIFA 25 {m['match_id']} ⚖️
 {m['player_a']} vs {m['player_b']} will be replayed in full (BO1)
@@ -393,7 +396,7 @@ The winner plays {nxt['match_id']} as scheduled. GL HF! 🎮""", C.GREEN)
 
 
 def s4_vendor(st: Stage, ledger: dict):
-    st.scene(4, "Vendor payment with budget impact", "finance → sponsor_ledger.json → approval gate")
+    st.scene(4, "Vendor payment with budget impact", "finance → ledger_live.json → approval gate")
     v = next(x for x in ledger["vendor_payments"] if x["status"] == "pending_approval")
     cat_key = next(k for k, c in ledger["expenses"]["categories"].items()
                    if any(i.get("invoice") == v["invoice"] for i in c.get("items", [])))
@@ -432,7 +435,7 @@ Fest Lead: approve VENDOR-{num} {code}""", C.RED, 1.2)
 
 
 def s5_dashboard(st: Stage, ledger: dict):
-    st.scene(5, "Sponsor deliverables dashboard", "finance → sponsor_ledger.json, overdue items checked against the clock")
+    st.scene(5, "Sponsor deliverables dashboard", "finance → ledger_live.json, overdue items checked against the clock")
     now = st.clock
     tiers = {"title": "Title", "gold": "Gold", "silver": "Silver", "connectivity_partner": "Partner"}
 
@@ -592,6 +595,8 @@ def main() -> int:
     print(f"{C.GREEN}✓ bracket_state.json    {len(M)} matches in {len(bracket['tournaments'])} tournaments{C.RESET}")
     print(f"{C.GREEN}✓ sponsor_ledger.json   {len(ledger['sponsors'])} sponsors · budget {rupees(ledger['total_budget'])}{C.RESET}")
     print(f"{C.GREEN}✓ schedule_and_rules.md {len(schedule.splitlines())} lines{C.RESET}")
+    print(f"{C.DIM}  Kickoff: marshal seeds bracket_live.json, tracker seeds ledger_live.json,{C.RESET}")
+    print(f"{C.DIM}           concierge opens announcements.md. Agents can only edit documents they created.{C.RESET}")
     print(f"{C.DIM}  Clock starts at the documents' snapshot: {day_time(bracket['last_updated'])}{C.RESET}")
     st.pause(0.8)
 
