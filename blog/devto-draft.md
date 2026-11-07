@@ -141,7 +141,7 @@ The rehearsal script (`python scripts/rehearse.py`) plays six scenarios against 
 
 ## Keeping the data honest
 
-Agents answer from documents, so a contradiction between documents becomes a confidently wrong answer in chat. `scripts/validate.py` runs 579 checks. It checks that every match in the published schedule exists in the bracket at the same time and stage, and that winners flow into the right next match. It checks that Valorant map scores are legal and BGMI points add up. It checks that the ledger's arithmetic holds, that the budget isn't over-allocated, that prize amounts match the rulebook's prize table, and that booth numbers match the venue map. It also checks that the template's references resolve. CI runs it on every push.
+Agents answer from documents, so a contradiction between documents becomes a confidently wrong answer in chat. `scripts/validate.py` runs 580 checks. It checks that every match in the published schedule exists in the bracket at the same time and stage, and that winners flow into the right next match. It checks that Valorant map scores are legal and BGMI points add up. It checks that the ledger's arithmetic holds, that the budget isn't over-allocated, that prize amounts match the rulebook's prize table, and that booth numbers match the venue map. It also checks that the template's references resolve, and that no embedded document contains a `{placeholder}` Switch would rewrite (Switch has no brace escape). CI runs it on every push.
 
 ## What I Learned
 

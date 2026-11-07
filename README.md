@@ -103,6 +103,15 @@ cd Flip-the-Switch
 python scripts/rehearse.py    # ~60 s; add --fast to skip pauses
 ```
 
+On Windows (PowerShell), skip `setup.sh` and run the scripts directly with `py` or `python`. No Python installed? [uv](https://docs.astral.sh/uv/) fetches one on the fly:
+
+```powershell
+uv run --no-project --with pyyaml python scripts/validate.py
+uv run --no-project python scripts/rehearse.py --fast
+```
+
+The scripts use only the standard library. PyYAML is optional and enables the template structure checks.
+
 The rehearsal plays six scenarios across the three rooms **against the real documents**. Every team, time, rule and amount is read from `documents/`, approval codes are generated per request, and each approval changes the state that the next scenario reads. Use `--write OUT/` to save the post-rehearsal documents. `documents/` itself is never modified.
 
 ### 2. Deploy on Switch
@@ -118,7 +127,7 @@ You don't need to upload any documents. They're embedded in the template.
 Edit `documents/` (your schedule, teams, sponsors, budget) and `agents/*/SKILL.md` (agent behaviour), then:
 
 ```bash
-python scripts/validate.py         # 579 consistency checks; fix anything it flags
+python scripts/validate.py         # 580 consistency checks; fix anything it flags
 python scripts/build_template.py   # re-embed into festcommand.template.yaml
 ```
 
@@ -158,7 +167,7 @@ Flip-the-Switch/
 │   └── sponsor_ledger.json            # income, budget, sponsors, prizes, vendors, alerts
 ├── scripts/
 │   ├── build_template.py              # source + skills + documents → template
-│   ├── validate.py                    # 579 cross-document consistency checks
+│   ├── validate.py                    # 580 cross-document consistency checks
 │   ├── rehearse.py                    # six-scenario simulation, data-driven
 │   └── setup.sh                       # environment + validation in one command
 ├── .github/workflows/validate.yml     # CI: build check, validate, rehearse
@@ -231,7 +240,7 @@ Built for the **[Flip the Switch Hackathon](https://wemakedevs.org)** by WeMakeD
 | Criteria | Weight | How FestCommand addresses it |
 |---|---|---|
 | Switch Features | 30% | v2 template creating 3 agents, 3 rooms and a linked group; room documents; per-agent addressing as the security boundary; per-room kickoffs; multi-room agents for hand-offs |
-| Technical Execution | 25% | Template built from single-source skills + documents, 579-check cross-document validator, data-driven rehearsal with a working approval gate, CI |
+| Technical Execution | 25% | Template built from single-source skills + documents, 580-check cross-document validator, data-driven rehearsal with a working approval gate, CI |
 | Creativity & Impact | 25% | Solves real campus fest chaos — a pain point felt by thousands of student organizers |
 | Presentation & Docs | 20% | Architecture diagram, demo video script, DEV.to blog draft, comprehensive README |
 

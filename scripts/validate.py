@@ -302,6 +302,9 @@ def check_ledger(ledger, schedule):
 
 ADDRESSING = {"owner", "owner-agents", "anyone"}
 AGENT_REQUIRED = ("provider", "directory", "instructions")
+# Built-ins documented in Switch docs/TEMPLATES.md ($first is only valid in default chains).
+BUILTINS = {"creator", "creator_email", "agents_dir", "date", "timestamp", "first"}
+PLACEHOLDER = re.compile(r"\{\$?[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_]+)?\}")
 
 
 def check_template():
@@ -341,7 +344,9 @@ def check_template():
             for d in r.get("docs", []):
                 check(set(d) <= {"name", "description", "instructions", "content"}, f"room {k}: doc has unknown keys")
                 check(bool(d.get("content")), f"room {k}: doc {d.get('name')} is empty")
-                hits = [p for p in params if "{" + p + "}" in d.get("content", "")]
+                # Switch has no brace escape, so a doc must not contain anything
+                # placeholder-shaped: {param}, {key.name} or {$builtin}.
+                hits = sorted(set(PLACEHOLDER.findall(d.get("content", ""))))
                 check(not hits, f"room {k}: doc {d['name']} contains placeholder(s) {hits} that Switch would substitute")
             if r.get("kickoff"):
                 check(bool(re.search(r"@\{(\w+)\.name\}", r["kickoff"])), f"room {k}: kickoff mentions no agent")
@@ -358,8 +363,12 @@ def check_template():
             for other in re.findall(r"@\{(\w+)\.name\}", r["instructions"]):
                 check(bool(rooms_of[k] & rooms_of.get(other, set())),
                       f"agent {k} mentions @{other} but they share no room")
-    refs = set(re.findall(r"\{(\w+)\.name\}", (ROOT / "festcommand.template.yaml").read_text(encoding="utf-8")))
+    text = (ROOT / "festcommand.template.yaml").read_text(encoding="utf-8")
+    refs = set(re.findall(r"\{(\w+)\.name\}", text))
     check(refs <= set(res), f"unknown resource references: {sorted(refs - set(res))}")
+    known = {"{" + p + "}" for p in params} | {"{" + r + ".name}" for r in res} | {"{$" + b + "}" for b in BUILTINS}
+    unknown = sorted(set(PLACEHOLDER.findall(text)) - known)
+    check(not unknown, f"placeholders that are neither params, resource names nor Switch built-ins: {unknown}")
     done(f"template: {sum(1 for v in kinds.values() if v == 'agent')} agents, "
          f"{sum(1 for v in kinds.values() if v == 'room')} rooms, 1 group, all references resolve", b0)
 
